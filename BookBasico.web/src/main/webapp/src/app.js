@@ -1,20 +1,17 @@
 (function (ng) {
 
     var mainApp = ng.module('mainApp', [
-        //'ngCrudMock',
-        'authModule',
         'bookModule',
-        'ngRoute',
-        'ngCrud'
+        'ngRoute'
     ]);
 
-    mainApp.config(['$routeProvider', 'CrudTemplateURL', 'CrudCtrlAlias', function ($routeProvider, tplUrl, alias) {
+    mainApp.config(['$routeProvider', function ($routeProvider) {
             $routeProvider
                 .when('/book', {
-                    templateUrl: tplUrl,
+                    templateUrl: 'src/modules/book/book.tpl.html',
                     controller: 'bookCtrl',
-                    controllerAs: alias
+                    controllerAs: 'ctrl'
                 })
-                .otherwise('/');
+                .otherwise('/book');
         }]);
 })(window.angular);

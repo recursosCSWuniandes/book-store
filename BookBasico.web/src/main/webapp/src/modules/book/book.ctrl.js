@@ -1,8 +1,83 @@
 (function (ng) {
     var mod = ng.module('bookModule');
 
-    mod.controller('bookCtrl', ['CrudCreator', '$scope', 'bookService', 'bookModel', function (CrudCreator, $scope, svc, model) {
-            CrudCreator.extendController(this, svc, $scope, model, 'book', 'Book');
+    mod.controller('bookCtrl', ['$scope', 'bookService', function ($scope, svc) {
+            $scope.currentRecord = {};
+            $scope.records = [];
+            $scope.alerts = [];
+
+            //Variables para el controlador
+            this.readOnly = false;
+            this.editMode = false;
+
+            //Alertas
+            function showMessage(msg, type) {
+                var types = ['info', 'danger', 'warning', 'success'];
+                if (types.some(function (rc) {
+                    return type === rc;
+                })) {
+                    $scope.alerts.push({type: type, msg: msg});
+                }
+            }
+
+            this.showError = function (msg) {
+                showMessage(msg, 'danger');
+            };
+
+            this.showSuccess = function (msg) {
+                showMessage(msg, 'success');
+            };
+
+            this.showWarning = function (msg) {
+                showMessage(msg, 'warning');
+            };
+
+            this.showInfo = function (msg) {
+                showMessage(msg, 'info');
+            };
+
+            this.closeAlert = function (index) {
+                $scope.alerts.splice(index, 1);
+            };
+
+            var self = this;
+            //Funciones del controlador
+            function responseError(response) {
+                self.showError(response.data);
+            }
+
+            this.createRecord = function () {
+                this.editMode = true;
+                $scope.currentRecord = {};
+            };
+
+            this.editRecord = function (record) {
+                return svc.fetchRecord(record.id).then(function (response) {
+                    $scope.currentRecord = response.data;
+                    self.editMode = true;
+                    return response;
+                }, responseError);
+            };
+
+            this.fetchRecords = function () {
+                return svc.fetchRecords().then(function (response) {
+                    $scope.records = response.data;
+                    $scope.currentRecord = {};
+                    self.editMode = false;
+                    return response;
+                }, responseError);
+            };
+            this.saveRecord = function () {
+                return svc.saveRecord($scope.currentRecord).then(function () {
+                    self.fetchRecords();
+                }, responseError);
+            };
+            this.deleteRecord = function (record) {
+                return svc.deleteRecord(record.id).then(function () {
+                    self.fetchRecords();
+                }, responseError);
+            };
+
             this.fetchRecords();
         }]);
 })(window.angular);
