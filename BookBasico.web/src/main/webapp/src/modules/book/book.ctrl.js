@@ -4,48 +4,12 @@
     mod.controller('bookCtrl', ['$scope', 'bookService', function ($scope, svc) {
             $scope.currentRecord = {};
             $scope.records = [];
-            $scope.alerts = [];
 
             //Variables para el controlador
             this.readOnly = false;
             this.editMode = false;
 
-            //Alertas
-            function showMessage(msg, type) {
-                var types = ['info', 'danger', 'warning', 'success'];
-                if (types.some(function (rc) {
-                    return type === rc;
-                })) {
-                    $scope.alerts.push({type: type, msg: msg});
-                }
-            }
-
-            this.showError = function (msg) {
-                showMessage(msg, 'danger');
-            };
-
-            this.showSuccess = function (msg) {
-                showMessage(msg, 'success');
-            };
-
-            this.showWarning = function (msg) {
-                showMessage(msg, 'warning');
-            };
-
-            this.showInfo = function (msg) {
-                showMessage(msg, 'info');
-            };
-
-            this.closeAlert = function (index) {
-                $scope.alerts.splice(index, 1);
-            };
-
             var self = this;
-            //Funciones del controlador
-            function responseError(response) {
-                self.showError(response.data);
-            }
-
             this.createRecord = function () {
                 this.editMode = true;
                 $scope.currentRecord = {};
@@ -56,7 +20,7 @@
                     $scope.currentRecord = response.data;
                     self.editMode = true;
                     return response;
-                }, responseError);
+                });
             };
 
             this.fetchRecords = function () {
@@ -65,17 +29,17 @@
                     $scope.currentRecord = {};
                     self.editMode = false;
                     return response;
-                }, responseError);
+                });
             };
             this.saveRecord = function () {
                 return svc.saveRecord($scope.currentRecord).then(function () {
                     self.fetchRecords();
-                }, responseError);
+                });
             };
             this.deleteRecord = function (record) {
                 return svc.deleteRecord(record.id).then(function () {
                     self.fetchRecords();
-                }, responseError);
+                });
             };
 
             this.fetchRecords();
