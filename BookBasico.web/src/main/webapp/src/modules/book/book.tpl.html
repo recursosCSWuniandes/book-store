@@ -16,8 +16,8 @@
             <div class="collapse navbar-collapse" id="book-navbar">
                 <button id="create-book" class="btn btn-default navbar-btn" ng-hide="ctrl.editMode" ng-click="ctrl.createRecord()"><span class="glyphicon glyphicon-plus"></span> Create</button>
                 <button id="refresh-book" class="btn btn-default navbar-btn" ng-hide="ctrl.editMode" ng-click="ctrl.fetchRecords()"><span class="glyphicon glyphicon-refresh"></span> Refresh</button>
-                <button id="save-book" class="btn btn-default navbar-btn" ng-show="ctrl.editMode" ng-click="ctrl.saveRecord()"><span class="glyphicon glyphicon-save"></span> Save</button>
-                <button id="cancel-book" class="btn btn-default navbar-btn" ng-show="ctrl.editMode" ng-click="ctrl.fetchRecords()"><span class="glyphicon glyphicon-remove"></span> Cancel</button>
+                <button id="save-book" type="submit" form="book-form" class="btn btn-default navbar-btn" ng-show="ctrl.editMode"><span class="glyphicon glyphicon-save"></span> Save</button>
+                <button id="cancel-book" type="button" form="book-form" class="btn btn-default navbar-btn" ng-show="ctrl.editMode" ng-click="form.$setPristine(); ctrl.fetchRecords();"><span class="glyphicon glyphicon-remove"></span> Cancel</button>
             </div>
         </div>
     </nav>
@@ -45,29 +45,29 @@
     </div>
 </div>
 <div ng-show="ctrl.editMode" class="well">
-    <form novalidate name="form" id="book-form" role="form">
+    <form novalidate name="form" id="book-form" role="form" ng-submit="form.$valid && ctrl.saveRecord()">
         <fieldset>
             <input id="id" class="form-control" type="hidden" ng-model="currentRecord.id"/>
-            <div class="form-group col-md-12" ng-class="{'has-success': form.name.$valid && form.name.$dirty, 'has-error': form.name.$invalid && form.name.$dirty}" >
+            <div class="form-group col-md-12" ng-class="{'has-success': form.name.$valid && form.name.$dirty, 'has-error': form.name.$invalid && (form.name.$dirty || form.$submitted)}" >
                 <label for="name" class="col-md-2 control-label">Name</label>
                 <div class="col-md-10">
                     <input id="name" name="name" class="form-control" type="text" ng-model="currentRecord.name" required />
                 </div>
             </div>
-            <div class="form-group col-md-12" ng-class="{'has-success': form.description.$valid && form.description.$dirty, 'has-error': form.description.$invalid && form.description.$dirty}" >
+            <div class="form-group col-md-12" ng-class="{'has-success': form.description.$valid && form.description.$dirty, 'has-error': form.description.$invalid && (form.description.$dirty || form.$submitted)}" >
                 <label for="description" class="col-md-2 control-label">Description</label>
                 <div class="col-md-10">
                     <input id="description" name="description" class="form-control" type="text" ng-model="currentRecord.description" required />
                 </div>
             </div>
-            <div class="form-group col-md-12" ng-class="{'has-success': form.isbn.$valid && form.isbn.$dirty, 'has-error': form.isbn.$invalid && form.isbn.$dirty}" >
+            <div class="form-group col-md-12" ng-class="{'has-success': form.isbn.$valid && form.isbn.$dirty, 'has-error': form.isbn.$invalid && (form.isbn.$dirty || form.$submitted)}" >
                 <label for="isbn" class="col-md-2 control-label">ISBN</label>
                 <div class="col-md-10">
                     <input id="isbn" name="isbn" class="form-control" type="text" ng-model="currentRecord.isbn" required />
                 </div>
             </div>
             
-            <div class="form-group col-md-12" ng-class="{'has-success': form.image.$valid && form.image.$dirty, 'has-error': form.image.$invalid && form.image.$dirty}" >
+            <div class="form-group col-md-12" ng-class="{'has-success': form.image.$valid && form.image.$dirty, 'has-error': form.image.$invalid && (form.image.$dirty || form.$submitted)}" >
                 <label for="image" class="col-md-2 control-label">Image</label>
                 <div class="col-md-10">
                     <input id="image" name="image" class="form-control" type="text" ng-model="currentRecord.image" required />
