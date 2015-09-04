@@ -131,7 +131,7 @@ public class BookPersistenceTest {
      */
     @Test
     public void getBooksTest() {
-        List<BookEntity> list = bookPersistence.findAll(null, null);
+        List<BookEntity> list = bookPersistence.findAll();
         Assert.assertEquals(data.size(), list.size());
         for (BookEntity ent : list) {
             boolean found = false;
@@ -192,69 +192,5 @@ public class BookPersistenceTest {
         Assert.assertEquals(newEntity.getIsbn(), resp.getIsbn());
         Assert.assertEquals(newEntity.getImage(), resp.getImage());
         Assert.assertEquals(newEntity.getDescription(), resp.getDescription());
-    }
-
-    /**
-     * @generated
-     */
-    @Test
-    public void getBookPaginationTest() {
-        //Page 1
-        List<BookEntity> ent1 = bookPersistence.findAll(1, 2);
-        Assert.assertNotNull(ent1);
-        Assert.assertEquals(2, ent1.size());
-        //Page 2
-        List<BookEntity> ent2 = bookPersistence.findAll(2, 2);
-        Assert.assertNotNull(ent2);
-        Assert.assertEquals(1, ent2.size());
-
-        for (BookEntity ent : ent1) {
-            boolean found = false;
-            for (BookEntity entity : data) {
-                if (ent.getId().equals(entity.getId())) {
-                    found = true;
-                }
-            }
-            Assert.assertTrue(found);
-        }
-
-        for (BookEntity ent : ent2) {
-            boolean found = false;
-            for (BookEntity entity : data) {
-                if (ent.getId().equals(entity.getId())) {
-                    found = true;
-                }
-            }
-            Assert.assertTrue(found);
-        }
-    }
-
-    /**
-     * @generated
-     */
-    @Test
-    public void findByName() {
-        String name = data.get(0).getName();
-        List<BookEntity> cache = new ArrayList<BookEntity>();
-        List<BookEntity> list = bookPersistence.findByName(name);
-
-        for (BookEntity entity : data) {
-            if (entity.getName().equals(name)) {
-                cache.add(entity);
-            }
-        }
-        Assert.assertEquals(list.size(), cache.size());
-        for (BookEntity ent : list) {
-            boolean found = false;
-            for (BookEntity cacheEntity : cache) {
-                if (cacheEntity.getName().equals(ent.getName())) {
-                    found = true;
-                    break;
-                }
-            }
-            if (!found) {
-                Assert.fail();
-            }
-        }
     }
 }

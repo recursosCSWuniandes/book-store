@@ -139,7 +139,7 @@ public class BookLogicTest {
      */
     @Test
     public void getBooksTest() {
-        List<BookDTO> list = bookLogic.getBooks(null, null);
+        List<BookDTO> list = bookLogic.getBooks();
         Assert.assertEquals(data.size(), list.size());
         for (BookDTO dto : list) {
             boolean found = false;
@@ -200,69 +200,5 @@ public class BookLogicTest {
         Assert.assertEquals(dto.getIsbn(), resp.getIsbn());
         Assert.assertEquals(dto.getImage(), resp.getImage());
         Assert.assertEquals(dto.getDescription(), resp.getDescription());
-    }
-
-    /**
-     * @generated
-     */
-    @Test
-    public void getBookPaginationTest() {
-        //Page 1
-        List<BookDTO> dto1 = bookLogic.getBooks(1, 2);
-        Assert.assertNotNull(dto1);
-        Assert.assertEquals(2, dto1.size());
-        //Page 2
-        List<BookDTO> dto2 = bookLogic.getBooks(2, 2);
-        Assert.assertNotNull(dto2);
-        Assert.assertEquals(1, dto2.size());
-
-        for (BookDTO dto : dto1) {
-            boolean found = false;
-            for (BookEntity entity : data) {
-                if (dto.getId().equals(entity.getId())) {
-                    found = true;
-                }
-            }
-            Assert.assertTrue(found);
-        }
-
-        for (BookDTO dto : dto2) {
-            boolean found = false;
-            for (BookEntity entity : data) {
-                if (dto.getId().equals(entity.getId())) {
-                    found = true;
-                }
-            }
-            Assert.assertTrue(found);
-        }
-    }
-
-    /**
-     * @generated
-     */
-    @Test
-    public void findByName() {
-        String name = data.get(0).getName();
-        List<BookEntity> cache = new ArrayList<BookEntity>();
-        List<BookDTO> list = bookLogic.findByName(name);
-
-        for (BookEntity entity : data) {
-            if (entity.getName().equals(name)) {
-                cache.add(entity);
-            }
-        }
-        Assert.assertEquals(cache.size(), list.size());
-        for (BookDTO dto : list) {
-            boolean found = false;
-            for (BookEntity cacheEntity : cache) {
-                if (cacheEntity.getName().equals(dto.getName())) {
-                    found = true;
-                    break;
-                }
-            }
-            if (!found) {
-                Assert.fail();
-            }
-        }
     }
 }
