@@ -9,16 +9,24 @@
             this.readOnly = false;
             this.editMode = false;
 
+            this.changeTab = function (tab) {
+                $scope.tab = tab;
+            };
+
             var self = this;
             this.createRecord = function () {
+                $scope.$broadcast('pre-create', $scope.currentRecord);
                 this.editMode = true;
                 $scope.currentRecord = {};
+                $scope.$broadcast('post-create', $scope.currentRecord);
             };
 
             this.editRecord = function (record) {
+                $scope.$broadcast('pre-edit', $scope.currentRecord);
                 return svc.fetchRecord(record.id).then(function (response) {
                     $scope.currentRecord = response.data;
                     self.editMode = true;
+                    $scope.$broadcast('post-edit', $scope.currentRecord);
                     return response;
                 });
             };
