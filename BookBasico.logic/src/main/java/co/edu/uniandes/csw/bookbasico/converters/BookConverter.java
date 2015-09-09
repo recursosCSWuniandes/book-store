@@ -6,8 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class BookConverter {
-
-    public static BookDTO basicEntity2DTO(BookEntity entity) {
+    
+    public static BookDTO refEntity2DTO(BookEntity entity) {
         if (entity != null) {
             BookDTO dto = new BookDTO();
             dto.setId(entity.getId());
@@ -22,7 +22,28 @@ public abstract class BookConverter {
         }
     }
 
-    public static BookEntity basicDTO2Entity(BookDTO dto) {
+    public static BookEntity refDTO2Entity(BookDTO dto) {
+        if (dto != null) {
+            BookEntity entity = new BookEntity();
+            entity.setId(dto.getId());
+
+            return entity;
+        } else {
+            return null;
+        }
+    }
+
+    private static BookDTO basicEntity2DTO(BookEntity entity) {
+        if (entity != null) {
+            BookDTO dto = refEntity2DTO(entity);
+
+            return dto;
+        } else {
+            return null;
+        }
+    }
+
+    private static BookEntity basicDTO2Entity(BookDTO dto) {
         if (dto != null) {
             BookEntity entity = new BookEntity();
             entity.setId(dto.getId());
@@ -35,6 +56,18 @@ public abstract class BookConverter {
         } else {
             return null;
         }
+    }
+    
+    public static BookDTO fullEntity2DTO(BookEntity entity){
+        BookDTO dto = basicEntity2DTO(entity);
+        dto.setReviews(ReviewConverter.listEntity2DTO(entity.getReviews()));
+        return dto;
+    }
+    
+    public static BookEntity fullDTO2Entity(BookDTO dto){
+        BookEntity entity = basicDTO2Entity(dto);
+        entity.setReviews(ReviewConverter.childListDTO2Entity(dto.getReviews(), entity));
+        return entity;
     }
 
     public static List<BookDTO> listEntity2DTO(List<BookEntity> entities) {

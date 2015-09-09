@@ -19,18 +19,18 @@ public class BookLogic implements IBookLogic {
     }
 
     public BookDTO getBook(Long id) {
-        return BookConverter.basicEntity2DTO(persistence.find(id));
+        return BookConverter.fullEntity2DTO(persistence.find(id));
     }
 
     public BookDTO createBook(BookDTO dto) {
-        BookEntity entity = BookConverter.basicDTO2Entity(dto);
+        BookEntity entity = BookConverter.fullDTO2Entity(dto);
         persistence.create(entity);
-        return BookConverter.basicEntity2DTO(entity);
+        return BookConverter.fullEntity2DTO(entity);
     }
 
     public BookDTO updateBook(BookDTO dto) {
-        BookEntity entity = persistence.update(BookConverter.basicDTO2Entity(dto));
-        return BookConverter.basicEntity2DTO(entity);
+        BookEntity entity = persistence.update(BookConverter.fullDTO2Entity(dto));
+        return BookConverter.fullEntity2DTO(entity);
     }
 
     public void deleteBook(Long id) {

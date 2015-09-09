@@ -1,5 +1,6 @@
 package co.edu.uniandes.csw.bookbasico.dtos;
 
+import java.util.List;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -13,6 +14,7 @@ public class BookDTO {
     private String isbn;
     private String image;
     private String description;
+    private List<ReviewDTO> reviews;
     /**
      * @generated
      */
@@ -81,6 +83,14 @@ public class BookDTO {
      */
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public List<ReviewDTO> getReviews() {
+        return reviews;
+    }
+
+    public void setReviews(List<ReviewDTO> reviews) {
+        this.reviews = reviews;
     }
 
 }

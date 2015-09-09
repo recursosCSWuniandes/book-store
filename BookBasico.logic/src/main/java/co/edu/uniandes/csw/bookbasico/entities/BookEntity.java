@@ -1,9 +1,12 @@
 package co.edu.uniandes.csw.bookbasico.entities;
 
 import java.io.Serializable;
+import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Id;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Entity;
+import javax.persistence.OneToMany;
 
 /**
  * @generated
@@ -22,6 +25,9 @@ public class BookEntity implements Serializable {
     private String image;
 
     private String description;
+    
+    @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ReviewEntity> reviews;
 
     /**
      * @generated
@@ -91,6 +97,14 @@ public class BookEntity implements Serializable {
      */
     public void setDescription(String description){
         this.description = description;
+    }
+
+    public List<ReviewEntity> getReviews() {
+        return reviews;
+    }
+
+    public void setReviews(List<ReviewEntity> reviews) {
+        this.reviews = reviews;
     }
 
 }
