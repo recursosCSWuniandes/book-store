@@ -28,6 +28,9 @@ public class BookEntity implements Serializable {
     
     @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ReviewEntity> reviews;
+    
+    @OneToMany
+    private List<AuthorEntity> authors;
 
     /**
      * @generated
@@ -105,6 +108,14 @@ public class BookEntity implements Serializable {
 
     public void setReviews(List<ReviewEntity> reviews) {
         this.reviews = reviews;
+    }
+
+    public List<AuthorEntity> getAuthors() {
+        return authors;
+    }
+
+    public void setAuthors(List<AuthorEntity> authors) {
+        this.authors = authors;
     }
 
 }

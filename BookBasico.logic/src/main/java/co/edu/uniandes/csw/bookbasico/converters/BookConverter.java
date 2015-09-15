@@ -61,12 +61,14 @@ public abstract class BookConverter {
     public static BookDTO fullEntity2DTO(BookEntity entity){
         BookDTO dto = basicEntity2DTO(entity);
         dto.setReviews(ReviewConverter.listEntity2DTO(entity.getReviews()));
+        dto.setAuthors(AuthorConverter.listEntity2DTO(entity.getAuthors()));
         return dto;
     }
     
     public static BookEntity fullDTO2Entity(BookDTO dto){
         BookEntity entity = basicDTO2Entity(dto);
         entity.setReviews(ReviewConverter.childListDTO2Entity(dto.getReviews(), entity));
+        entity.setAuthors(AuthorConverter.listDTO2Entity(dto.getAuthors()));
         return entity;
     }
 

@@ -6,7 +6,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 /**
  * @generated
  */
-@XmlRootElement 
+@XmlRootElement
 public class BookDTO {
 
     private Long id;
@@ -15,6 +15,8 @@ public class BookDTO {
     private String image;
     private String description;
     private List<ReviewDTO> reviews;
+    private List<AuthorDTO> authors;
+
     /**
      * @generated
      */
@@ -93,4 +95,11 @@ public class BookDTO {
         this.reviews = reviews;
     }
 
+    public List<AuthorDTO> getAuthors() {
+        return authors;
+    }
+
+    public void setAuthors(List<AuthorDTO> authors) {
+        this.authors = authors;
+    }
 }
