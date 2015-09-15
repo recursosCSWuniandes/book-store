@@ -66,7 +66,7 @@
                     <input id="isbn" name="isbn" class="form-control" type="text" ng-model="currentRecord.isbn" required />
                 </div>
             </div>
-            
+
             <div class="form-group col-md-12" ng-class="{'has-success': form.image.$valid && form.image.$dirty, 'has-error': form.image.$invalid && (form.image.$dirty || form.$submitted)}" >
                 <label for="image" class="col-md-2 control-label">Image</label>
                 <div class="col-md-10">
@@ -81,8 +81,48 @@
         <li role="presentation" ng-class="{active: tab === 'reviews'}">
             <a href ng-click="ctrl.changeTab('reviews')">Reviews</a>
         </li>
+        <li role="presentation" ng-class="{active: tab === 'authors'}">
+            <a href ng-click="ctrl.changeTab('authors')">Authors</a>
+        </li>
     </ul>
     <div ng-show="tab === 'reviews'">
         <div ng-controller="reviewCtrl as ctrl" ng-include="'src/modules/review/review.tpl.html'"></div>
+    </div>
+    <div ng-show="tab === 'authors'" ng-controller="authorsCtrl as ctrl">
+        <div id="author-header">
+            <nav class="navbar navbar-default" role="navigation">
+                <div class="container-fluid">
+                    <!-- Brand and toggle get grouped for better mobile display -->
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#author-navbar">
+                            <span class="sr-only">Toggle navigation</span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </button>
+                        <a class="navbar-brand">Authors</a>
+                    </div>
+
+                    <!-- Collect the nav links, forms, and other content for toggling -->
+                    <div class="collapse navbar-collapse" id="author-navbar">
+                        <button id="select-author" class="btn btn-default navbar-btn" ng-click="ctrl.showList()"><span class="glyphicon glyphicon-check"></span> Select</button>
+                    </div>
+                </div>
+            </nav>
+        </div>
+        <div class="col-md-12">
+            <table class="table table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="record in records">
+                        <td>{{record.name}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
