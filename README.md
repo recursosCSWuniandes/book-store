@@ -17,19 +17,6 @@ La comunicación entre cliente y servidor se realiza intercambiando objetos JSON
 }
 ```
 
-###CRUD Básico
-Para los servicios de CRUD Básico, Cuando se transmite información sobre un registro específico, se realiza enviando un objeto con la estructura mencionada en la sección anterior.
-La única excepción se presenta al solicitar al servidor una lista de los registros en la base de datos, que incluye información adicional para manejar paginación de lado del servidor.
-
-La respuesta del servidor al solicitar una colección presenta el siguiente formato:
-
-```javascript
-{
-    totalRecords: 0, //cantidad de registros en la base de datos
-    records: [] //collección con los datos solicitados. cada objeto tiene la estructura de la entidad.
-}
-```
-
 ##API de la aplicación BookBasico
 ###Entidad Book
 ####CRUD Básico
@@ -42,7 +29,10 @@ En la siguiente tabla se detalla los servicios REST generados para la entidad Bo
     name: '' /*Tipo String*/,
     isbn: '' /*Tipo String*/,
     image: '' /*Tipo String*/,
-    description: '' /*Tipo String*/
+    description: '' /*Tipo String*/,
+    editorial: {} /*Tipo Object*/
+    reviews: [] /*Tipo Collection*/,
+    authors: [] /*Tipo Collection*/
 }
 ```
 #####Servicios

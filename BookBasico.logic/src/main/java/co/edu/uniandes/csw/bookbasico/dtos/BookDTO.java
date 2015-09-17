@@ -15,7 +15,7 @@ public class BookDTO {
     private String image;
     private String description;
     private List<ReviewDTO> reviews;
-    private List<AuthorDTO> authors;
+    private EditorialDTO editorial;
 
     /**
      * @generated
@@ -95,11 +95,11 @@ public class BookDTO {
         this.reviews = reviews;
     }
 
-    public List<AuthorDTO> getAuthors() {
-        return authors;
+    public EditorialDTO getEditorial() {
+        return editorial;
     }
 
-    public void setAuthors(List<AuthorDTO> authors) {
-        this.authors = authors;
+    public void setEditorial(EditorialDTO editorial) {
+        this.editorial = editorial;
     }
 }

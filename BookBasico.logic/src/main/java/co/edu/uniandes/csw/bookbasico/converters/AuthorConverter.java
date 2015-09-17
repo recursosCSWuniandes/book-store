@@ -6,24 +6,33 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class AuthorConverter {
-    public static AuthorDTO basicEntity2DTO(AuthorEntity entity){
-        AuthorDTO dto = new AuthorDTO();
-        dto.setId(entity.getId());
-        dto.setName(entity.getName());
-        
-        return dto;
+
+    public static AuthorDTO basicEntity2DTO(AuthorEntity entity) {
+        if (entity != null) {
+
+            AuthorDTO dto = new AuthorDTO();
+            dto.setId(entity.getId());
+            dto.setName(entity.getName());
+
+            return dto;
+        }
+        return null;
     }
-    
-    public static AuthorEntity basicDTO2Entity(AuthorDTO dto){
-        AuthorEntity entity = new AuthorEntity();
-        
-        entity.setId(dto.getId());
-        entity.setName(dto.getName());
-        
-        return entity;
+
+    public static AuthorEntity basicDTO2Entity(AuthorDTO dto) {
+        if (dto != null) {
+
+            AuthorEntity entity = new AuthorEntity();
+
+            entity.setId(dto.getId());
+            entity.setName(dto.getName());
+
+            return entity;
+        }
+        return null;
     }
-    
-    public static List<AuthorDTO> listEntity2DTO(List<AuthorEntity> entities){
+
+    public static List<AuthorDTO> listEntity2DTO(List<AuthorEntity> entities) {
         List<AuthorDTO> dtos = new ArrayList<AuthorDTO>();
         if (entities != null) {
             for (AuthorEntity entity : entities) {
@@ -32,8 +41,8 @@ public abstract class AuthorConverter {
         }
         return dtos;
     }
-    
-    public static List<AuthorEntity> listDTO2Entity(List<AuthorDTO> dtos){
+
+    public static List<AuthorEntity> listDTO2Entity(List<AuthorDTO> dtos) {
         List<AuthorEntity> entities = new ArrayList<AuthorEntity>();
         if (dtos != null) {
             for (AuthorDTO dto : dtos) {

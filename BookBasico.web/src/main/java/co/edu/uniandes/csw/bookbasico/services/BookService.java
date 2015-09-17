@@ -1,6 +1,7 @@
 package co.edu.uniandes.csw.bookbasico.services;
 
 import co.edu.uniandes.csw.bookbasico.api.IBookLogic;
+import co.edu.uniandes.csw.bookbasico.dtos.AuthorDTO;
 import co.edu.uniandes.csw.bookbasico.dtos.BookDTO;
 import co.edu.uniandes.csw.bookbasico.providers.StatusCreated;
 import java.util.List;
@@ -51,5 +52,35 @@ public class BookService {
     @Path("{id: \\d+}")
     public void deleteBook(@PathParam("id") Long id) {
         bookLogic.deleteBook(id);
+    }
+
+    @POST
+    @Path("{bookId: \\d+}/authors/{authorId: \\d+}")
+    public AuthorDTO addAuthor(@PathParam("bookId") Long bookId, @PathParam("authorId") Long authorId) {
+        return bookLogic.addAuthor(authorId, bookId);
+    }
+
+    @DELETE
+    @Path("{bookId: \\d+}/authors/{authorId: \\d+}")
+    public AuthorDTO deleteAuthor(@PathParam("bookId") Long bookId, @PathParam("authorId") Long authorId) {
+        return bookLogic.removeAuthor(authorId, bookId);
+    }
+
+    @PUT
+    @Path("{bookId: \\d+}/authors")
+    public void replaceAuthors(@PathParam("bookId") Long bookId, List<AuthorDTO> authors) {
+        bookLogic.replaceAuthors(authors, bookId);
+    }
+
+    @GET
+    @Path("{bookId: \\d+}/authors")
+    public List<AuthorDTO> getAuthors(@PathParam("bookId") Long bookId) {
+        return bookLogic.getAuthors(bookId);
+    }
+
+    @GET
+    @Path("{bookId: \\d+}/authors/{authorId: \\d+}")
+    public void replaceAuthors(@PathParam("bookId") Long bookId, @PathParam("authorId") Long authorId) {
+        bookLogic.getAuthor(bookId, authorId);
     }
 }

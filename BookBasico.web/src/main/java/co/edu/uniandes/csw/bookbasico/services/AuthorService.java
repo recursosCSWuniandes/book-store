@@ -2,6 +2,7 @@ package co.edu.uniandes.csw.bookbasico.services;
 
 import co.edu.uniandes.csw.bookbasico.api.IAuthorLogic;
 import co.edu.uniandes.csw.bookbasico.dtos.AuthorDTO;
+import co.edu.uniandes.csw.bookbasico.dtos.BookDTO;
 import co.edu.uniandes.csw.bookbasico.providers.StatusCreated;
 import java.util.List;
 import javax.inject.Inject;
@@ -21,35 +22,65 @@ import javax.ws.rs.core.MediaType;
 public class AuthorService {
 
     @Inject
-    private IAuthorLogic bookLogic;
+    private IAuthorLogic authorLogic;
 
     @POST
     @StatusCreated
     public AuthorDTO createAuthor(AuthorDTO dto) {
-        return bookLogic.createAuthor(dto);
+        return authorLogic.createAuthor(dto);
     }
 
     @GET
     public List<AuthorDTO> getAuthors() {
-        return bookLogic.getAuthors();
+        return authorLogic.getAuthors();
     }
 
     @GET
     @Path("{authorId: \\d+}")
     public AuthorDTO getAuthor(@PathParam("authorId") Long id) {
-        return bookLogic.getAuthor(id);
+        return authorLogic.getAuthor(id);
     }
 
     @PUT
     @Path("{authorId: \\d+}")
     public AuthorDTO updateAuthor(@PathParam("authorId") Long id, AuthorDTO dto) {
         dto.setId(id);
-        return bookLogic.updateAuthor(dto);
+        return authorLogic.updateAuthor(dto);
     }
 
     @DELETE
     @Path("{authorId: \\d+}")
     public void deleteAuthor(@PathParam("authorId") Long id) {
-        bookLogic.deleteAuthor(id);
+        authorLogic.deleteAuthor(id);
+    }
+
+    @POST
+    @Path("{authorId: \\d+}/books/{bookId: \\d+}")
+    public BookDTO addBook(@PathParam("authorId") Long authorId, @PathParam("bookId") Long bookId) {
+        return authorLogic.addBook(bookId, authorId);
+    }
+
+    @DELETE
+    @Path("{authorId: \\d+}/books/{bookId: \\d+}")
+    public BookDTO deleteBook(@PathParam("authorId") Long authorId, @PathParam("bookId") Long bookId) {
+        return authorLogic.removeBook(bookId, authorId);
+    }
+
+    @PUT
+    @Path("{authorId: \\d+}/books")
+    public void replaceBooks(@PathParam("authorId") Long authorId, List<BookDTO> books) {
+        authorLogic.replaceBooks(books, authorId);
+    }
+
+    @GET
+    @Path("{authorId: \\d+}/books")
+    public List<BookDTO> getBooks(@PathParam("authorId") Long authorId) {
+        return authorLogic.getBooks(authorId);
+    }
+
+    @GET
+    @Path("{authorId: \\d+}/books/{bookId: \\d+}")
+    public void replaceBooks(@PathParam("authorId") Long authorId, @PathParam("bookId") Long bookId) {
+        authorLogic.getBook(authorId, bookId);
     }
 }
