@@ -1,7 +1,7 @@
 (function (ng) {
-    var mod = ng.module('bookModule');
+    var mod = ng.module('editorialModule');
 
-    mod.controller('bookCtrl', ['$scope', 'bookService', 'editorialService', function ($scope, svc, editorialSvc) {
+    mod.controller('editorialCtrl', ['$scope', 'editorialService', function ($scope, svc) {
             $scope.currentRecord = {};
             $scope.records = [];
 
@@ -49,10 +49,6 @@
                     self.fetchRecords();
                 });
             };
-            
-            editorialSvc.fetchRecords().then(function(response){
-                $scope.editorials = response.data;
-            });
 
             this.fetchRecords();
         }]);

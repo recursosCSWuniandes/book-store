@@ -1,5 +1,5 @@
 (function (ng) {
-    var mod = ng.module('bookModule', ['ui.bootstrap', 'reviewModule', 'authorModule']);
+    var mod = ng.module('bookModule', ['ui.bootstrap', 'reviewModule', 'authorModule', 'editorialModule']);
 
     mod.constant('bookContext', 'webresources/books');
 

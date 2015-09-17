@@ -35,6 +35,7 @@
                     <p><strong>Name:</strong> {{record.name}}</p>
                     <p><strong>Description:</strong> {{record.description}}</p>
                     <p><strong>ISBN:</strong> {{record.isbn}}</p>
+                    <p><strong>Editorial:</strong> {{record.editorial.name}}</p>
                 </div>
                 <p class="text-center">
                     <button id="{{$parent.$index}}-edit-btn" class="btn btn-default btn-sm" ng-click="ctrl.editRecord(record)"><span class="glyphicon glyphicon-edit"></span> Edit</button>
@@ -71,6 +72,12 @@
                 <label for="image" class="col-md-2 control-label">Image</label>
                 <div class="col-md-10">
                     <input id="image" name="image" class="form-control" type="text" ng-model="currentRecord.image" required />
+                </div>
+            </div>
+            <div class="form-group col-md-12" ng-class="{'has-success': form.editorial.$valid && form.editorial.$dirty, 'has-error': form.editorial.$invalid && (form.editorial.$dirty || form.$submitted)}" >
+                <label for="editorial" class="col-md-2 control-label">Editorial</label>
+                <div class="col-md-10">
+                    <select id="editorial" name="editorial" ng-options="rc.name for rc in editorials track by rc.id" class="form-control" type="text" ng-model="currentRecord.editorial" required ></select>
                 </div>
             </div>
         </fieldset>
