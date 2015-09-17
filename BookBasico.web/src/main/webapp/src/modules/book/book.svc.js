@@ -19,5 +19,12 @@
             this.deleteRecord = function (id) {
                 return $http.delete(context + "/" + id);
             };
+            this.replaceAuthors = function (bookId, authors) {
+                return $http.put(context + "/" + bookId + "/authors", authors);
+            };
+
+            this.getAuthors = function (id) {
+                return $http.get(context + "/" + id + "/authors");
+            };
         }]);
 })(window.angular);

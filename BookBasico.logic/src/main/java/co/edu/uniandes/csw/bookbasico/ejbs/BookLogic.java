@@ -60,9 +60,10 @@ public class BookLogic implements IBookLogic {
         return null;
     }
     
-    public void replaceAuthors(List<AuthorDTO> authors, Long bookId){
+    public List<AuthorDTO> replaceAuthors(List<AuthorDTO> authors, Long bookId){
         BookEntity bookEntity = persistence.find(bookId);
         bookEntity.setAuthors(AuthorConverter.listDTO2Entity(authors));
+        return AuthorConverter.listEntity2DTO(bookEntity.getAuthors());
     }
     
     public List<AuthorDTO> getAuthors(Long bookId){

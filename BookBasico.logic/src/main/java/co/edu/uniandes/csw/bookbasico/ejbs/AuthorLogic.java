@@ -45,37 +45,38 @@ public class AuthorLogic implements IAuthorLogic{
         persistence.delete(id);
     }
     
-    public BookDTO addBook(Long BookId, Long AuthorId){
-        AuthorEntity AuthorEntity = persistence.find(AuthorId);
-        BookEntity BookEntity = bookPersistence.find(BookId);
-        AuthorEntity.getBooks().add(BookEntity);
-        return BookConverter.basicEntity2DTO(BookEntity);
+    public BookDTO addBook(Long bookId, Long authorId){
+        AuthorEntity author = persistence.find(authorId);
+        BookEntity book = bookPersistence.find(bookId);
+        author.getBooks().add(book);
+        return BookConverter.basicEntity2DTO(book);
     }
     
-    public BookDTO removeBook(Long BookId, Long AuthorId){
-        AuthorEntity AuthorEntity = persistence.find(AuthorId);
-        BookEntity Book = new BookEntity();
-        Book.setId(BookId);
-        AuthorEntity.getBooks().remove(Book);
+    public BookDTO removeBook(Long bookId, Long authorId){
+        AuthorEntity author = persistence.find(authorId);
+        BookEntity book = new BookEntity();
+        book.setId(bookId);
+        author.getBooks().remove(book);
         return null;
     }
     
-    public void replaceBooks(List<BookDTO> Books, Long AuthorId){
-        AuthorEntity AuthorEntity = persistence.find(AuthorId);
-        AuthorEntity.setBooks(BookConverter.listDTO2Entity(Books));
+    public List<BookDTO> replaceBooks(List<BookDTO> books, Long AuthorId){
+        AuthorEntity author = persistence.find(AuthorId);
+        author.setBooks(BookConverter.listDTO2Entity(books));
+        return BookConverter.listEntity2DTO(author.getBooks());
     }
     
-    public List<BookDTO> getBooks(Long AuthorId){
-        return BookConverter.listEntity2DTO(persistence.find(AuthorId).getBooks());
+    public List<BookDTO> getBooks(Long authorId){
+        return BookConverter.listEntity2DTO(persistence.find(authorId).getBooks());
     }
     
-    public BookDTO getBook(Long AuthorId, Long BookId){
-        List<BookEntity> Books = persistence.find(AuthorId).getBooks();
-        BookEntity Book = new BookEntity();
-        Book.setId(BookId);
-        int index = Books.indexOf(Book);
+    public BookDTO getBook(Long authorId, Long bookId){
+        List<BookEntity> books = persistence.find(authorId).getBooks();
+        BookEntity book = new BookEntity();
+        book.setId(bookId);
+        int index = books.indexOf(book);
         if (index >= 0) {
-            return BookConverter.basicEntity2DTO(Books.get(index));
+            return BookConverter.basicEntity2DTO(books.get(index));
         }
         return null;
     }

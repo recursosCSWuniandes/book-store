@@ -20,7 +20,7 @@ public interface IBookLogic {
 
     public AuthorDTO removeAuthor(Long authorId, Long bookId);
 
-    public void replaceAuthors(List<AuthorDTO> authors, Long bookId);
+    public List<AuthorDTO> replaceAuthors(List<AuthorDTO> authors, Long bookId);
 
     public List<AuthorDTO> getAuthors(Long bookId);
 

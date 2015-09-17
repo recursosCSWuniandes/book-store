@@ -49,11 +49,94 @@
                     self.fetchRecords();
                 });
             };
-            
-            editorialSvc.fetchRecords().then(function(response){
+
+            editorialSvc.fetchRecords().then(function (response) {
                 $scope.editorials = response.data;
             });
 
             this.fetchRecords();
+        }]);
+
+    mod.controller('authorsCtrl', ['$scope', 'authorService', '$modal', 'bookService', function ($scope, svc, $modal, bookSvc) {
+            $scope.currentRecord = {};
+            $scope.records = [];
+            $scope.refName = 'authors';
+
+            //Variables para el controlador
+            this.readOnly = false;
+            this.editMode = false;
+
+            //Escucha de evento cuando se selecciona un registro maestro
+            function onCreateOrEdit(event, args) {
+                var childName = 'authors';
+                if (args[childName] === undefined) {
+                    args[childName] = [];
+                }
+                $scope.records = [];
+                $scope.refId = args.id;
+                bookSvc.getAuthors(args.id).then(function (response) {
+                    $scope.records = response.data;
+                });
+            }
+
+            $scope.$on('post-create', onCreateOrEdit);
+            $scope.$on('post-edit', onCreateOrEdit);
+
+            this.showList = function () {
+                var modal = $modal.open({
+                    animation: true,
+                    templateUrl: 'src/modules/book/authorModal.tpl.html',
+                    controller: ['$scope', '$modalInstance', 'items', 'currentItems', function ($scope, $modalInstance, items, currentItems) {
+                            $scope.records = items.data;
+                            $scope.allChecked = false;
+
+                            function loadSelected(list, selected) {
+                                ng.forEach(selected, function (selectedValue) {
+                                    ng.forEach(list, function (listValue) {
+                                        if (listValue.id === selectedValue.id) {
+                                            listValue.selected = true;
+                                        }
+                                    });
+                                });
+                            }
+
+                            $scope.checkAll = function (flag) {
+                                this.records.forEach(function (item) {
+                                    item.selected = flag;
+                                });
+                            };
+
+                            loadSelected($scope.records, currentItems);
+
+                            function getSelectedItems() {
+                                return $scope.records.filter(function (item) {
+                                    return !!item.selected;
+                                });
+                            }
+
+                            $scope.ok = function () {
+                                $modalInstance.close(getSelectedItems());
+                            };
+
+                            $scope.cancel = function () {
+                                $modalInstance.dismiss('cancel');
+                            };
+                        }],
+                    resolve: {
+                        items: function () {
+                            return svc.fetchRecords();
+                        },
+                        currentItems: function () {
+                            return $scope.records;
+                        }
+                    }
+                });
+                modal.result.then(function (data) {
+                    bookSvc.replaceAuthors($scope.refId, data).then(function (response) {
+                        $scope.records.splice(0, $scope.records.length);
+                        $scope.records.push.apply($scope.records, response.data);
+                    });
+                });
+            };
         }]);
 })(window.angular);

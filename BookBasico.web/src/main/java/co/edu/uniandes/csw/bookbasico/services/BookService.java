@@ -68,8 +68,8 @@ public class BookService {
 
     @PUT
     @Path("{bookId: \\d+}/authors")
-    public void replaceAuthors(@PathParam("bookId") Long bookId, List<AuthorDTO> authors) {
-        bookLogic.replaceAuthors(authors, bookId);
+    public List<AuthorDTO> replaceAuthors(@PathParam("bookId") Long bookId, List<AuthorDTO> authors) {
+        return bookLogic.replaceAuthors(authors, bookId);
     }
 
     @GET
@@ -80,7 +80,7 @@ public class BookService {
 
     @GET
     @Path("{bookId: \\d+}/authors/{authorId: \\d+}")
-    public void replaceAuthors(@PathParam("bookId") Long bookId, @PathParam("authorId") Long authorId) {
+    public void getAuthor(@PathParam("bookId") Long bookId, @PathParam("authorId") Long authorId) {
         bookLogic.getAuthor(bookId, authorId);
     }
 }
