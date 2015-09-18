@@ -26,5 +26,8 @@
             this.getAuthors = function (id) {
                 return $http.get(context + "/" + id + "/authors");
             };
+            this.removeAuthor = function(bookId, authorId){
+                return $http.delete(context + "/" + bookId + "/authors/" + authorId);
+            };
         }]);
 })(window.angular);

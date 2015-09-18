@@ -82,6 +82,12 @@
             $scope.$on('post-create', onCreateOrEdit);
             $scope.$on('post-edit', onCreateOrEdit);
 
+            this.removeAuthor = function (index) {
+                bookSvc.removeAuthor($scope.refId, $scope.records[index].id).then(function () {
+                    $scope.records.splice(index, 1);
+                });
+            };
+
             this.showList = function () {
                 var modal = $modal.open({
                     animation: true,
