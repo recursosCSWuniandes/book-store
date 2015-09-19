@@ -1,10 +1,10 @@
 #API Rest
 -  [Introducción](#introducción)
--  [Estructuras JSON](#Estructuras JSON)
+-  [Estructuras JSON](#estructuras-JSON)
   - [Entidad Book](#entidad-book)
   - [Entidad Review](#entidad-review)
--  [Servicios para /books](#Servicios para /books)
--  [Servicios para /books/id/authors](#Servicios para /books/id/authors)
+-  [Servicios para /books](#servicios-para-/books)
+-  [Servicios para /books/id/authors](#servicios-para-/books/id/authors)
 
 ##Introducción
 La comunicación entre cliente y servidor se realiza intercambiando objetos JSON. Para cada entidad se hace un mapeo a JSON, donde cada uno de sus atributos se transforma en una propiedad de un objeto JSON. Todos los servicios se generan en la URL /BookBasico.web/webresources/. Por defecto, todas las entidades tienen un atributo `id`, con el cual se identifica cada registro:
