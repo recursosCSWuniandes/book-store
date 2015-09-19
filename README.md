@@ -43,16 +43,26 @@ En la siguiente tabla se detalla los servicios REST generados para la entidad Bo
     isbn: '' /*Tipo String*/,
     image: '' /*Tipo String*/,
     description: '' /*Tipo String*/
+    editorial: {} /*Tipo Object*/
+    reviews: [] /*Tipo Collection*/
+    authors: [] /*Tipo Collection*/
 }
 ```
-#####Servicios
+#####Servicios para /books
 Método|URI|Acción|Parámetros|Cuerpo|Retorno
 :--:|:--:|:--:|:--:|:--:|:--:
-**GET**|/books|Obtener todos los objetos JSON de Book (RETRIEVE)|**@QueryParam page**: página a consultar<br>**@QueryParam maxRecords**: cantidad de registros a consultar<br><br>*Si se omite alguno de estos parámetros se obtiene todos los registros en la base de datos*||Colección de objetos JSON Book y el total de registros en la base de datos en el header X-Total-Count
-**GET**|/books/:id|Obtener los atributos de una instancia de Book en formato JSON(RETRIEVE)|**@PathParam id**: Identificador del registro||Objeto JSON con detalle de la instancia de Book
-**POST**|/books|Crear una nueva instancia de la entidad Book (CREATE)||Objeto JSON de Book a crear|Objeto JSON de Book creado
-**PUT**|/books/:id|Actualiza una instancia de la entidad Book (UPDATE)|**@PathParam id**: Identificador del registro|Objeto JSON de Book|Objeto JSON de Book actualizado
-**DELETE**|/books/:id|Borra instancia de Book en el servidor (DELETE)|<strong>@PathParam id</strong>: Identificador del registro||
+**GET**|/books|Retorna todos los objetos JSON de Book (RETRIEVE). No trae ni los reviews ni los autores de los libros. Si trae la editorial.| ||Colección de objetos JSON Book.
+**GET**|/books/:id|Obtener los atributos de una instancia de Book en formato JSON(RETRIEVE). No trae la colección de autores pero si la de los reviews y la editorial.|**@PathParam id**: Identificador del registro||Objeto JSON con detalle de la instancia de Book
+**POST**|/books|Crear una nueva instancia de la entidad Book (CREATE). No recibe los autores. Recibe los reviews y la referencia a la editorial.||Objeto JSON de Book a crear|Objeto JSON de Book creado
+**PUT**|/books/:id|Actualiza una instancia de la entidad Book (UPDATE). No recibe los autores. Recibe los reviews y la referencia a la editorial.|**@PathParam id**: Identificador del registro|Objeto JSON de Book|Objeto JSON de Book actualizado
+**DELETE**|/books/:id|Borra instancia de Book en el servidor (DELETE). Borra los reviews asociados con el libro.|<strong>@PathParam id</strong>: Identificador del libro.||
+
+
+#####Servicios para /books/id/authors
+Método|URI|Acción|Parámetros|Cuerpo|Retorno
+:--:|:--:|:--:|:--:|:--:|:--:
+**GET**|/books/id/authors|Retorna la colección de autores en formato json del libro correspondiente al id del path. | |Colección de objetos JSON Author.
+
 
 [Volver arriba](#tabla-de-contenidos)
 
