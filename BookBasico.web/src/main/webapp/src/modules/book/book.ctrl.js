@@ -84,6 +84,30 @@
             $scope.currentRecord = {};
             $scope.records = [];
             $scope.refName = 'authors';
+            $scope.alerts = [];
+
+            //Alertas
+            this.closeAlert = function (index) {
+                $scope.alerts.splice(index, 1);
+            };
+
+            function showMessage(msg, type) {
+                var types = ['info', 'danger', 'warning', 'success'];
+                if (types.some(function (rc) {
+                    return type === rc;
+                })) {
+                    $scope.alerts.push({type: type, msg: msg});
+                }
+            }
+
+            this.showError = function (msg) {
+                showMessage(msg, 'danger');
+            };
+
+            var self = this;
+            function responseError(response) {
+                self.showError(response.data);
+            }
 
             //Variables para el controlador
             this.readOnly = false;
@@ -99,7 +123,7 @@
                 $scope.refId = args.id;
                 bookSvc.getAuthors(args.id).then(function (response) {
                     $scope.records = response.data;
-                });
+                }, responseError);
             }
 
             $scope.$on('post-create', onCreateOrEdit);
@@ -108,7 +132,7 @@
             this.removeAuthor = function (index) {
                 bookSvc.removeAuthor($scope.refId, $scope.records[index].id).then(function () {
                     $scope.records.splice(index, 1);
-                });
+                }, responseError);
             };
 
             this.showList = function () {
@@ -164,7 +188,7 @@
                     bookSvc.replaceAuthors($scope.refId, data).then(function (response) {
                         $scope.records.splice(0, $scope.records.length);
                         $scope.records.push.apply($scope.records, response.data);
-                    });
+                    }, responseError);
                 });
             };
         }]);

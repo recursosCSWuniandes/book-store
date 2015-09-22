@@ -4,6 +4,29 @@
     mod.controller('editorialCtrl', ['$scope', 'editorialService', function ($scope, svc) {
             $scope.currentRecord = {};
             $scope.records = [];
+            $scope.alerts = [];
+
+            //Alertas
+            this.closeAlert = function (index) {
+                $scope.alerts.splice(index, 1);
+            };
+
+            function showMessage(msg, type) {
+                var types = ['info', 'danger', 'warning', 'success'];
+                if (types.some(function (rc) {
+                    return type === rc;
+                })) {
+                    $scope.alerts.push({type: type, msg: msg});
+                }
+            }
+
+            this.showError = function (msg) {
+                showMessage(msg, 'danger');
+            };
+
+            function responseError(response) {
+                self.showError(response.data);
+            }
 
             //Variables para el controlador
             this.readOnly = false;
@@ -28,7 +51,7 @@
                     self.editMode = true;
                     $scope.$broadcast('post-edit', $scope.currentRecord);
                     return response;
-                });
+                }, responseError);
             };
 
             this.fetchRecords = function () {
@@ -37,17 +60,17 @@
                     $scope.currentRecord = {};
                     self.editMode = false;
                     return response;
-                });
+                }, responseError);
             };
             this.saveRecord = function () {
                 return svc.saveRecord($scope.currentRecord).then(function () {
                     self.fetchRecords();
-                });
+                }, responseError);
             };
             this.deleteRecord = function (record) {
                 return svc.deleteRecord(record.id).then(function () {
                     self.fetchRecords();
-                });
+                }, responseError);
             };
 
             this.fetchRecords();
