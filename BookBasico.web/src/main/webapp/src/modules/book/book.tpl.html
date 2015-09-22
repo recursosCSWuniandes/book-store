@@ -22,6 +22,7 @@
         </div>
     </nav>
 </div>
+<alert ng-repeat="alert in alerts" type="{{alert.type}}" close="ctrl.closeAlert($index)">{{alert.msg}}</alert>
 <div ng-hide="ctrl.editMode">
     <div class="col-sm-12">
         <div ng-repeat="record in records">
