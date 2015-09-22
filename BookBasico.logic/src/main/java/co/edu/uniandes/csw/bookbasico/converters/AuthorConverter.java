@@ -6,12 +6,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class AuthorConverter {
-
+ 
     /**
      * Convierte una instancia de AuthorEntity a AuthorDTO
-     * Convierte únicamente los atributos propios de la entidad
+     * Convierte Únicamente los atributos propios de la entidad y no tiene en 
+     * cuenta las relaciones con otras entidades.
      * @param entity instancia de AuthorEntity a convertir
-     * @return Instancia de AuthorDTO con los datos de entity
+     * @return Instancia de AuthorDTO con los datos básicos de entity
      */
     public static AuthorDTO basicEntity2DTO(AuthorEntity entity) {
         if (entity != null) {
@@ -27,9 +28,10 @@ public abstract class AuthorConverter {
 
     /**
      * Convierte una instancia de AuthorDTO a AuthorEntity
-     * Convierte todos los atributos propios de AuthorDTO a la entidad
+     * Convierte todos los atributos propios de AuthorDTO a la entidad y no 
+     * tiene en cuenta las relaciones con otras entidades.
      * @param dto Instancia de AuthorDTO a convertir
-     * @return Instancia de AuthorEntity con los datos de dto
+     * @return Instancia de AuthorEntity con los datos básicos de dto
      */
     public static AuthorEntity basicDTO2Entity(AuthorDTO dto) {
         if (dto != null) {
@@ -46,9 +48,10 @@ public abstract class AuthorConverter {
 
     /**
      * Convierte una colección de instancias de AuthorEntity a AuthorDTO
-     * Por cada instancia en la colección invoca basicEntity2DTO y guarda el
+     * Por cada instancia en la colección invoca basicEntity2DTO (por cada 
+     * instancia solo convierte sus atributos básicos) y guarda el
      * resultado en una nueva colección
-     * @param entities Colección de instancias de AuthorEntity
+     * @param entities Colección de instancias de AuthorEntity 
      * @return Colección de instancias de AuthorDTO
      */
     public static List<AuthorDTO> listEntity2DTO(List<AuthorEntity> entities) {
@@ -63,10 +66,11 @@ public abstract class AuthorConverter {
 
     /**
      * Convierte una colección de instancias de AuthorDTO a AuthorEntity
-     * Por cada instancia en la colección invoca basicDTO2Entity y guarda el
+     * Por cada instancia en la colección invoca basicDTO2Entity (solo los 
+     * atributos básicos) y guarda el
      * resultado en una nueva colección.
      * @param dtos Colección de instancias de AuthorDTO
-     * @return Colección de instancias de AuthorEntity
+     * @return ColecciÃ³n de instancias de AuthorEntity
      */
     public static List<AuthorEntity> listDTO2Entity(List<AuthorDTO> dtos) {
         List<AuthorEntity> entities = new ArrayList<AuthorEntity>();
