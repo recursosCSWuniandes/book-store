@@ -11,7 +11,8 @@ public class ReviewEntity implements Serializable {
 
     /**
      * La anotación @Id indica a JPA que este campo es la llave primaria de la entidad
-     * La anotación @GeneratedValue indica a JPA que el campo es autogenerado
+     * La anotación @GeneratedValue indica a JPA que el campo es generado automáticamente. 
+     * La secuencia del valor del id dependerá de "Review"
      */
     @Id
     @GeneratedValue(generator = "Review")

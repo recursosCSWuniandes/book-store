@@ -18,7 +18,8 @@ public class BookEntity implements Serializable {
 
     /**
      * La anotación @Id indica a JPA que este campo es la llave primaria de la entidad
-     * La anotación @GeneratedValue indica a JPA que el campo es autogenerado
+     * La anotación @GeneratedValue indica a JPA que el valor del campo debe ser generado 
+     * automáticamente. La secuencia del valor del id dependerá de "Book".
      */
     @Id
     @GeneratedValue(generator = "Book")
@@ -37,7 +38,7 @@ public class BookEntity implements Serializable {
      * El parámetro mappedBy indica que no es una relación nueva, sino que 
      * corresponde a una relación ya existente desde ReviewEntity.
      * El parámetro cascade indica que todas las operaciones realizadas sobre
-     * BookEntity deben propagarse a los elementos de la relación
+     * BookEntity deben propagarse a los elementos de la relación.
      * El parámetro orphanRemoval indica que se debe eliminar toda instancia
      * de ReviewEntity que no pertenezca a esta relación.
      */
@@ -51,7 +52,8 @@ public class BookEntity implements Serializable {
      * un dueño de la relación (quien crea la relación) y en la otra entidad
      * se define una relación que depende de la ya existente a través de mappedBy.
      * En este caso, BookEntity es dueño de la anotación, por lo que no se asigna
-     * el parámetro mappedBy
+     * el parámetro mappedBy pero se debe definir en el otro extremo, es decir 
+     * en la clase AuthorEntity.
      */
     @ManyToMany
     private List<AuthorEntity> authors;
