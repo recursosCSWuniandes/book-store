@@ -9,6 +9,10 @@ import javax.persistence.ManyToOne;
 @Entity
 public class ReviewEntity implements Serializable {
 
+    /**
+     * La anotación @Id indica a JPA que este campo es la llave primaria de la entidad
+     * La anotación @GeneratedValue indica a JPA que el campo es autogenerado
+     */
     @Id
     @GeneratedValue(generator = "Review")
     private Long id;
@@ -19,6 +23,13 @@ public class ReviewEntity implements Serializable {
     
     private String description;
     
+    /**
+     * Relación Muchos a uno con BookEntity
+     * Esta relación es mapeada desde BookEntity por la relación en el atributo
+     * reviews.
+     * La anotación crea una llave foránea en la base de datos que
+     * apunta a la tabla de BookEntity
+     */
     @ManyToOne
     private BookEntity book;
 

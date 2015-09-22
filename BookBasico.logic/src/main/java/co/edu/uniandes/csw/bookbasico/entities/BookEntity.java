@@ -16,6 +16,10 @@ import javax.persistence.OneToMany;
 @Entity
 public class BookEntity implements Serializable {
 
+    /**
+     * La anotación @Id indica a JPA que este campo es la llave primaria de la entidad
+     * La anotación @GeneratedValue indica a JPA que el campo es autogenerado
+     */
     @Id
     @GeneratedValue(generator = "Book")
     private Long id;
@@ -28,12 +32,34 @@ public class BookEntity implements Serializable {
 
     private String description;
 
+    /**
+     * Relación de uno a muchos hacia ReviewEntity
+     * El parámetro mappedBy indica que no es una relación nueva, sino que 
+     * corresponde a una relación ya existente desde ReviewEntity.
+     * El parámetro cascade indica que todas las operaciones realizadas sobre
+     * BookEntity deben propagarse a los elementos de la relación
+     * El parámetro orphanRemoval indica que se debe eliminar toda instancia
+     * de ReviewEntity que no pertenezca a esta relación.
+     */
     @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ReviewEntity> reviews;
 
+    /**
+     * Relación muchos a muchos con AuthorEntity
+     * En JPA existe el concepto de "dueño de la relación". Es decir, cuando 
+     * hay una relación bidireccional (navegable en ambos sentidos) se establece
+     * un dueño de la relación (quien crea la relación) y en la otra entidad
+     * se define una relación que depende de la ya existente a través de mappedBy.
+     * En este caso, BookEntity es dueño de la anotación, por lo que no se asigna
+     * el parámetro mappedBy
+     */
     @ManyToMany
     private List<AuthorEntity> authors;
     
+    /**
+     * Relación muchos a uno con EditorialEntity. Este tipo de relación crea en
+     * la tabla BookEntity una llave foránea hacia EditorialEntity.
+     */
     @ManyToOne
     private EditorialEntity editorial;
 

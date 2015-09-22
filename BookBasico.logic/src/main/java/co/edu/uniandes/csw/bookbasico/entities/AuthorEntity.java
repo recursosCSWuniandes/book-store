@@ -10,12 +10,23 @@ import javax.persistence.ManyToMany;
 @Entity
 public class AuthorEntity implements Serializable{
 
+    /**
+     * La anotación @Id indica a JPA que este campo es la llave primaria de la entidad
+     * La anotación @GeneratedValue indica a JPA que el campo es autogenerado
+     */
     @Id
     @GeneratedValue(generator = "Author")
     private Long id;
 
     private String name;
 
+    /**
+     * Relación muchos a muchos con BookEntity.
+     * Dado que la misma relación ya está definida en BookEntity, se debe
+     * agregar el parámetro mappedBy, cuyo valor es el nombre del atributo en
+     * BookEntity que define la relación. Si no se hace esto, JPA crea una nueva
+     * relación con BookEntity
+     */
     @ManyToMany(mappedBy = "authors")
     private List<BookEntity> books;
 

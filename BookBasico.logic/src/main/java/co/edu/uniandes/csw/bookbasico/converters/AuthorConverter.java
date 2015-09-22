@@ -70,7 +70,7 @@ public abstract class AuthorConverter {
      * atributos básicos) y guarda el
      * resultado en una nueva colección.
      * @param dtos Colección de instancias de AuthorDTO
-     * @return ColecciÃ³n de instancias de AuthorEntity
+     * @return Colección de instancias de AuthorEntity
      */
     public static List<AuthorEntity> listDTO2Entity(List<AuthorDTO> dtos) {
         List<AuthorEntity> entities = new ArrayList<AuthorEntity>();

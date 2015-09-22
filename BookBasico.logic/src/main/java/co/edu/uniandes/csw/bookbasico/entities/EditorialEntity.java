@@ -8,6 +8,10 @@ import javax.persistence.Id;
 @Entity
 public class EditorialEntity implements Serializable {
 
+    /**
+     * La anotación @Id indica a JPA que este campo es la llave primaria de la entidad
+     * La anotación @GeneratedValue indica a JPA que el campo es autogenerado
+     */
     @Id
     @GeneratedValue(generator = "Editorial")
     private Long id;
