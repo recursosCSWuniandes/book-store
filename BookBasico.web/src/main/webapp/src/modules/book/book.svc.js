@@ -2,13 +2,36 @@
     var mod = ng.module('bookModule');
 
     mod.service('bookService', ['$http', 'bookContext', function ($http, context) {
+            /**
+             * Obtener la lista de books.
+             * Hace una petición GET con $http a /books para obtener la lista
+             * de books
+             * @returns {promise} promise para leer la respuesta del servidor
+             */
             this.fetchRecords = function () {
                 return $http.get(context);
             };
 
+            /**
+             * Obtener un registro de books.
+             * Hace una petición GET a /books/:id para obtener
+             * los datos de un registro específico de books
+             * @param {number} id del registro a obtener
+             * @returns {promise} promise para leer la respuesta del servidor
+             */
             this.fetchRecord = function (id) {
                 return $http.get(context + "/" + id);
             };
+
+            /**
+             * Guardar un registro de books.
+             * Si currentRecord tiene la propiedad id, hace un PUT a /books/:id con los
+             * nuevos datos de la instancia de books.
+             * Si currentRecord no tiene la propiedad id, se hace un POST a /books
+             * para crear el nuevo registro de books
+             * @param {object} currentRecord instancia de book a guardar/actualizar
+             * @returns {promise} promise para leer la respuesta del servidor
+             */
             this.saveRecord = function (currentRecord) {
                 if (currentRecord.id) {
                     return $http.put(context + "/" + currentRecord.id, currentRecord);
@@ -16,17 +39,45 @@
                     return $http.post(context, currentRecord);
                 }
             };
+
+            /**
+             * Hace una petición DELETE a /books/:id para eliminar un book
+             * @param {type} id identificador de la instancia de book a eliminar
+             * @returns {promise} promise para leer la respuesta del servidor
+             */
             this.deleteRecord = function (id) {
                 return $http.delete(context + "/" + id);
             };
+
+            /**
+             * Hace una petición PUT a /books/:id/authors para reemplazar los
+             * author asociados a un book
+             * @param {number} bookId Identificador de la instancia de book
+             * @param {array} authors Colección de authors nueva
+             * @returns {promise} promise para leer la respuesta del servidor
+             */
             this.replaceAuthors = function (bookId, authors) {
                 return $http.put(context + "/" + bookId + "/authors", authors);
             };
 
+            /**
+             * Hace una petición GET a /books/:id/authors para obtener la colección
+             * de author asociados a un book
+             * @param {number} id Identificador de la instancia de book
+             * @returns {promise} promise para leer la respuesta del servidor
+             */
             this.getAuthors = function (id) {
                 return $http.get(context + "/" + id + "/authors");
             };
-            this.removeAuthor = function(bookId, authorId){
+            
+            /**
+             * Hace una petición DELETE a /books/:id/authors/:id para remover
+             * un author de un book
+             * @param {number} bookId Identificador de la instancia de book
+             * @param {number} authorId Identificador de la instancia de author
+             * @returns {promise} promise para leer la respuesta del servidor
+             */
+            this.removeAuthor = function (bookId, authorId) {
                 return $http.delete(context + "/" + bookId + "/authors/" + authorId);
             };
         }]);
