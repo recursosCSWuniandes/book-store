@@ -42,7 +42,7 @@
 
             /**
              * Hace una petición DELETE a /books/:id para eliminar un book
-             * @param {type} id identificador de la instancia de book a eliminar
+             * @param {number} id identificador de la instancia de book a eliminar
              * @returns {promise} promise para leer la respuesta del servidor
              */
             this.deleteRecord = function (id) {
