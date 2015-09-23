@@ -2,6 +2,7 @@ package co.edu.uniandes.csw.bookbasico.dtos;
 
 import java.util.List;
 import javax.xml.bind.annotation.XmlRootElement;
+import uk.co.jemos.podam.common.PodamExclude;
 
 /**
  * @generated
@@ -14,7 +15,9 @@ public class BookDTO {
     private String isbn;
     private String image;
     private String description;
+    @PodamExclude
     private List<ReviewDTO> reviews;
+    @PodamExclude
     private EditorialDTO editorial;
 
     /**
