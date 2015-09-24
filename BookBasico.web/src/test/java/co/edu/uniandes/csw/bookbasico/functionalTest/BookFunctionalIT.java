@@ -44,12 +44,12 @@ public class BookFunctionalIT {
 
     public static String URLRESOURCES = "src/main/webapp";
     public static WebDriver driver;
-    // Mediante la anotación @ArquillianResource se obtiene la URL de despliegue de la aplicación
+    // Mediante la anotacion @ArquillianResource se obtiene la URL de despliegue de la aplicacion
     @ArquillianResource
     URL deploymentURL;
 
     /**
-     * Metodo que crea el empaquetamiento y el despliegue de la aplicación
+     * Metodo que crea el empaquetamiento y el despliegue de la aplicacion
      * BookBasico
      *
      * @return Archive - war
@@ -61,17 +61,17 @@ public class BookFunctionalIT {
         WebArchive war = ShrinkWrap
                 // Nombre del Proyecto "SportClub.service" seguido de ".war". Debe ser el mismo nombre del proyecto web que contiene los javascript y los  servicios Rest
                 .create(WebArchive.class, "BookBasico.web.war")
-                // Se agrega la dependencia a la lógica con el nombre groupid:artefactid:version (GAV)
+                // Se agrega la dependencia a la logica con el nombre groupid:artefactid:version (GAV)
                 .addAsLibraries(resolver.artifact("co.edu.uniandes.csw.bookbasico:BookBasico.logic:1.0")
                         .resolveAsFiles())
                 // Se agregan los compilados de los paquetes que se van a probar
                 .addPackage(BookService.class.getPackage())
-                // Se agrega contenido estatico: html y módulos de javascript. 
+                // Se agrega contenido estatico: html y modulos de javascript. 
                 .addAsWebResource(new File(URLRESOURCES, "index.html"))
                 .merge(ShrinkWrap.create(GenericArchive.class).as(ExplodedImporter.class).importDirectory(URLRESOURCES + "/src/").as(GenericArchive.class), "/src/", Filters.includeAll())
                 // El archivo que contiene la configuracion a la base de datos. 
                 .addAsResource("META-INF/persistence.xml", "META-INF/persistence.xml")
-                // El archivo beans.xml es necesario para injección de dependencias. 
+                // El archivo beans.xml es necesario para injeccion de dependencias. 
                 .addAsWebInfResource(new File("src/main/webapp/WEB-INF/beans.xml"))
                 // El archivo web.xml es necesario para el despliegue de los servlets
                 .setWebXML(new File("src/main/webapp/WEB-INF/web.xml"));
@@ -81,19 +81,19 @@ public class BookFunctionalIT {
 
     @BeforeClass
     public static void setUp() {
-        // Crea una instancia del driver de firefox sobre el que se ejecutara la aplicación.
+        // Crea una instancia del driver de firefox sobre el que se ejecutara la aplicacion.
         driver = new FirefoxDriver();
     }
 
     @Before
     public void setUpTest() {
-        // El browser  a esta url. Se ejecuta al inicar cada uno de los métodos de prueba indicados con @Test
+        // El browser  a esta url. Se ejecuta al inicar cada uno de los metodos de prueba indicados con @Test
         driver.get(deploymentURL.toString());
     }
 
     @AfterClass
     public static void tearDown() throws Exception {
-        //Se ejecuta al terminar todos los métodos de prueba indicados con @Test Cierra el browser
+        //Se ejecuta al terminar todos los metodos de prueba indicados con @Test Cierra el browser
         driver.quit();
     }
 
@@ -112,9 +112,9 @@ public class BookFunctionalIT {
         driver.findElement(By.id("create-book")).click();
         Thread.sleep(2000);
         driver.findElement(By.id("name")).clear();
-        driver.findElement(By.id("name")).sendKeys("Cien años de Soledad");
+        driver.findElement(By.id("name")).sendKeys("Cien aï¿½os de Soledad");
         driver.findElement(By.id("description")).clear();
-        driver.findElement(By.id("description")).sendKeys("Realismo mágico");
+        driver.findElement(By.id("description")).sendKeys("Realismo mï¿½gico");
         driver.findElement(By.id("isbn")).clear();
         driver.findElement(By.id("isbn")).sendKeys("1025789845-13");
         driver.findElement(By.id("image")).clear();
@@ -125,7 +125,7 @@ public class BookFunctionalIT {
         for (WebElement book : books) {
             WebElement image = book.findElement(By.xpath("//img[contains(@ng-src,'http://image.casadellibro.com/a/l/t0/08/9788497592208.jpg')]"));
             List<WebElement> captions = book.findElements(By.xpath("//div[contains(@class, 'caption')]/p"));
-            if (captions.get(0).getText().contains("Cien años de Soledad") && captions.get(1).getText().contains("Realismo mágico")
+            if (captions.get(0).getText().contains("Cien aï¿½os de Soledad") && captions.get(1).getText().contains("Realismo mï¿½gico")
                     && captions.get(2).getText().contains("1025789845-13") && image.isDisplayed()) {
                 success = true;
             }
