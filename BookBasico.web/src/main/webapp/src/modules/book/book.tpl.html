@@ -89,14 +89,14 @@
         <li role="presentation" ng-class="{active: tab === 'reviews'}">
             <a href ng-click="ctrl.changeTab('reviews')">Reviews</a>
         </li>
-        <li role="presentation" ng-class="{active: tab === 'authors'}">
+        <li ng-show="currentRecord.id" role="presentation" ng-class="{active: tab === 'authors'}">
             <a href ng-click="ctrl.changeTab('authors')">Authors</a>
         </li>
     </ul>
     <div ng-show="tab === 'reviews'">
         <div ng-controller="reviewCtrl as ctrl" ng-include="'src/modules/review/review.tpl.html'"></div>
     </div>
-    <div ng-show="tab === 'authors'" ng-controller="authorsCtrl as ctrl">
+    <div ng-show="tab === 'authors' && refId" ng-controller="authorsCtrl as ctrl">
         <div id="author-header">
             <nav class="navbar navbar-default" role="navigation">
                 <div class="container-fluid">

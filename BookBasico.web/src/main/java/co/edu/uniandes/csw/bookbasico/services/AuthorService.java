@@ -62,8 +62,8 @@ public class AuthorService {
 
     @DELETE
     @Path("{authorId: \\d+}/books/{bookId: \\d+}")
-    public BookDTO deleteBook(@PathParam("authorId") Long authorId, @PathParam("bookId") Long bookId) {
-        return authorLogic.removeBook(bookId, authorId);
+    public void deleteBook(@PathParam("authorId") Long authorId, @PathParam("bookId") Long bookId) {
+        authorLogic.removeBook(bookId, authorId);
     }
 
     @PUT

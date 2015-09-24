@@ -18,7 +18,7 @@ public interface IBookLogic {
 
     public AuthorDTO addAuthor(Long authorId, Long bookId);
 
-    public AuthorDTO removeAuthor(Long authorId, Long bookId);
+    public void removeAuthor(Long authorId, Long bookId);
 
     public List<AuthorDTO> replaceAuthors(List<AuthorDTO> authors, Long bookId);
 

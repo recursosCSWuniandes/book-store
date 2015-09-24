@@ -1,6 +1,7 @@
 package co.edu.uniandes.csw.bookbasico.ejbs;
 
 import co.edu.uniandes.csw.bookbasico.api.IAuthorLogic;
+import co.edu.uniandes.csw.bookbasico.api.IBookLogic;
 import co.edu.uniandes.csw.bookbasico.converters.AuthorConverter;
 import co.edu.uniandes.csw.bookbasico.converters.BookConverter;
 import co.edu.uniandes.csw.bookbasico.dtos.AuthorDTO;
@@ -14,11 +15,14 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 
 @Stateless
-public class AuthorLogic implements IAuthorLogic{
+public class AuthorLogic implements IAuthorLogic {
 
     @Inject
     private AuthorPersistence persistence;
-    
+
+    @Inject
+    IBookLogic bookLogic;
+
     @Inject
     private BookPersistence bookPersistence;
 
@@ -44,33 +48,39 @@ public class AuthorLogic implements IAuthorLogic{
     public void deleteAuthor(Long id) {
         persistence.delete(id);
     }
-    
-    public BookDTO addBook(Long bookId, Long authorId){
-        AuthorEntity author = persistence.find(authorId);
+
+    public BookDTO addBook(Long bookId, Long authorId) {
+        bookLogic.addAuthor(authorId, bookId);
         BookEntity book = bookPersistence.find(bookId);
-        author.getBooks().add(book);
         return BookConverter.basicEntity2DTO(book);
     }
-    
-    public BookDTO removeBook(Long bookId, Long authorId){
-        AuthorEntity author = persistence.find(authorId);
-        BookEntity book = new BookEntity();
-        book.setId(bookId);
-        author.getBooks().remove(book);
-        return null;
+
+    public void removeBook(Long bookId, Long authorId) {
+        bookLogic.removeAuthor(authorId, bookId);
     }
-    
-    public List<BookDTO> replaceBooks(List<BookDTO> books, Long AuthorId){
+
+    public List<BookDTO> replaceBooks(List<BookDTO> books, Long AuthorId) {
+        List<BookEntity> bookList = bookPersistence.findAll();
+        List<BookEntity> newBookList = BookConverter.listDTO2Entity(books);
         AuthorEntity author = persistence.find(AuthorId);
-        author.setBooks(BookConverter.listDTO2Entity(books));
+        for (BookEntity book : bookList) {
+            if (newBookList.contains(book)) {
+                if (!book.getAuthors().contains(author)) {
+                    bookLogic.addAuthor(AuthorId, book.getId());
+                }
+            } else {
+                bookLogic.removeAuthor(AuthorId, book.getId());
+            }
+        }
+        author.setBooks(newBookList);
         return BookConverter.listEntity2DTO(author.getBooks());
     }
-    
-    public List<BookDTO> getBooks(Long authorId){
+
+    public List<BookDTO> getBooks(Long authorId) {
         return BookConverter.listEntity2DTO(persistence.find(authorId).getBooks());
     }
-    
-    public BookDTO getBook(Long authorId, Long bookId){
+
+    public BookDTO getBook(Long authorId, Long bookId) {
         List<BookEntity> books = persistence.find(authorId).getBooks();
         BookEntity book = new BookEntity();
         book.setId(bookId);

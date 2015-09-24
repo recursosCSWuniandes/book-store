@@ -62,6 +62,6 @@ public class AuthorEntity implements Serializable{
 
     @Override
     public boolean equals(Object obj) {
-        return this.getId().equals(obj); //To change body of generated methods, choose Tools | Templates.
+        return this.getId().equals(((AuthorEntity)obj).getId()); //To change body of generated methods, choose Tools | Templates.
     }
 }
