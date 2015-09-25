@@ -5,6 +5,7 @@
  */
 package co.edu.uniandes.csw.bookbasico.api;
 
+import co.edu.uniandes.csw.bookbasico.dtos.BookDTO;
 import co.edu.uniandes.csw.bookbasico.dtos.EditorialDTO;
 import java.util.List;
 
@@ -23,5 +24,14 @@ public interface IEditorialLogic {
     public EditorialDTO updateEditorial(EditorialDTO dto);
 
     public void deleteEditorial(Long id);
+    
+    public BookDTO addBook(Long bookId, Long editorialId);
 
+    public void removeBook(Long bookId, Long editorialId);
+
+    public List<BookDTO> replaceBooks(List<BookDTO> books, Long editorialId);
+
+    public List<BookDTO> getBooks(Long editorialId);
+
+    public BookDTO getBook(Long editorialId, Long bookId);
 }

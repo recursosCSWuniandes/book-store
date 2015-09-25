@@ -1,6 +1,7 @@
 package co.edu.uniandes.csw.bookbasico.services;
 
 import co.edu.uniandes.csw.bookbasico.api.IEditorialLogic;
+import co.edu.uniandes.csw.bookbasico.dtos.BookDTO;
 import co.edu.uniandes.csw.bookbasico.dtos.EditorialDTO;
 import co.edu.uniandes.csw.bookbasico.providers.StatusCreated;
 import java.util.List;
@@ -51,5 +52,35 @@ public class EditorialService {
     @Path("{id: \\d+}")
     public void deleteEditorial(@PathParam("id") Long id) {
         editorialLogic.deleteEditorial(id);
+    }
+
+    @POST
+    @Path("{editorialId: \\d+}/books/{bookId: \\d+}")
+    public BookDTO addBook(@PathParam("editorialId") Long editorialId, @PathParam("bookId") Long bookId) {
+        return editorialLogic.addBook(bookId, editorialId);
+    }
+
+    @DELETE
+    @Path("{editorialId: \\d+}/books/{bookId: \\d+}")
+    public void deleteBook(@PathParam("editorialId") Long editorialId, @PathParam("bookId") Long bookId) {
+        editorialLogic.removeBook(bookId, editorialId);
+    }
+
+    @PUT
+    @Path("{editorialId: \\d+}/books")
+    public List<BookDTO> replaceBooks(@PathParam("editorialId") Long editorialId, List<BookDTO> books) {
+        return editorialLogic.replaceBooks(books, editorialId);
+    }
+
+    @GET
+    @Path("{editorialId: \\d+}/books")
+    public List<BookDTO> getBooks(@PathParam("editorialId") Long editorialId) {
+        return editorialLogic.getBooks(editorialId);
+    }
+
+    @GET
+    @Path("{editorialId: \\d+}/books/{bookId: \\d+}")
+    public void getBook(@PathParam("editorialId") Long editorialId, @PathParam("bookId") Long bookId) {
+        editorialLogic.getBook(editorialId, bookId);
     }
 }
