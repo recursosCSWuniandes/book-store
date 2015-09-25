@@ -106,9 +106,8 @@ public class BookFunctionalIT {
     @Test
     @RunAsClient
     public void t1createBook() throws InterruptedException {
-        Thread.sleep(1500);
         boolean success = false;
-        Thread.sleep(200);
+        Thread.sleep(2500);
         driver.findElement(By.id("create-book")).click();
         Thread.sleep(3000);
         driver.findElement(By.id("name")).clear();
