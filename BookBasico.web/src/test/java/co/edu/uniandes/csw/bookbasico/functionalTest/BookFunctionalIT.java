@@ -108,11 +108,11 @@ public class BookFunctionalIT {
     public void t1createBook() throws InterruptedException {
         Thread.sleep(1500);
         boolean success = false;
-        Thread.sleep(3000);
+        Thread.sleep(200);
         driver.findElement(By.id("create-book")).click();
-        Thread.sleep(2000);
+        Thread.sleep(3000);
         driver.findElement(By.id("name")).clear();
-        driver.findElement(By.id("name")).sendKeys("Cien años de Soledad");
+        driver.findElement(By.id("name")).sendKeys("Cien anos de Soledad");
         driver.findElement(By.id("description")).clear();
         driver.findElement(By.id("description")).sendKeys("Realismo magico");
         driver.findElement(By.id("isbn")).clear();
@@ -125,7 +125,7 @@ public class BookFunctionalIT {
         for (WebElement book : books) {
             WebElement image = book.findElement(By.xpath("//img[contains(@ng-src,'http://image.casadellibro.com/a/l/t0/08/9788497592208.jpg')]"));
             List<WebElement> captions = book.findElements(By.xpath("//div[contains(@class, 'caption')]/p"));
-            if (captions.get(0).getText().contains("Cien años de Soledad") && captions.get(1).getText().contains("Realismo magico")
+            if (captions.get(0).getText().contains("Cien anos de Soledad") && captions.get(1).getText().contains("Realismo magico")
                     && captions.get(2).getText().contains("1025789845-13") && image.isDisplayed()) {
                 success = true;
             }
