@@ -9,6 +9,7 @@ import javax.persistence.Query;
 
 @Stateless
 public class AuthorPersistence {
+
     @PersistenceContext(unitName = "BookBasicoPU")
     protected EntityManager em;
 
@@ -32,6 +33,12 @@ public class AuthorPersistence {
 
     public List<AuthorEntity> findAll() {
         Query q = em.createQuery("select u from AuthorEntity u");
+        return q.getResultList();
+    }
+
+    public List<AuthorEntity> findByEditorial(Long editorialId) {
+        Query q = em.createNamedQuery("AuthorEntity.findByEditorial");
+        q.setParameter("editorial_id", editorialId);
         return q.getResultList();
     }
 }

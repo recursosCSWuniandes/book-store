@@ -80,5 +80,15 @@
             this.removeBook = function (editorialId, bookId) {
                 return $http.delete(context + "/" + editorialId + "/books/" + bookId);
             };
+            
+            /**
+             * Hace una petición GET a /editorials/:id/authors para obtener la colección
+             * de author asociados a un editorial
+             * @param {number} id Identificador de la instancia de editorial
+             * @returns {promise} promise para leer la respuesta del servidor
+             */
+            this.getAuthors = function (id) {
+                return $http.get(context + "/" + id + "/authors");
+            };
         }]);
 })(window.angular);

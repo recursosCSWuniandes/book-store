@@ -1,6 +1,8 @@
 package co.edu.uniandes.csw.bookbasico.services;
 
+import co.edu.uniandes.csw.bookbasico.api.IAuthorLogic;
 import co.edu.uniandes.csw.bookbasico.api.IEditorialLogic;
+import co.edu.uniandes.csw.bookbasico.dtos.AuthorDTO;
 import co.edu.uniandes.csw.bookbasico.dtos.BookDTO;
 import co.edu.uniandes.csw.bookbasico.dtos.EditorialDTO;
 import co.edu.uniandes.csw.bookbasico.providers.StatusCreated;
@@ -23,6 +25,9 @@ public class EditorialService {
 
     @Inject
     private IEditorialLogic editorialLogic;
+    
+    @Inject
+    private IAuthorLogic authorLogic;
 
     @POST
     @StatusCreated
@@ -82,5 +87,11 @@ public class EditorialService {
     @Path("{editorialId: \\d+}/books/{bookId: \\d+}")
     public void getBook(@PathParam("editorialId") Long editorialId, @PathParam("bookId") Long bookId) {
         editorialLogic.getBook(editorialId, bookId);
+    }
+    
+    @GET
+    @Path("{editorialId: \\d+}/authors")
+    public List<AuthorDTO> getAuthors(@PathParam("editorialId") Long editorialId) {
+        return authorLogic.findByEditorial(editorialId);
     }
 }

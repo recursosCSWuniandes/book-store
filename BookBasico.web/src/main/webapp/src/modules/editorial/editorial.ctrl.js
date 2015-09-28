@@ -188,4 +188,48 @@
                 });
             };
         }]);
+    
+    mod.controller('editorialAuthorsCtrl', ['$scope', 'editorialService', function ($scope, editorialSvc) {
+            $scope.currentRecord = {};
+            $scope.records = [];
+            $scope.alerts = [];
+
+            //Alertas
+            this.closeAlert = function (index) {
+                $scope.alerts.splice(index, 1);
+            };
+
+            function showMessage(msg, type) {
+                var types = ['info', 'danger', 'warning', 'success'];
+                if (types.some(function (rc) {
+                    return type === rc;
+                })) {
+                    $scope.alerts.push({type: type, msg: msg});
+                }
+            }
+
+            this.showError = function (msg) {
+                showMessage(msg, 'danger');
+            };
+
+            var self = this;
+            function responseError(response) {
+                self.showError(response.data);
+            }
+
+            //Variables para el controlador
+            this.editMode = false;
+
+            //Escucha de evento cuando se selecciona un registro maestro
+            function onCreateOrEdit(event, args) {
+                $scope.records = [];
+                $scope.refId = args.id;
+                editorialSvc.getAuthors(args.id).then(function (response) {
+                    $scope.records = response.data;
+                }, responseError);
+            }
+
+            $scope.$on('post-create', onCreateOrEdit);
+            $scope.$on('post-edit', onCreateOrEdit);
+        }]);
 })(window.angular);

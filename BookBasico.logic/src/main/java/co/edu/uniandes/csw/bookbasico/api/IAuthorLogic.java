@@ -25,4 +25,6 @@ public interface IAuthorLogic {
     public List<BookDTO> getBooks(Long AuthorId);
     
     public BookDTO getBook(Long AuthorId, Long BookId);
+    
+    public List<AuthorDTO> findByEditorial(Long editorialId);
 }

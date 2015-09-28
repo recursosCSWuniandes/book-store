@@ -90,4 +90,8 @@ public class AuthorLogic implements IAuthorLogic {
         }
         return null;
     }
+    
+    public List<AuthorDTO> findByEditorial(Long editorialId){
+        return AuthorConverter.listEntity2DTO(persistence.findByEditorial(editorialId));
+    }
 }
