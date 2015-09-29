@@ -93,9 +93,11 @@
             <a href ng-click="ctrl.changeTab('authors')">Authors</a>
         </li>
     </ul>
+    <!-- Aquí incluye el template del módulo de reviews e indica el controlador correspondiente reviewCtrl-->
     <div ng-show="tab === 'reviews'">
         <div ng-controller="reviewCtrl as ctrl" ng-include="'src/modules/review/review.tpl.html'"></div>
     </div>
+     <!-- Aquí se necesita el template de la selección de los autores al libro -->
     <div ng-show="tab === 'authors' && refId" ng-controller="authorsCtrl as ctrl">
         <div id="author-header">
             <nav class="navbar navbar-default" role="navigation">
