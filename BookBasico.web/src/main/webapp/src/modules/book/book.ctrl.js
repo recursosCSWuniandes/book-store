@@ -1,7 +1,7 @@
 (function (ng) {
     var mod = ng.module('bookModule');
 
-    mod.controller('bookCtrl', ['$scope', 'bookService', 'editorialService', function ($scope, svc, editorialSvc) {
+    mod.controller('bookCtrl', ['$scope', 'bookService', 'editorialService', 'authorService', '$modal', function ($scope, svc, editorialSvc, authorSvc, $modal) {
             $scope.currentRecord = {};
             $scope.records = [];
             $scope.alerts = [];
@@ -76,6 +76,62 @@
             editorialSvc.fetchRecords().then(function (response) {
                 $scope.editorials = response.data;
             });
+            
+            this.selectAuthors = function (book) {
+                var modal = $modal.open({
+                    animation: true,
+                    templateUrl: 'src/modules/book/authorModal.tpl.html',
+                    controller: ['$scope', '$modalInstance', 'items', 'currentItems', function ($scope, $modalInstance, items, currentItems) {
+                            $scope.records = items.data;
+                            $scope.allChecked = false;
+
+                            function loadSelected(list, selected) {
+                                ng.forEach(selected, function (selectedValue) {
+                                    ng.forEach(list, function (listValue) {
+                                        if (listValue.id === selectedValue.id) {
+                                            listValue.selected = true;
+                                        }
+                                    });
+                                });
+                            }
+
+                            $scope.checkAll = function (flag) {
+                                this.records.forEach(function (item) {
+                                    item.selected = flag;
+                                });
+                            };
+
+                            loadSelected($scope.records, currentItems);
+
+                            function getSelectedItems() {
+                                return $scope.records.filter(function (item) {
+                                    return !!item.selected;
+                                });
+                            }
+
+                            $scope.ok = function () {
+                                $modalInstance.close(getSelectedItems());
+                            };
+
+                            $scope.cancel = function () {
+                                $modalInstance.dismiss('cancel');
+                            };
+                        }],
+                    resolve: {
+                        items: function () {
+                            return authorSvc.fetchRecords();
+                        },
+                        currentItems: function () {
+                            return svc.getAuthors(book.id);
+                        }
+                    }
+                });
+                modal.result.then(function (data) {
+                    svc.replaceAuthors(book.id, data).then(function () {
+                        self.showSuccess('Autores actualizados');
+                    }, responseError);
+                });
+            };
 
             this.fetchRecords();
         }]);
@@ -133,63 +189,6 @@
                 bookSvc.removeAuthor($scope.refId, $scope.records[index].id).then(function () {
                     $scope.records.splice(index, 1);
                 }, responseError);
-            };
-
-            this.showList = function () {
-                var modal = $modal.open({
-                    animation: true,
-                    templateUrl: 'src/modules/book/authorModal.tpl.html',
-                    controller: ['$scope', '$modalInstance', 'items', 'currentItems', function ($scope, $modalInstance, items, currentItems) {
-                            $scope.records = items.data;
-                            $scope.allChecked = false;
-
-                            function loadSelected(list, selected) {
-                                ng.forEach(selected, function (selectedValue) {
-                                    ng.forEach(list, function (listValue) {
-                                        if (listValue.id === selectedValue.id) {
-                                            listValue.selected = true;
-                                        }
-                                    });
-                                });
-                            }
-
-                            $scope.checkAll = function (flag) {
-                                this.records.forEach(function (item) {
-                                    item.selected = flag;
-                                });
-                            };
-
-                            loadSelected($scope.records, currentItems);
-
-                            function getSelectedItems() {
-                                return $scope.records.filter(function (item) {
-                                    return !!item.selected;
-                                });
-                            }
-
-                            $scope.ok = function () {
-                                $modalInstance.close(getSelectedItems());
-                            };
-
-                            $scope.cancel = function () {
-                                $modalInstance.dismiss('cancel');
-                            };
-                        }],
-                    resolve: {
-                        items: function () {
-                            return svc.fetchRecords();
-                        },
-                        currentItems: function () {
-                            return $scope.records;
-                        }
-                    }
-                });
-                modal.result.then(function (data) {
-                    bookSvc.replaceAuthors($scope.refId, data).then(function (response) {
-                        $scope.records.splice(0, $scope.records.length);
-                        $scope.records.push.apply($scope.records, response.data);
-                    }, responseError);
-                });
             };
         }]);
 })(window.angular);
