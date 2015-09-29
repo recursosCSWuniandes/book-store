@@ -41,6 +41,7 @@
                 <p class="text-center">
                     <button id="{{$index}}-edit-btn" class="btn btn-default btn-sm" ng-click="ctrl.editRecord(record)"><span class="glyphicon glyphicon-edit"></span> Edit</button>
                     <button id="{{$index}}-delete-btn" class="btn btn-default btn-sm" ng-click="ctrl.deleteRecord(record)"><span class="glyphicon glyphicon-minus"></span> Remove</button>
+                    <button id="select-author" class="btn btn-default navbar-btn" ng-click="ctrl.selectAuthors(record)"><span class="glyphicon glyphicon-check"></span> Select authors</button>
                 </p>
             </div>
         </div>
@@ -113,7 +114,7 @@
 
                     <!-- Collect the nav links, forms, and other content for toggling -->
                     <div class="collapse navbar-collapse" id="author-navbar">
-                        <button id="select-author" class="btn btn-default navbar-btn" ng-click="ctrl.showList()"><span class="glyphicon glyphicon-check"></span> Select</button>
+                        
                     </div>
                 </div>
             </nav>
