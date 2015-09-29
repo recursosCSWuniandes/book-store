@@ -37,6 +37,7 @@
                     <p><strong>Description:</strong> {{record.description}}</p>
                     <p><strong>ISBN:</strong> {{record.isbn}}</p>
                     <p><strong>Editorial:</strong> {{record.editorial.name}}</p>
+                    <p><strong>Authors: </strong><span ng-repeat="author in record.authors">{{author.name}}{{$last?'':', '}}</span></p>
                 </div>
                 <p class="text-center">
                     <button id="{{$index}}-edit-btn" class="btn btn-default btn-sm" ng-click="ctrl.editRecord(record)"><span class="glyphicon glyphicon-edit"></span> Edit</button>
@@ -94,33 +95,12 @@
             <a href ng-click="ctrl.changeTab('authors')">Authors</a>
         </li>
     </ul>
-    <!-- Aquí incluye el template del módulo de reviews e indica el controlador correspondiente reviewCtrl-->
+    <!-- Aquï¿½ incluye el template del mï¿½dulo de reviews e indica el controlador correspondiente reviewCtrl-->
     <div ng-show="tab === 'reviews'">
         <div ng-controller="reviewCtrl as ctrl" ng-include="'src/modules/review/review.tpl.html'"></div>
     </div>
-     <!-- Aquí se necesita el template de la selección de los autores al libro -->
+     <!-- Aquï¿½ se necesita el template de la selecciï¿½n de los autores al libro -->
     <div ng-show="tab === 'authors' && refId" ng-controller="authorsCtrl as ctrl">
-        <div id="author-header">
-            <nav class="navbar navbar-default" role="navigation">
-                <div class="container-fluid">
-                    <!-- Brand and toggle get grouped for better mobile display -->
-                    <div class="navbar-header">
-                        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#author-navbar">
-                            <span class="sr-only">Toggle navigation</span>
-                            <span class="icon-bar"></span>
-                            <span class="icon-bar"></span>
-                            <span class="icon-bar"></span>
-                        </button>
-                        <a class="navbar-brand">Authors</a>
-                    </div>
-
-                    <!-- Collect the nav links, forms, and other content for toggling -->
-                    <div class="collapse navbar-collapse" id="author-navbar">
-                        
-                    </div>
-                </div>
-            </nav>
-        </div>
         <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="ctrl.closeAlert($index)">{{alert.msg}}</alert>
         <div class="col-md-12">
             <table class="table table-striped table-bordered">

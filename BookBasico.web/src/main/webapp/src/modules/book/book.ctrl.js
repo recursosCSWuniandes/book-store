@@ -24,7 +24,7 @@
                 showMessage(msg, 'danger');
             };
 
-            this.showSuccess = function(msg){
+            this.showSuccess = function (msg) {
                 showMessage(msg, 'success');
             };
 
@@ -63,6 +63,11 @@
                     $scope.records = response.data;
                     $scope.currentRecord = {};
                     self.editMode = false;
+                    ng.forEach(response.data, function (value, key) {
+                        svc.getAuthors(value.id).then(function (response) {
+                            value.authors = response.data;
+                        });
+                    });
                     return response;
                 }, responseError);
             };
@@ -80,7 +85,7 @@
             editorialSvc.fetchRecords().then(function (response) {
                 $scope.editorials = response.data;
             });
-            
+
             this.selectAuthors = function (book) {
                 var modal = $modal.open({
                     animation: true,
@@ -99,13 +104,13 @@
                                 });
                             }
 
+                            loadSelected($scope.records, currentItems);
+
                             $scope.checkAll = function (flag) {
                                 this.records.forEach(function (item) {
                                     item.selected = flag;
                                 });
                             };
-
-                            loadSelected($scope.records, currentItems);
 
                             function getSelectedItems() {
                                 return $scope.records.filter(function (item) {
