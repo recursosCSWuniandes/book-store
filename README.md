@@ -74,7 +74,7 @@ Método|URI|Acción|Parámetros|Cuerpo|Retorno
 ##Servicios para /books/id/authors
 Método|URI|Acción|Parámetros|Cuerpo|Retorno
 :--:|:--:|:--:|:--:|:--:|:--:
-**GET**|/books/id/authors|Retorna para el libro correspondiente al id del path, la colección de autores en formato json. | |Colección de objetos JSON Author.
+**GET**|/books/id/authors|Retorna para el libro correspondiente al id del path, la colección de autores en formato json. |**@PathParam id** Identificador del libro |Colección de objetos JSON Author.
 **POST**|/books/id/authors|NO EXISTE | |
 **POST**|/books/id1/authors/id2|Asocia el autor id2 en la colección de autores del book id1|**@PathParam id1** Identificador del libro y *@PathParam id2**: Identificador del autor| |
 **DELETE**|/books/id1/authors/id2|ELimina la asociación del autor identificado con id2 en la colección de autores del book id1|**@PathParam id1** Identificador del libro y *@PathParam id2**: Identificador del autor|
