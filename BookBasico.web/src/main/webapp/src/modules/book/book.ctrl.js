@@ -24,6 +24,10 @@
                 showMessage(msg, 'danger');
             };
 
+            this.showSuccess = function(msg){
+                showMessage(msg, 'success');
+            };
+
             function responseError(response) {
                 self.showError(response.data);
             }
