@@ -6,7 +6,8 @@
              * Obtener la lista de editorials.
              * Hace una petición GET con $http a /editorials para obtener la lista
              * de editorials
-             * @returns {promise} promise para leer la respuesta del servidor
+             * @returns {promise} promise para leer la respuesta del servidor.
+             * Devuelve un array de objetos de editorial.
              */
             this.fetchRecords = function () {
                 return $http.get(context);
@@ -18,6 +19,7 @@
              * los datos de un registro específico de editorials
              * @param {number} id del registro a obtener
              * @returns {promise} promise para leer la respuesta del servidor
+             * Devuelve un objeto de editorial.
              */
             this.fetchRecord = function (id) {
                 return $http.get(context + "/" + id);
@@ -31,6 +33,7 @@
              * para crear el nuevo registro de editorials
              * @param {object} currentRecord instancia de editorials a guardar/actualizar
              * @returns {promise} promise para leer la respuesta del servidor
+             * Devuelve un objeto de editorial incluyendo su ID.
              */
             this.saveRecord = function (currentRecord) {
                 if (currentRecord.id) {
@@ -44,6 +47,7 @@
              * Hace una petición DELETE a /editorials/:id para eliminar un editorial
              * @param {number} id identificador de la instancia de editorial a eliminar
              * @returns {promise} promise para leer la respuesta del servidor
+             * No devuelve datos.
              */
             this.deleteRecord = function (id) {
                 return $http.delete(context + "/" + id);
@@ -54,7 +58,8 @@
              * book asociados a un editorial
              * @param {number} editorialId Identificador de la instancia de editorial
              * @param {array} books Colección de books nueva
-             * @returns {promise} promise para leer la respuesta del servidor
+             * @returns {promise} promise para leer la respuesta del servidor.
+             * Devuelve el nuevo array de objetos de books
              */
             this.replaceBooks = function (editorialId, books) {
                 return $http.put(context + "/" + editorialId + "/books", books);
@@ -65,6 +70,7 @@
              * de book asociados a un editorial
              * @param {number} id Identificador de la instancia de editorial
              * @returns {promise} promise para leer la respuesta del servidor
+             * Devuelve un array de objetos de books.
              */
             this.getBooks = function (id) {
                 return $http.get(context + "/" + id + "/books");
@@ -76,6 +82,7 @@
              * @param {number} editorialId Identificador de la instancia de editorial
              * @param {number} bookId Identificador de la instancia de book
              * @returns {promise} promise para leer la respuesta del servidor
+             * No devuelve datos.
              */
             this.removeBook = function (editorialId, bookId) {
                 return $http.delete(context + "/" + editorialId + "/books/" + bookId);
@@ -86,6 +93,7 @@
              * de author asociados a un editorial
              * @param {number} id Identificador de la instancia de editorial
              * @returns {promise} promise para leer la respuesta del servidor
+             * Devuelve un array de objetos de authors
              */
             this.getAuthors = function (id) {
                 return $http.get(context + "/" + id + "/authors");
