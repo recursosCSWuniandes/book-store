@@ -37,7 +37,7 @@ public class BookService {
 
     /**
      * Obtiene la lista de los registros de Book
-     * @return Colección de objetos de BookDTO
+     * @return Colección de objetos de BookDTO cada uno con sus respectivos Review
      */
     @GET
     public List<BookDTO> getBooks() {
@@ -47,7 +47,7 @@ public class BookService {
     /**
      * Obtiene los datos de una instancia de Book a partir de su ID
      * @param id Identificador de la instancia a consultar
-     * @return Instancia de BookDTO con los datos del Book consultado
+     * @return Instancia de BookDTO con los datos del Book consultado y sus Review
      */
     @GET
     @Path("{id: \\d+}")
