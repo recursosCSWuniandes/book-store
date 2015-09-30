@@ -128,7 +128,7 @@ public abstract class BookConverter {
         List<BookDTO> dtos = new ArrayList<BookDTO>();
         if (entities != null) {
             for (BookEntity entity : entities) {
-                dtos.add(basicEntity2DTO(entity));
+                dtos.add(fullEntity2DTO(entity));
             }
         }
         return dtos;
