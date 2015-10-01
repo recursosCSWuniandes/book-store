@@ -20,20 +20,10 @@ La comunicación entre cliente y servidor se realiza intercambiando objetos JSON
 ```
 
 Para los servicios de CRUD Básico, Cuando se transmite información sobre un registro específico, se realiza enviando un objeto con la estructura mencionada en la sección anterior.
-La única excepción se presenta al solicitar al servidor una lista de los registros en la base de datos, que incluye información adicional para manejar paginación de lado del servidor.
-
-La respuesta del servidor al solicitar una colección presenta el siguiente formato:
-
-```javascript
-{
-    totalRecords: 0, //cantidad de registros en la base de datos
-    records: [] //collección con los datos solicitados. cada objeto tiene la estructura de la entidad.
-}
-```
 
 
 ##Estructuras JSON
-###Objeto Book
+###Objeto Json Book
 ```javascript
 {
     id: '' /*Tipo Long*/,
@@ -41,12 +31,13 @@ La respuesta del servidor al solicitar una colección presenta el siguiente form
     isbn: '' /*Tipo String*/,
     image: '' /*Tipo String*/,
     description: '' /*Tipo String*/
-    editorial: {} /*Tipo Object*/
-    reviews: [] /*Tipo Collection*/
-    authors: [] /*Tipo Collection*/
+    editorial: {id : '',
+                nombre : '' } /*Tipo Object Json editorial*/
+    reviews: [] /*Tipo Collection de objetos Json Review*/
 }
+/* Nota: en la estructura de book no hay referencia a los authors */
 ```
-###Objeto Review
+###Objeto Json Review
 ```javascript
 {
     id: '' /*Tipo Long*/,
@@ -73,7 +64,7 @@ La respuesta del servidor al solicitar una colección presenta el siguiente form
 ##Servicios para /books
 Método|URI|Acción|Parámetros|Cuerpo|Retorno
 :--:|:--:|:--:|:--:|:--:|:--:
-**GET**|/books|Retorna todos los objetos JSON de Book (RETRIEVE). No trae ni los reviews ni los autores de los libros. Si trae la editorial.| ||Colección de objetos JSON Book.
+**GET**|/books|Retorna todos los objetos JSON de Book (RETRIEVE). No trae los autores de los libros. Si trae la editorial y los reviews.| ||Colección de objetos JSON Book.
 **GET**|/books/id|Obtener los atributos de una instancia de Book en formato JSON(RETRIEVE). No trae la colección de autores pero si la de los reviews y la editorial.|**@PathParam id**: Identificador del registro||Objeto JSON con detalle de la instancia de Book
 **POST**|/books|Crear una nueva instancia de la entidad Book (CREATE). No recibe los autores. Recibe los reviews y la referencia a la editorial.||Objeto JSON de Book a crear|Objeto JSON de Book creado
 **PUT**|/books/id|Actualiza una instancia de la entidad Book (UPDATE). No recibe los autores. Recibe los reviews y la referencia a la editorial.|**@PathParam id**: Identificador del registro|Objeto JSON de Book|Objeto JSON de Book actualizado
@@ -83,11 +74,11 @@ Método|URI|Acción|Parámetros|Cuerpo|Retorno
 ##Servicios para /books/id/authors
 Método|URI|Acción|Parámetros|Cuerpo|Retorno
 :--:|:--:|:--:|:--:|:--:|:--:
-**GET**|/books/id/authors|Retorna la colección de autores en formato json del libro correspondiente al id del path. | |Colección de objetos JSON Author.
+**GET**|/books/id/authors|Retorna para el libro correspondiente al id del path, la colección de autores en formato json. |**@PathParam id** Identificador del libro |Colección de objetos JSON Author.
 **POST**|/books/id/authors|NO EXISTE | |
-**POST**|/books/id1/authors/id2|Asocia el autor id2 en la colección de autores del book id1|**@PathParam id2**: Identificador del autor|Objeto json con el id2 del author a asociar|
-**DELETE**|/books/id1/authors/id2|ELimina la asociación del autor identificado con id2 en la colección de autores del book id1|**@PathParam id2**: Identificador del autor|Objeto json con el id2 del author a asociar|
-**PUT**|/books/id/authors/|Remplaza la colección de autores del book id por una nueva colección| |
+**POST**|/books/id1/authors/id2|Asocia el autor id2 en la colección de autores del book id1|**@PathParam id1** Identificador del libro y *@PathParam id2**: Identificador del autor| |
+**DELETE**|/books/id1/authors/id2|ELimina la asociación del autor identificado con id2 en la colección de autores del book id1|**@PathParam id1** Identificador del libro y *@PathParam id2**: Identificador del autor|
+**PUT**|/books/id/authors/|Remplaza la colección de autores del book id por una nueva colección|**@PathParam id** Identificador del libro |Colección JSON Author 
 
 
 [Volver arriba](#tabla-de-contenidos)

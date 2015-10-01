@@ -22,4 +22,4 @@ nbactions.xml
 
 #Tests
 /BookBasico.logic/derby.log
-
+*.log
