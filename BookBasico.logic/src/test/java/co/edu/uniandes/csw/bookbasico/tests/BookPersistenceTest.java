@@ -1,5 +1,7 @@
 package co.edu.uniandes.csw.bookbasico.tests;
 
+import co.edu.uniandes.csw.bookbasico.converters.BookConverter;
+import co.edu.uniandes.csw.bookbasico.dtos.BookDTO;
 import co.edu.uniandes.csw.bookbasico.entities.BookEntity;
 import co.edu.uniandes.csw.bookbasico.persistence.BookPersistence;
 import static co.edu.uniandes.csw.bookbasico.tests._TestUtil.*;
@@ -18,6 +20,8 @@ import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import uk.co.jemos.podam.api.PodamFactory;
+import uk.co.jemos.podam.api.PodamFactoryImpl;
 
 /**
  * @generated
@@ -93,11 +97,8 @@ public class BookPersistenceTest {
      */
     private void insertData() {
         for (int i = 0; i < 3; i++) {
-            BookEntity entity = new BookEntity();
-            entity.setName(generateRandom(String.class));
-            entity.setIsbn(generateRandom(String.class));
-            entity.setImage(generateRandom(String.class));
-            entity.setDescription(generateRandom(String.class));
+            PodamFactory factory = new PodamFactoryImpl();
+            BookEntity entity = BookConverter.basicDTO2Entity(factory.manufacturePojo(BookDTO.class));
             em.persist(entity);
             data.add(entity);
         }
@@ -108,11 +109,8 @@ public class BookPersistenceTest {
      */
     @Test
     public void createBookTest() {
-        BookEntity newEntity = new BookEntity();
-        newEntity.setName(generateRandom(String.class));
-        newEntity.setIsbn(generateRandom(String.class));
-        newEntity.setImage(generateRandom(String.class));
-        newEntity.setDescription(generateRandom(String.class));
+        PodamFactory factory = new PodamFactoryImpl();
+        BookEntity newEntity = BookConverter.basicDTO2Entity(factory.manufacturePojo(BookDTO.class));
 
         BookEntity result = bookPersistence.create(newEntity);
 
@@ -176,13 +174,9 @@ public class BookPersistenceTest {
     public void updateBookTest() {
         BookEntity entity = data.get(0);
 
-        BookEntity newEntity = new BookEntity();
-
+        PodamFactory factory = new PodamFactoryImpl();
+        BookEntity newEntity = BookConverter.basicDTO2Entity(factory.manufacturePojo(BookDTO.class));
         newEntity.setId(entity.getId());
-        newEntity.setName(generateRandom(String.class));
-        newEntity.setIsbn(generateRandom(String.class));
-        newEntity.setImage(generateRandom(String.class));
-        newEntity.setDescription(generateRandom(String.class));
 
         bookPersistence.update(newEntity);
 
