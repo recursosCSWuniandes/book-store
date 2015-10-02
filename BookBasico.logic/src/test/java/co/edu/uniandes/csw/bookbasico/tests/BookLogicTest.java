@@ -22,6 +22,8 @@ import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import uk.co.jemos.podam.api.PodamFactory;
+import uk.co.jemos.podam.api.PodamFactoryImpl;
 
 /**
  * @generated
@@ -100,12 +102,9 @@ public class BookLogicTest {
      * @generated
      */
     private void insertData() {
-        for (int i = 0; i < 3; i++) {
-            BookEntity entity = new BookEntity();
-        	entity.setName(generateRandom(String.class));
-        	entity.setIsbn(generateRandom(String.class));
-        	entity.setImage(generateRandom(String.class));
-        	entity.setDescription(generateRandom(String.class));
+        for (int i = 0; i < 3; i++) {            
+            PodamFactory factory = new PodamFactoryImpl();
+            BookEntity entity = BookConverter.basicDTO2Entity(factory.manufacturePojo(BookDTO.class));
             em.persist(entity);
             data.add(entity);
         }
@@ -116,16 +115,10 @@ public class BookLogicTest {
      */
     @Test
     public void createBookTest() {
-        BookDTO dto = new BookDTO();
-        dto.setName(generateRandom(String.class));
-        dto.setIsbn(generateRandom(String.class));
-        dto.setImage(generateRandom(String.class));
-        dto.setDescription(generateRandom(String.class));
-
+        PodamFactory factory = new PodamFactoryImpl();
+        BookDTO dto = factory.manufacturePojo(BookDTO.class);
         BookDTO result = bookLogic.createBook(dto);
-
         Assert.assertNotNull(result);
-
         BookEntity entity = em.find(BookEntity.class, result.getId());
 
         Assert.assertEquals(dto.getName(), entity.getName());
@@ -183,15 +176,10 @@ public class BookLogicTest {
     @Test
     public void updateBookTest() {
         BookEntity entity = data.get(0);
-
-        BookDTO dto = new BookDTO();
-
+        PodamFactory factory = new PodamFactoryImpl();
+        BookDTO dto = factory.manufacturePojo(BookDTO.class);
         dto.setId(entity.getId());
-        dto.setName(generateRandom(String.class));
-        dto.setIsbn(generateRandom(String.class));
-        dto.setImage(generateRandom(String.class));
-        dto.setDescription(generateRandom(String.class));
-
+        
         bookLogic.updateBook(dto);
 
         BookEntity resp = em.find(BookEntity.class, entity.getId());
