@@ -5,10 +5,21 @@
  */
 package co.edu.uniandes.csw.bookbasico.functionalTest;
 
+import co.edu.uniandes.csw.bookbasico.dtos.BookDTO;
+import static co.edu.uniandes.csw.bookbasico.serviceTest.BookTest.PATHBOOK;
+import static co.edu.uniandes.csw.bookbasico.serviceTest.BookTest.URLBASE;
 import co.edu.uniandes.csw.bookbasico.services.BookService;
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.junit.Arquillian;
@@ -21,6 +32,7 @@ import org.jboss.shrinkwrap.api.importer.ExplodedImporter;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.jboss.shrinkwrap.resolver.api.DependencyResolvers;
 import org.jboss.shrinkwrap.resolver.api.maven.MavenDependencyResolver;
+import org.junit.After;
 import org.junit.AfterClass;
 import static org.junit.Assert.assertTrue;
 import org.junit.Before;
@@ -33,6 +45,8 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import uk.co.jemos.podam.api.PodamFactory;
+import uk.co.jemos.podam.api.PodamFactoryImpl;
 
 /**
  *
@@ -42,8 +56,15 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class BookFunctionalIT {
 
-    public static String URLRESOURCES = "src/main/webapp";
-    public static WebDriver driver;
+    private static String URLRESOURCES = "src/main/webapp";
+    private static String URLBASE = "http://localhost:8181/BookBasico.web/webresources";
+    private static String PATHBOOK = "/books";
+    private static WebDriver driver;
+    private static int Ok = 200;
+    private static int Created = 201;
+    private static int OkWithoutContent = 204;
+    private static String URLIMAGE = "http://www.seleniumhq.org/images/big-logo.png";
+    
     // Mediante la anotacion @ArquillianResource se obtiene la URL de despliegue de la aplicacion
     @ArquillianResource
     URL deploymentURL;
@@ -78,6 +99,8 @@ public class BookFunctionalIT {
 
         return war;
     }
+   
+    public List<BookDTO> data = new ArrayList();
 
     @BeforeClass
     public static void setUp() {
@@ -86,15 +109,47 @@ public class BookFunctionalIT {
     }
 
     @Before
-    public void setUpTest() {
-        // El browser  a esta url. Se ejecuta al inicar cada uno de los metodos de prueba indicados con @Test
+    public void setUpTest() {        
+        insertData();
+        // El browser  va a la url de despliegue. Se ejecuta al inicar cada uno de los metodos de prueba indicados con @Test
         driver.get(deploymentURL.toString());
+        
     }
 
     @AfterClass
     public static void tearDown() throws Exception {
         //Se ejecuta al terminar todos los metodos de prueba indicados con @Test Cierra el browser
         driver.quit();
+    }
+    
+    
+
+    private void insertData() {
+        for (int i = 0; i < 3; i++) {            
+            PodamFactory factory = new PodamFactoryImpl();
+            BookDTO book = factory.manufacturePojo(BookDTO.class);
+            book.setImage(URLIMAGE);
+            Client cliente = ClientBuilder.newClient();
+            Response response = cliente.target(URLBASE + PATHBOOK)
+                .request()
+                .post(Entity.entity(book, MediaType.APPLICATION_JSON));
+            if (response.getStatus()== Ok)
+                data.add(book);
+        }
+    }
+
+    @After
+    public void clearData() {
+        for (int i = 0; i < data.size(); i++) {            
+            PodamFactory factory = new PodamFactoryImpl();
+            BookDTO book = factory.manufacturePojo(BookDTO.class);
+            Client cliente = ClientBuilder.newClient();
+            Response response = cliente.target(URLBASE + PATHBOOK + '/' + data.get(i).getId())
+                .request()
+                .delete();
+            if (response.getStatus()== OkWithoutContent)
+                data.remove(book);
+        }
     }
 
     /**
@@ -116,16 +171,15 @@ public class BookFunctionalIT {
         driver.findElement(By.id("description")).sendKeys("Realismo magico");
         driver.findElement(By.id("isbn")).clear();
         driver.findElement(By.id("isbn")).sendKeys("1025789845-13");
-        driver.findElement(By.id("image")).clear();
-        driver.findElement(By.id("image")).sendKeys("http://image.casadellibro.com/a/l/t0/08/9788497592208.jpg");
+        driver.findElement(By.id("imageurl")).clear();
+        driver.findElement(By.id("imageurl")).sendKeys("http://image.casadellibro.com/a/l/t0/08/9788497592208.jpg");
         driver.findElement(By.id("save-book")).click();
         Thread.sleep(2000);
         List<WebElement> books = driver.findElements(By.xpath("//div[contains(@ng-repeat,'record in records')]"));
         for (WebElement book : books) {
-            WebElement image = book.findElement(By.xpath("//img[contains(@ng-src,'http://image.casadellibro.com/a/l/t0/08/9788497592208.jpg')]"));
-            List<WebElement> captions = book.findElements(By.xpath("//div[contains(@class, 'caption')]/p"));
+            List<WebElement> captions = book.findElements(By.xpath("div[contains(@class, 'col-md-4')]/div[contains(@class, 'caption')]/p"));
             if (captions.get(0).getText().contains("Cien anos de Soledad") && captions.get(1).getText().contains("Realismo magico")
-                    && captions.get(2).getText().contains("1025789845-13") && image.isDisplayed()) {
+                    && captions.get(2).getText().contains("1025789845-13")) {
                 success = true;
             }
         }
@@ -144,9 +198,9 @@ public class BookFunctionalIT {
     public void t2EditBook() throws InterruptedException {
         Thread.sleep(1500);
         boolean success = false;
-        String newDescription = "Considerada una obra maestra de la literatura hispanoamericana y universal";
+        String newDescription = "Nueva descripcion";
         String newIsbn = "5555500000-13";
-        driver.findElement(By.id("-edit-btn")).click();
+        driver.findElement(By.id("-edit-btn")).click(); //Hace click en el primer elemento edit-btn encontrado
         Thread.sleep(1000);
         driver.findElement(By.id("description")).clear();
         driver.findElement(By.id("description")).sendKeys(newDescription);
@@ -156,10 +210,11 @@ public class BookFunctionalIT {
         Thread.sleep(1000);
         List<WebElement> books = driver.findElements(By.xpath("//div[contains(@ng-repeat,'record in records')]"));
         for (WebElement book : books) {
-            List<WebElement> captions = book.findElements(By.xpath("//div[contains(@class, 'caption')]/p"));
+            List<WebElement> captions = book.findElements(By.xpath("div[contains(@class, 'col-md-4')]/div[contains(@class, 'caption')]/p"));
             if (captions.get(1).getText().contains(newDescription)
                     && captions.get(2).getText().contains(newIsbn)) {
                 success = true;
+                break;
             }
         }
         assertTrue(success);
@@ -173,13 +228,18 @@ public class BookFunctionalIT {
      */
     @Test
     @RunAsClient
-    public void t3DeleteBook() throws InterruptedException {
+    public void t3DeleteBook() throws InterruptedException, IOException {
         Thread.sleep(1500);
         boolean success = false;
-        driver.findElement(By.id("-delete-btn")).click();
+        Client cliente = ClientBuilder.newClient();
+        Response response = cliente.target(URLBASE + PATHBOOK)
+                .request().get();
+        String listBook = response.readEntity(String.class);
+        List<BookDTO> listBookTest = new ObjectMapper().readValue(listBook, List.class);
+        driver.findElement(By.id("-delete-btn")).click();// Elimina el primer elemento con encontrado id -delete-btn 
         Thread.sleep(1000);
         List<WebElement> books = driver.findElements(By.xpath("//div[contains(@ng-repeat,'record in records')]"));
-        if (books.isEmpty()) {
+        if (books.size() == (listBookTest.size()-1)) {
             success = true;
         }
         assertTrue(success);
