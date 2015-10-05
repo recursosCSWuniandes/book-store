@@ -88,7 +88,7 @@
             <version>6.0.1.RELEASE</version>
         </dependency>
     </dependencies>
-    <build>
+<!--    <build>
         <plugins>                           
             <plugin> 
                 <groupId>org.jacoco</groupId>
@@ -100,7 +100,7 @@
                             <goal>prepare-agent</goal>
                         </goals>
                         <configuration>
-                            <!--                            <destFile>${sonar.jacoco.reportPath}</destFile>-->
+                                                        <destFile>${sonar.jacoco.reportPath}</destFile>
                             <propertyName>surefireArgLine</propertyName>
                             <excludes>
                                 <exclude>**/*IT.java</exclude>
@@ -114,15 +114,15 @@
                             <goal>report</goal>
                         </goals>
                         <configuration>
-                            <!-- Sets the path to the file which contains the execution data. -->
+                             Sets the path to the file which contains the execution data. 
                             <dataFile>${sonar.jacoco.reportPath}</dataFile>
-                            <!-- Sets the output directory for the code coverage report. -->
+                             Sets the output directory for the code coverage report. 
                             <outputDirectory>${sonar.jacoco.outReportPath}</outputDirectory>
                         </configuration>
                     </execution>
                     
-                    <!--we want to execute <span class="hiddenSpellError" pre="execute " data-mce-bogus="1">jacoco</span>:prepare-agent-integration in test phase,
-                    but before executing maven failsafe plugin -->
+                    we want to execute <span class="hiddenSpellError" pre="execute " data-mce-bogus="1">jacoco</span>:prepare-agent-integration in test phase,
+                    but before executing maven failsafe plugin 
                     <execution>
                         <configuration>
                             <destFile>${sonar.jacoco.itReportPath}</destFile>
@@ -137,7 +137,7 @@
                             <goal>prepare-agent-integration</goal>
                         </goals>
                     </execution>
-                    <!-- Ensures that the code coverage report for integration tests after integration tests have been run. -->
+                     Ensures that the code coverage report for integration tests after integration tests have been run. 
                     <execution>
                         <id>post-integration-test</id>
                         <phase>post-integration-test</phase>
@@ -145,9 +145,9 @@
                             <goal>report</goal>
                         </goals>
                         <configuration>
-                            <!-- Sets the path to the file which contains the execution data. -->
+                             Sets the path to the file which contains the execution data. 
                             <dataFile>${sonar.jacoco.itReportPath}</dataFile>
-                            <!-- Sets the output directory for the code coverage report. -->
+                             Sets the output directory for the code coverage report. 
                             <outputDirectory>${sonar.jacoco.outItReportPath}</outputDirectory>
                         </configuration>
                     </execution>
@@ -159,7 +159,7 @@
                 <version>2.18</version>
                 <configuration>
                     <encoding>${project.build.sourceEncoding}</encoding>
-                    <argLine>${jacoco.agent.argLine} -XX:MaxPermSize=1024m</argLine> 
+                    <argLine>${jacoco.agent.argLine}</argLine> 
                     <reportsDirectory>${project.build.directory}/target/failsafe-reports</reportsDirectory>
                     <excludes>
                         <exclude>**/*Test.java</exclude>
@@ -181,10 +181,10 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>2.18</version>
                 <configuration>
-                    <!-- Sets the VM argument line used when unit tests are run. -->
+                     Sets the VM argument line used when unit tests are run. 
                     <argLine>${surefireArgLine}</argLine>
-                    <!-- Skips unit tests if the value of skip.unit.tests property is true -->                  
-                    <!-- Excludes integration tests when unit tests are run. -->
+                     Skips unit tests if the value of skip.unit.tests property is true                   
+                     Excludes integration tests when unit tests are run. 
                     <excludes>
                         <exclude>**/*IT.java</exclude>
                     </excludes>
@@ -208,5 +208,18 @@
                 </configuration>
             </plugin>
         </plugins>
-    </build>
+    </build>-->
+    <build>
+        <plugins>      
+        <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>2.5.1</version>
+                <configuration>
+                    <source>1.7</source>
+                    <target>1.7</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>       
 </project>
