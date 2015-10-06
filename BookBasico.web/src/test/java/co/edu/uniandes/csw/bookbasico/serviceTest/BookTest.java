@@ -28,8 +28,10 @@ import org.jboss.shrinkwrap.resolver.api.DependencyResolvers;
 import org.jboss.shrinkwrap.resolver.api.maven.MavenDependencyResolver;
 import org.junit.Assert;
 import org.junit.BeforeClass;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.junit.runners.MethodSorters;
 import uk.co.jemos.podam.api.PodamFactory;
 import uk.co.jemos.podam.api.PodamFactoryImpl;
 
@@ -37,6 +39,7 @@ import uk.co.jemos.podam.api.PodamFactoryImpl;
  *
  * @author Jhonatan
  */
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @RunWith(Arquillian.class)
 public class BookTest {
 
@@ -56,7 +59,7 @@ public class BookTest {
                 // Nombre del Proyecto "Bookbasico.web" seguido de ".war". Debe ser el mismo nombre del proyecto web que contiene los javascript y los  servicios Rest
                 .create(WebArchive.class, "BookBasico.web.war")
                 // Se agrega la dependencia a la logica con el nombre groupid:artefactid:version (GAV)
-                .addAsLibraries(resolver.artifact("co.edu.uniandes.csw.bookbasico:bookBasico.logic:1.0")
+                .addAsLibraries(resolver.artifact("co.edu.uniandes.csw.bookbasico:BookBasico.logic:1.0")
                         .resolveAsFiles())
                 // Se agregan los compilados de los paquetes de servicios
                 .addPackage(BookService.class.getPackage())
@@ -144,5 +147,5 @@ public class BookTest {
                 .request().delete();
         Assert.assertEquals(OkWithoutContent, response.getStatus());
     }
-
-}
+    
+    }
