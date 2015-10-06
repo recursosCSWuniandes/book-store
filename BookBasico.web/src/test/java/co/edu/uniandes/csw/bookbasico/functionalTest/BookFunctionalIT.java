@@ -6,8 +6,6 @@
 package co.edu.uniandes.csw.bookbasico.functionalTest;
 
 import co.edu.uniandes.csw.bookbasico.dtos.BookDTO;
-import static co.edu.uniandes.csw.bookbasico.serviceTest.BookTest.PATHBOOK;
-import static co.edu.uniandes.csw.bookbasico.serviceTest.BookTest.URLBASE;
 import co.edu.uniandes.csw.bookbasico.services.BookService;
 import java.io.File;
 import java.io.IOException;

@@ -6,7 +6,6 @@
 package co.edu.uniandes.csw.bookbasico.serviceTest;
 
 import co.edu.uniandes.csw.bookbasico.dtos.BookDTO;
-import co.edu.uniandes.csw.bookbasico.entities.BookEntity;
 import co.edu.uniandes.csw.bookbasico.providers.EJBExceptionMapper;
 import co.edu.uniandes.csw.bookbasico.services.BookService;
 import java.io.File;
@@ -27,13 +26,10 @@ import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.jboss.shrinkwrap.resolver.api.DependencyResolvers;
 import org.jboss.shrinkwrap.resolver.api.maven.MavenDependencyResolver;
-import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
-import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.junit.runners.MethodSorters;
 import uk.co.jemos.podam.api.PodamFactory;
 import uk.co.jemos.podam.api.PodamFactoryImpl;
 
@@ -42,7 +38,6 @@ import uk.co.jemos.podam.api.PodamFactoryImpl;
  * @author Jhonatan
  */
 @RunWith(Arquillian.class)
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class BookTest {
 
     public static String URLRESOURCES = "src/main/webapp";
@@ -75,7 +70,7 @@ public class BookTest {
 
         return war;
     }
-
+    
     @BeforeClass
     public static void setUp() {
         for (int i = 0; i < 5; i++) {
@@ -85,10 +80,6 @@ public class BookTest {
         }
     }
 
-    @AfterClass
-    public static void clearData() {
-        oraculo.clear();
-    }
 
     @Test
     @RunAsClient
