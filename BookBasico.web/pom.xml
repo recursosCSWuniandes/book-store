@@ -114,15 +114,10 @@
                             <goal>report</goal>
                         </goals>
                         <configuration>
-<!--                             Sets the path to the file which contains the execution data. -->
                             <dataFile>${sonar.jacoco.reportPath}</dataFile>
-<!--                             Sets the output directory for the code coverage report. -->
                             <outputDirectory>${sonar.jacoco.outReportPath}</outputDirectory>
                         </configuration>
                     </execution>
-                    
-<!--                    we want to execute <span class="hiddenSpellError" pre="execute " data-mce-bogus="1">jacoco</span>:prepare-agent-integration in test phase,
-                    but before executing maven failsafe plugin -->
                     <execution>
                         <configuration>
                             <destFile>${sonar.jacoco.itReportPath}</destFile>
@@ -137,7 +132,6 @@
                             <goal>prepare-agent-integration</goal>
                         </goals>
                     </execution>
-<!--                     Ensures that the code coverage report for integration tests after integration tests have been run. -->
                     <execution>
                         <id>post-integration-test</id>
                         <phase>post-integration-test</phase>
@@ -181,10 +175,7 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>2.18</version>
                 <configuration>
-<!--                     Sets the VM argument line used when unit tests are run. -->
                     <argLine>${surefireArgLine}</argLine>
-<!--                     Skips unit tests if the value of skip.unit.tests property is true                   
-                     Excludes integration tests when unit tests are run. -->
                     <excludes>
                         <exclude>**/*IT.java</exclude>
                     </excludes>

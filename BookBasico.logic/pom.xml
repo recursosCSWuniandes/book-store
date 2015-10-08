@@ -100,18 +100,15 @@
                         <goals>
                             <goal>prepare-agent-integration</goal>
                         </goals>
-                    </execution>
-                    <!--                     Ensures that the code coverage report for integration tests after integration tests have been run. -->
+                    </execution>                    
                     <execution>
                         <id>post-integration-test</id>
                         <phase>post-integration-test</phase>
                         <goals>
                             <goal>report</goal>
                         </goals>
-                        <configuration>
-                            <!--Sets the path to the file which contains the execution data.--> 
+                        <configuration>                           
                             <dataFile>${sonar.jacoco.itReportPath}</dataFile>
-                            <!--                             Sets the output directory for the code coverage report. -->
                             <outputDirectory>${sonar.jacoco.outItReportPath}</outputDirectory>
                         </configuration>
                     </execution>
@@ -145,10 +142,7 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>2.18</version>
                 <configuration>
-                    <!--                     Sets the VM argument line used when unit tests are run. -->
-                    <argLine>${surefireArgLine}</argLine>
-                    <!--                     Skips unit tests if the value of skip.unit.tests property is true                   
-                    Excludes integration tests when unit tests are run. -->
+                    <argLine>${surefireArgLine}</argLine>                    
                     <excludes>
                         <exclude>**/*IT.java</exclude>
                     </excludes>
