@@ -17,7 +17,7 @@
         }]);
     mainApp.config(['authServiceProvider', function (auth) {
             auth.setValues({
-                apiUrl: 'users',
+                apiUrl: 'webresources/users/',
                 successPath: '/catalog',
                 loginPath: '/login',
                 registerPath: '/register',
