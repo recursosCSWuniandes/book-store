@@ -1,0 +1,153 @@
+package co.edu.uniandes.csw.bookbasico.services;
+
+import co.edu.uniandes.csw.bookbasico.api.IEditorialLogic;
+import co.edu.uniandes.csw.bookbasico.dtos.BookDTO;
+import co.edu.uniandes.csw.bookbasico.dtos.EditorialDTO;
+import co.edu.uniandes.csw.bookbasico.providers.StatusCreated;
+import java.util.List;
+import javax.inject.Inject;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+
+@Path("/editorials")
+@Consumes(MediaType.APPLICATION_JSON)
+@Produces(MediaType.APPLICATION_JSON)
+public class EditorialService {
+
+    @Inject
+    private IEditorialLogic editorialLogic;
+
+    /**
+     * Crea un registro de Editorial
+     *
+     * @param dto Instancia de EditorialDTO con los datos del nuevo registro
+     * @return Instancia de EditorialDTO con los datos nuevos y su ID.
+     */
+    @POST
+    @StatusCreated
+    public EditorialDTO createEditorial(EditorialDTO dto) {
+        return editorialLogic.createEditorial(dto);
+    }
+
+    /**
+     * Obtiene la colección de registros de Editorial
+     *
+     * @return Colección de instancias de EditorialDTO
+     */
+    @GET
+    public List<EditorialDTO> getEditorials() {
+        return editorialLogic.getEditorials();
+    }
+
+    /**
+     * Obtiene una instancia de Editorial a partir de su identificador
+     *
+     * @param id Identificador de la instancia de Editorial
+     * @return Instancia de EditorialDTO
+     */
+    @GET
+    @Path("{id: \\d+}")
+    public EditorialDTO getEditorial(@PathParam("id") Long id) {
+        return editorialLogic.getEditorial(id);
+    }
+
+    /**
+     * Actualiza un registro de Editorial
+     *
+     * @param id Identificador de la instancia de Editorial a actualizar
+     * @param dto Instancia de EditorialDTO con los nuevos datos
+     * @return Instancia de EditorialDTO con los nuevos datos
+     */
+    @PUT
+    @Path("{id: \\d+}")
+    public EditorialDTO updateEditorial(@PathParam("id") Long id, EditorialDTO dto) {
+        dto.setId(id);
+        return editorialLogic.updateEditorial(dto);
+    }
+
+    /**
+     * Elimina un registro de Editorial
+     *
+     * @param id Identificador del registro de Editorial
+     */
+    @DELETE
+    @Path("{id: \\d+}")
+    public void deleteEditorial(@PathParam("id") Long id) {
+        editorialLogic.deleteEditorial(id);
+    }
+
+    /**
+     * Asocia una instancia existente de Book a una instancia existente de
+     * Editorial
+     *
+     * @param editorialId Identificador de la instancia de Editorial
+     * @param bookId Identificador de la instancia de Book
+     * @return Instancia de BookDTO asociada a la instancia de Editorial
+     */
+    @POST
+    @Path("{editorialId: \\d+}/books/{bookId: \\d+}")
+    public BookDTO addBook(@PathParam("editorialId") Long editorialId, @PathParam("bookId") Long bookId) {
+        return editorialLogic.addBook(bookId, editorialId);
+    }
+
+    /**
+     * Desasocia una instancia de Book de una instancia de Editorial
+     *
+     * @param editorialId Identificador de la instancia de Editorial
+     * @param bookId Identificador de la instancia de Book
+     */
+    @DELETE
+    @Path("{editorialId: \\d+}/books/{bookId: \\d+}")
+    public void deleteBook(@PathParam("editorialId") Long editorialId, @PathParam("bookId") Long bookId) {
+        editorialLogic.removeBook(bookId, editorialId);
+    }
+
+    /**
+     * Remplaza la colección de instancias de Book asociada a una instancia de
+     * Editorial
+     *
+     * @param editorialId Identificador de la instancia de Editorial
+     * @param books Colección de instancias de BookDTO para asociar a la
+     * instancia de Editorial
+     * @return Colección de instancias de BookDTO asociada a la instancia de
+     * Editorial
+     */
+    @PUT
+    @Path("{editorialId: \\d+}/books")
+    public List<BookDTO> replaceBooks(@PathParam("editorialId") Long editorialId, List<BookDTO> books) {
+        return editorialLogic.replaceBooks(books, editorialId);
+    }
+
+    /**
+     * Obtiene la colección de Book asociada a una instancia de Editorial
+     *
+     * @param editorialId Identificador de la instancia de Editorial
+     * @return Colección de instancias de BookDTO asociadas a la instancia de
+     * Editorial
+     */
+    @GET
+    @Path("{editorialId: \\d+}/books")
+    public List<BookDTO> getBooks(@PathParam("editorialId") Long editorialId) {
+        return editorialLogic.getBooks(editorialId);
+    }
+
+    /**
+     * Obtiene una instancia de Book asociada a una instancia de Editorial
+     *
+     * @param editorialId Identificador de la instancia de Editorial
+     * @param bookId Identificador de la instancia de Book
+     * @return Instancia de BookDTO asociada a la instancia de Editorial
+     */
+    @GET
+    @Path("{editorialId: \\d+}/books/{bookId: \\d+}")
+    public BookDTO getBook(@PathParam("editorialId") Long editorialId, @PathParam("bookId") Long bookId) {
+        return editorialLogic.getBook(editorialId, bookId);
+    }
+}

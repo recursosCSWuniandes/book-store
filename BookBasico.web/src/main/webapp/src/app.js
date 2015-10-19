@@ -2,6 +2,7 @@
 
     var mainApp = ng.module('mainApp', [
         'bookModule',
+        'editorialModule',
         'authModule',
         'ngRoute'
     ]);
@@ -11,6 +12,11 @@
                     .when('/book', {
                         templateUrl: 'src/modules/book/book.tpl.html',
                         controller: 'bookCtrl',
+                        controllerAs: 'ctrl'
+                    })
+                    .when('/editorial', {
+                        templateUrl: 'src/modules/editorial/editorial.tpl.html',
+                        controller: 'editorialCtrl',
                         controllerAs: 'ctrl'
                     })
                     .otherwise('/book');

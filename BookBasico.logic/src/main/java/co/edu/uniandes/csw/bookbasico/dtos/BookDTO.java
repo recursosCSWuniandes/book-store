@@ -1,11 +1,12 @@
 package co.edu.uniandes.csw.bookbasico.dtos;
 
 import javax.xml.bind.annotation.XmlRootElement;
+import uk.co.jemos.podam.common.PodamExclude;
 
 /**
  * @generated
  */
-@XmlRootElement 
+@XmlRootElement
 public class BookDTO {
 
     private Long id;
@@ -13,6 +14,9 @@ public class BookDTO {
     private String isbn;
     private String image;
     private String description;
+    @PodamExclude
+    private EditorialDTO editorial;
+
     /**
      * @generated
      */
@@ -83,4 +87,11 @@ public class BookDTO {
         this.description = description;
     }
 
+    public EditorialDTO getEditorial() {
+        return editorial;
+    }
+
+    public void setEditorial(EditorialDTO editorial) {
+        this.editorial = editorial;
+    }
 }

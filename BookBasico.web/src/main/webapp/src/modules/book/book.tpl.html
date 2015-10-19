@@ -36,6 +36,7 @@
                     <p><strong>Name:</strong> {{record.name}}</p>
                     <p><strong>Description:</strong> {{record.description}}</p>
                     <p><strong>ISBN:</strong> {{record.isbn}}</p>
+                    <p><strong>Editorial:</strong> {{record.editorial.name}}</p>
                 </div>
                 <p class="text-center">
                     <button id="{{$parent.$index}}-edit-btn" class="btn btn-default btn-sm" ng-click="ctrl.editRecord(record)"><span class="glyphicon glyphicon-edit"></span> Edit</button>
