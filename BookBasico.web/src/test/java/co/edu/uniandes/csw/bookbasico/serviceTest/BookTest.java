@@ -5,9 +5,12 @@
  */
 package co.edu.uniandes.csw.bookbasico.serviceTest;
 
+import co.edu.uniandes.csw.auth.model.UserDTO;
 import co.edu.uniandes.csw.bookbasico.dtos.BookDTO;
 import co.edu.uniandes.csw.bookbasico.providers.EJBExceptionMapper;
 import co.edu.uniandes.csw.bookbasico.services.BookService;
+import co.edu.uniandes.csw.bookbasico.shiro.ApiKeyProperties;
+import com.stormpath.sdk.account.Account;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -15,8 +18,11 @@ import java.util.List;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
+import javax.ws.rs.core.Cookie;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.mgt.RealmSecurityManager;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
@@ -26,7 +32,9 @@ import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.jboss.shrinkwrap.resolver.api.DependencyResolvers;
 import org.jboss.shrinkwrap.resolver.api.maven.MavenDependencyResolver;
+import org.junit.AfterClass;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
@@ -50,6 +58,8 @@ public class BookTest {
     public static int Created = 201;
     public static int OkWithoutContent = 204;
     public static List<BookDTO> oraculo = new ArrayList<>();
+    public static List<Account> accountsTest = new ArrayList();
+    private static Cookie cookieSessionId;
 
     @Deployment
     public static Archive<?> createDeployment() {
@@ -64,20 +74,26 @@ public class BookTest {
                 // Se agregan los compilados de los paquetes de servicios
                 .addPackage(BookService.class.getPackage())
                 .addPackage(EJBExceptionMapper.class.getPackage())
+                .addPackage(ApiKeyProperties.class.getPackage())
                 // El archivo que contiene la configuracion a la base de datos. 
                 .addAsResource("META-INF/persistence.xml", "META-INF/persistence.xml")
                 // El archivo beans.xml es necesario para injeccion de dependencias. 
                 .addAsWebInfResource(new File("src/main/webapp/WEB-INF/beans.xml"))
                 // El archivo shiro.ini es necesario para injeccion de dependencias
-                .addAsWebInfResource("WEB-INF/shiro.ini")
+                .addAsWebInfResource(new File("src/main/webapp/WEB-INF/shiro.ini"))
                 // El archivo web.xml es necesario para el despliegue de los servlets
                 .setWebXML(new File("src/main/webapp/WEB-INF/web.xml"));
 
         return war;
     }
-    
+
     @BeforeClass
     public static void setUp() {
+        insertData();
+        cookieSessionId = login(System.getenv("USERNAME_USER"), System.getenv("PASSWORD_USER"));
+    }
+
+    public static void insertData() {
         for (int i = 0; i < 5; i++) {
             PodamFactory factory = new PodamFactoryImpl();
             BookDTO book = factory.manufacturePojo(BookDTO.class);
@@ -85,14 +101,29 @@ public class BookTest {
         }
     }
 
+    public static Cookie login(String username, String password) {
+        Client cliente = ClientBuilder.newClient();
+        UserDTO user = new UserDTO();
+        user.setUserName(username);
+        user.setPassword(password);
+        Response response = cliente.target(URLBASE).path("/users/login").request().
+                post(Entity.entity(user, MediaType.APPLICATION_JSON));       
+        UserDTO foundUser = (UserDTO) response.readEntity(UserDTO.class);
+        
+        if (foundUser != null && response.getStatus() == Ok) {
+            return response.getCookies().get("JSESSIONID");
+        } else {
+            return null;
+        }
+    }
 
     @Test
     @RunAsClient
-    public void t1CreateBookService() throws IOException {
+    public void t1CreateBookService() throws IOException {        
         BookDTO book = oraculo.get(0);
         Client cliente = ClientBuilder.newClient();
         Response response = cliente.target(URLBASE + PATHBOOK)
-                .request()
+                .request().cookie(cookieSessionId)
                 .post(Entity.entity(book, MediaType.APPLICATION_JSON));
         BookDTO bookTest = (BookDTO) response.readEntity(BookDTO.class);
         Assert.assertEquals(book.getName(), bookTest.getName());
@@ -106,7 +137,7 @@ public class BookTest {
     public void t2GetBookById() {
         Client cliente = ClientBuilder.newClient();
         BookDTO bookTest = cliente.target(URLBASE + PATHBOOK).path("/" + oraculo.get(0).getId())
-                .request().get(BookDTO.class);
+                .request().cookie(cookieSessionId).get(BookDTO.class);
         Assert.assertEquals(bookTest.getName(), oraculo.get(0).getName());
     }
 
@@ -115,7 +146,7 @@ public class BookTest {
     public void t3GetCountryService() throws IOException {
         Client cliente = ClientBuilder.newClient();
         Response response = cliente.target(URLBASE + PATHBOOK)
-                .request().get();
+                .request().cookie(cookieSessionId).get();
         String listBook = response.readEntity(String.class);
         List<BookDTO> listBookTest = new ObjectMapper().readValue(listBook, List.class);
         Assert.assertEquals(Ok, response.getStatus());
@@ -132,7 +163,7 @@ public class BookTest {
         book.setIsbn(bookChanged.getIsbn());
         Client cliente = ClientBuilder.newClient();
         Response response = cliente.target(URLBASE + PATHBOOK).path("/" + book.getId())
-                .request().put(Entity.entity(book, MediaType.APPLICATION_JSON));
+                .request().cookie(cookieSessionId).put(Entity.entity(book, MediaType.APPLICATION_JSON));
         BookDTO bookTest = (BookDTO) response.readEntity(BookDTO.class);
         Assert.assertEquals(Ok, response.getStatus());
         Assert.assertEquals(book.getName(), bookTest.getName());
@@ -146,8 +177,8 @@ public class BookTest {
         Client cliente = ClientBuilder.newClient();
         BookDTO book = oraculo.get(0);
         Response response = cliente.target(URLBASE + PATHBOOK).path("/" + book.getId())
-                .request().delete();
+                .request().cookie(cookieSessionId).delete();
         Assert.assertEquals(OkWithoutContent, response.getStatus());
     }
-    
-    }
+
+}
