@@ -10,6 +10,8 @@ import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 /**
  * @generated
@@ -34,6 +36,7 @@ public class BookEntity implements Serializable {
 
     private String description;
     
+    @Temporal(TemporalType.DATE)
     private Date publishDate;
 
     /**

@@ -37,6 +37,7 @@
                     <p><strong>Description:</strong> {{record.description}}</p>
                     <p><strong>ISBN:</strong> {{record.isbn}}</p>
                     <p><strong>Editorial:</strong> {{record.editorial.name}}</p>
+                    <p><strong>Publish Date:</strong> {{record.publishDate | date}}</p>
                     <p><strong>Authors: </strong><span ng-repeat="author in record.authors">{{author.name}}{{$last?'':', '}}</span></p>
                 </div>
                 <p class="text-center">
@@ -83,6 +84,17 @@
                     <select id="editorial" name="editorial" ng-options="rc.name for rc in editorials track by rc.id" class="form-control" type="text" ng-model="currentRecord.editorial" required ></select>
                 </div>
             </div>
+            <div>
+                <label for="publishDate" class="col-md-2 control-label">Publish Date</label>
+                <div class="col-md-10">
+                    <p class="input-group">
+                        <input type="text" id="publishDate" name="publishDate" class="form-control" ng-model="currentRecord.publishDate" ng-required="model.required" datepicker-popup is-open="opened" readonly />
+                        <span class="input-group-btn">
+                            <button type="button" id="publishDate-datepicker" class="btn btn-default" ng-click="open($event)"><span class="glyphicon glyphicon-calendar"></span></button>
+                        </span>
+                    </p>
+                </div>
+            </div>
         </fieldset>
     </form>
 </div>
@@ -99,7 +111,7 @@
     <div ng-show="tab === 'reviews'">
         <div ng-controller="reviewCtrl as ctrl" ng-include="'src/modules/review/review.tpl.html'"></div>
     </div>
-     <!-- Aqu� se necesita el template de la selecci�n de los autores al libro -->
+    <!-- Aqu� se necesita el template de la selecci�n de los autores al libro -->
     <div ng-show="tab === 'authors' && refId" ng-controller="authorsCtrl as ctrl">
         <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="ctrl.closeAlert($index)">{{alert.msg}}</alert>
         <div class="col-md-12">
