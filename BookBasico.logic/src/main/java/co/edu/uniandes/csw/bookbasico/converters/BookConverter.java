@@ -20,6 +20,7 @@ public abstract class BookConverter {
             BookDTO dto = new BookDTO();
             dto.setId(entity.getId());
             dto.setName(entity.getName());
+            dto.setPublishDate(entity.getPublishDate());
             dto.setIsbn(entity.getIsbn());
             dto.setImage(entity.getImage());
             dto.setDescription(entity.getDescription());
@@ -82,6 +83,7 @@ public abstract class BookConverter {
             entity.setName(dto.getName());
             entity.setIsbn(dto.getIsbn());
             entity.setImage(dto.getImage());
+            entity.setPublishDate(dto.getPublishDate());
             entity.setDescription(dto.getDescription());
             entity.setEditorial(EditorialConverter.basicDTO2Entity(dto.getEditorial()));
 

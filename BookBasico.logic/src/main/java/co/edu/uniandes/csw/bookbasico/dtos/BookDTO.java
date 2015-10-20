@@ -1,7 +1,9 @@
 package co.edu.uniandes.csw.bookbasico.dtos;
 
+import java.util.Date;
 import java.util.List;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import uk.co.jemos.podam.common.PodamExclude;
 
 /**
@@ -14,6 +16,8 @@ public class BookDTO {
     private String name;
     private String isbn;
     private String image;
+    @XmlJavaTypeAdapter(DateAdapter.class)
+    private Date publishDate;
     private String description;
     @PodamExclude
     private List<ReviewDTO> reviews;
@@ -104,5 +108,13 @@ public class BookDTO {
 
     public void setEditorial(EditorialDTO editorial) {
         this.editorial = editorial;
+    }
+
+    public Date getPublishDate() {
+        return publishDate;
+    }
+
+    public void setPublishDate(Date publish_date) {
+        this.publishDate = publish_date;
     }
 }

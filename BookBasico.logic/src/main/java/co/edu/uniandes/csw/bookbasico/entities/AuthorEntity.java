@@ -1,6 +1,7 @@
 package co.edu.uniandes.csw.bookbasico.entities;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -27,6 +28,8 @@ public class AuthorEntity implements Serializable{
     private Long id;
 
     private String name;
+    
+    private Date birthDate;
 
     /**
      * Relación muchos a muchos entre AuthorEntity y BookEntity.
@@ -70,5 +73,13 @@ public class AuthorEntity implements Serializable{
     @Override
     public boolean equals(Object obj) {
         return this.getId().equals(((AuthorEntity)obj).getId()); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    public Date getBirthDate() {
+        return birthDate;
+    }
+
+    public void setBirthDate(Date birthDate) {
+        this.birthDate = birthDate;
     }
 }

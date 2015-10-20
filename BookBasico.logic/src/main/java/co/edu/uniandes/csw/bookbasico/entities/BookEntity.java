@@ -1,6 +1,7 @@
 package co.edu.uniandes.csw.bookbasico.entities;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Id;
@@ -32,6 +33,8 @@ public class BookEntity implements Serializable {
     private String image;
 
     private String description;
+    
+    private Date publishDate;
 
     /**
      * Relación de uno a muchos hacia ReviewEntity
@@ -167,5 +170,13 @@ public class BookEntity implements Serializable {
 
     public void setEditorial(EditorialEntity editorial) {
         this.editorial = editorial;
+    }
+
+    public Date getPublishDate() {
+        return publishDate;
+    }
+
+    public void setPublishDate(Date publish_date) {
+        this.publishDate = publish_date;
     }
 }

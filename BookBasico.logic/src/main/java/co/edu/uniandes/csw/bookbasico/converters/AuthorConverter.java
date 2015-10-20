@@ -20,6 +20,7 @@ public abstract class AuthorConverter {
             AuthorDTO dto = new AuthorDTO();
             dto.setId(entity.getId());
             dto.setName(entity.getName());
+            dto.setBirthDate(entity.getBirthDate());
 
             return dto;
         }
@@ -40,6 +41,7 @@ public abstract class AuthorConverter {
 
             entity.setId(dto.getId());
             entity.setName(dto.getName());
+            entity.setBirthDate(dto.getBirthDate());
 
             return entity;
         }

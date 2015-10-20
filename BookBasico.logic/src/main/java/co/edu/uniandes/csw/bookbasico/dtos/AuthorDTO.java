@@ -1,11 +1,16 @@
 package co.edu.uniandes.csw.bookbasico.dtos;
 
+import java.util.Date;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 @XmlRootElement 
 public class AuthorDTO {
     private Long id;
     private String name;
+    
+    @XmlJavaTypeAdapter(DateAdapter.class)
+    private Date birthDate;
 
     public Long getId() {
         return id;
@@ -21,5 +26,13 @@ public class AuthorDTO {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Date getBirthDate() {
+        return birthDate;
+    }
+
+    public void setBirthDate(Date birthDate) {
+        this.birthDate = birthDate;
     }
 }
