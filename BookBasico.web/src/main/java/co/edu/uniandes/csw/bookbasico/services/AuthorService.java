@@ -3,8 +3,11 @@ package co.edu.uniandes.csw.bookbasico.services;
 import co.edu.uniandes.csw.bookbasico.api.IAuthorLogic;
 import co.edu.uniandes.csw.bookbasico.dtos.AuthorDTO;
 import co.edu.uniandes.csw.bookbasico.dtos.BookDTO;
+import co.edu.uniandes.csw.bookbasico.exceptions.BusinessLogicException;
 import co.edu.uniandes.csw.bookbasico.providers.StatusCreated;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -14,6 +17,7 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 
 @Path("/authors")
@@ -87,7 +91,12 @@ public class AuthorService {
     @POST
     @Path("{authorId: \\d+}/books/{bookId: \\d+}")
     public BookDTO addBook(@PathParam("authorId") Long authorId, @PathParam("bookId") Long bookId) {
-        return authorLogic.addBook(bookId, authorId);
+        try {
+            return authorLogic.addBook(bookId, authorId);
+        } catch (BusinessLogicException ex) {
+            Logger.getLogger(AuthorService.class.getName()).log(Level.SEVERE, null, ex);
+            throw new WebApplicationException(ex, 409);
+        }
     }
 
     /**
@@ -110,7 +119,12 @@ public class AuthorService {
     @PUT
     @Path("{authorId: \\d+}/books")
     public List<BookDTO> replaceBooks(@PathParam("authorId") Long authorId, List<BookDTO> books) {
-        return authorLogic.replaceBooks(books, authorId);
+        try {
+            return authorLogic.replaceBooks(books, authorId);
+        } catch (BusinessLogicException ex) {
+            Logger.getLogger(AuthorService.class.getName()).log(Level.SEVERE, null, ex);
+            throw new WebApplicationException(ex, 409);
+        }
     }
 
     /**

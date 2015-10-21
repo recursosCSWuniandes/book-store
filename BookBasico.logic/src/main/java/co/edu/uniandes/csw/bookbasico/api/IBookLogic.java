@@ -2,6 +2,7 @@ package co.edu.uniandes.csw.bookbasico.api;
 
 import co.edu.uniandes.csw.bookbasico.dtos.AuthorDTO;
 import co.edu.uniandes.csw.bookbasico.dtos.BookDTO;
+import co.edu.uniandes.csw.bookbasico.exceptions.BusinessLogicException;
 import java.util.List;
 
 public interface IBookLogic {
@@ -16,7 +17,7 @@ public interface IBookLogic {
 
     public void deleteBook(Long id);
 
-    public AuthorDTO addAuthor(Long authorId, Long bookId);
+    public AuthorDTO addAuthor(Long authorId, Long bookId) throws BusinessLogicException;
 
     public void removeAuthor(Long authorId, Long bookId);
 

@@ -3,8 +3,11 @@ package co.edu.uniandes.csw.bookbasico.services;
 import co.edu.uniandes.csw.bookbasico.api.IBookLogic;
 import co.edu.uniandes.csw.bookbasico.dtos.AuthorDTO;
 import co.edu.uniandes.csw.bookbasico.dtos.BookDTO;
+import co.edu.uniandes.csw.bookbasico.exceptions.BusinessLogicException;
 import co.edu.uniandes.csw.bookbasico.providers.StatusCreated;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -14,6 +17,7 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 
 @Path("/books")
@@ -26,6 +30,7 @@ public class BookService {
 
     /**
      * Se encarga de crear un book en la base de datos
+     *
      * @param dto Objeto de BookDTO con los datos nuevos
      * @return Objeto de BookDTO con los datos nuevos y su ID.
      */
@@ -37,7 +42,9 @@ public class BookService {
 
     /**
      * Obtiene la lista de los registros de Book
-     * @return Colección de objetos de BookDTO cada uno con sus respectivos Review
+     *
+     * @return Colección de objetos de BookDTO cada uno con sus respectivos
+     * Review
      */
     @GET
     public List<BookDTO> getBooks() {
@@ -46,8 +53,10 @@ public class BookService {
 
     /**
      * Obtiene los datos de una instancia de Book a partir de su ID
+     *
      * @param id Identificador de la instancia a consultar
-     * @return Instancia de BookDTO con los datos del Book consultado y sus Review
+     * @return Instancia de BookDTO con los datos del Book consultado y sus
+     * Review
      */
     @GET
     @Path("{id: \\d+}")
@@ -57,6 +66,7 @@ public class BookService {
 
     /**
      * Actualiza la información de una instancia de Book
+     *
      * @param id Identificador de la instancia de Book a modificar
      * @param dto Instancia de BookDTO con los nuevos datos.
      * @return Instancia de BookDTO con los datos actualizados.
@@ -70,6 +80,7 @@ public class BookService {
 
     /**
      * Elimina una instancia de Book de la base de datos.
+     *
      * @param id Identificador de la instancia a eliminar.
      */
     @DELETE
@@ -80,6 +91,7 @@ public class BookService {
 
     /**
      * Asocia un Author existente con un Book
+     *
      * @param bookId Identificador de la instancia de Book
      * @param authorId Identificador de la instancia de Author
      * @return Instancia de AuthorDTO que fue asociada a Book
@@ -87,11 +99,17 @@ public class BookService {
     @POST
     @Path("{bookId: \\d+}/authors/{authorId: \\d+}")
     public AuthorDTO addAuthor(@PathParam("bookId") Long bookId, @PathParam("authorId") Long authorId) {
-        return bookLogic.addAuthor(authorId, bookId);
+        try {
+            return bookLogic.addAuthor(authorId, bookId);
+        } catch (BusinessLogicException ex) {
+            Logger.getLogger(BookService.class.getName()).log(Level.SEVERE, null, ex);
+            throw new WebApplicationException(ex, 409);
+        }
     }
 
     /**
      * Desasocia un Author existente de un Book existente
+     *
      * @param bookId Identificador de la instancia de Book
      * @param authorId Identificador de la instancia de Author
      */
@@ -103,8 +121,10 @@ public class BookService {
 
     /**
      * Remplaza las instancias de Author asociadas a una instancia de Book
+     *
      * @param bookId Identificador de la instancia de Book
-     * @param authors Colección de instancias de AuthorDTO a asociar a instancia de Book
+     * @param authors Colección de instancias de AuthorDTO a asociar a instancia
+     * de Book
      * @return Nueva colección de AuthorDTO asociada a la instancia de Book
      */
     @PUT
@@ -114,9 +134,12 @@ public class BookService {
     }
 
     /**
-     * Obtiene una colección de instancias de AuthorDTO asociadas a una instancia de Book
+     * Obtiene una colección de instancias de AuthorDTO asociadas a una
+     * instancia de Book
+     *
      * @param bookId Identificador de la instancia de Book
-     * @return Colección de instancias de AuthorDTO asociadas a la instancia de Book
+     * @return Colección de instancias de AuthorDTO asociadas a la instancia de
+     * Book
      */
     @GET
     @Path("{bookId: \\d+}/authors")
@@ -126,6 +149,7 @@ public class BookService {
 
     /**
      * Obtiene una instancia de Author asociada a una instancia de Book
+     *
      * @param bookId Identificador de la instancia de Book
      * @param authorId Identificador de la instancia de Author
      */

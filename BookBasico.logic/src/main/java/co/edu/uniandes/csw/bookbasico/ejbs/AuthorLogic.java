@@ -8,6 +8,7 @@ import co.edu.uniandes.csw.bookbasico.dtos.AuthorDTO;
 import co.edu.uniandes.csw.bookbasico.dtos.BookDTO;
 import co.edu.uniandes.csw.bookbasico.entities.AuthorEntity;
 import co.edu.uniandes.csw.bookbasico.entities.BookEntity;
+import co.edu.uniandes.csw.bookbasico.exceptions.BusinessLogicException;
 import co.edu.uniandes.csw.bookbasico.persistence.AuthorPersistence;
 import co.edu.uniandes.csw.bookbasico.persistence.BookPersistence;
 import java.util.List;
@@ -49,7 +50,7 @@ public class AuthorLogic implements IAuthorLogic {
         persistence.delete(id);
     }
 
-    public BookDTO addBook(Long bookId, Long authorId) {
+    public BookDTO addBook(Long bookId, Long authorId) throws BusinessLogicException {
         bookLogic.addAuthor(authorId, bookId);
         BookEntity book = bookPersistence.find(bookId);
         return BookConverter.basicEntity2DTO(book);
@@ -59,7 +60,7 @@ public class AuthorLogic implements IAuthorLogic {
         bookLogic.removeAuthor(authorId, bookId);
     }
 
-    public List<BookDTO> replaceBooks(List<BookDTO> books, Long AuthorId) {
+    public List<BookDTO> replaceBooks(List<BookDTO> books, Long AuthorId) throws BusinessLogicException {
         List<BookEntity> bookList = bookPersistence.findAll();
         List<BookEntity> newBookList = BookConverter.listDTO2Entity(books);
         AuthorEntity author = persistence.find(AuthorId);

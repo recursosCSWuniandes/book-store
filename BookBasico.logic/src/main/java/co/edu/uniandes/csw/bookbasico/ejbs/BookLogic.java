@@ -7,6 +7,8 @@ import co.edu.uniandes.csw.bookbasico.dtos.AuthorDTO;
 import co.edu.uniandes.csw.bookbasico.dtos.BookDTO;
 import co.edu.uniandes.csw.bookbasico.entities.AuthorEntity;
 import co.edu.uniandes.csw.bookbasico.entities.BookEntity;
+import co.edu.uniandes.csw.bookbasico.exceptions.BusinessLogicException;
+import co.edu.uniandes.csw.bookbasico.persistence.AuthorPersistence;
 import co.edu.uniandes.csw.bookbasico.persistence.BookPersistence;
 import java.util.List;
 import javax.ejb.Stateless;
@@ -17,6 +19,9 @@ public class BookLogic implements IBookLogic {
 
     @Inject
     private BookPersistence persistence;
+    
+    @Inject
+    private AuthorPersistence authorPersistence;
 
     public List<BookDTO> getBooks() {
         return BookConverter.listEntity2DTO(persistence.findAll());
@@ -44,10 +49,12 @@ public class BookLogic implements IBookLogic {
         persistence.delete(id);
     }
 
-    public AuthorDTO addAuthor(Long authorId, Long bookId) {
+    public AuthorDTO addAuthor(Long authorId, Long bookId) throws BusinessLogicException{
         BookEntity bookEntity = persistence.find(bookId);
-        AuthorEntity authorEntity = new AuthorEntity();
-        authorEntity.setId(authorId);
+        AuthorEntity authorEntity = authorPersistence.find(authorId);
+        if (authorEntity.getBirthDate() != null && authorEntity.getBirthDate().after(bookEntity.getPublishDate())) {
+            throw new BusinessLogicException("Publish date can't be prior to authors birthdate");
+        }
         bookEntity.getAuthors().add(authorEntity);
         return AuthorConverter.basicEntity2DTO(authorEntity);
     }
