@@ -5,6 +5,7 @@
  */
 package co.edu.uniandes.csw.bookbasico.functionalTest;
 
+import co.edu.uniandes.csw.auth.model.UserDTO;
 import co.edu.uniandes.csw.bookbasico.dtos.BookDTO;
 import co.edu.uniandes.csw.bookbasico.services.BookService;
 import java.io.File;
@@ -15,6 +16,7 @@ import java.util.List;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
+import javax.ws.rs.core.Cookie;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -62,6 +64,7 @@ public class BookFunctionalIT {
     private static int Created = 201;
     private static int OkWithoutContent = 204;
     private static String URLIMAGE = "http://www.seleniumhq.org/images/big-logo.png";
+    private static Cookie cookieSessionId;
     
     // Mediante la anotacion @ArquillianResource se obtiene la URL de despliegue de la aplicacion
     @ArquillianResource
@@ -93,7 +96,7 @@ public class BookFunctionalIT {
                 // El archivo beans.xml es necesario para injeccion de dependencias. 
                 .addAsWebInfResource(new File("src/main/webapp/WEB-INF/beans.xml"))
                 // El archivo shiro.ini es necesario para injeccion de dependencias
-                .addAsWebInfResource("WEB-INF/shiro.ini")
+                .addAsWebInfResource(new File("src/main/webapp/WEB-INF/shiro.ini"))
                 // El archivo web.xml es necesario para el despliegue de los servlets
                 .setWebXML(new File("src/main/webapp/WEB-INF/web.xml"));
 
@@ -103,16 +106,21 @@ public class BookFunctionalIT {
     public List<BookDTO> data = new ArrayList();
 
     @BeforeClass
-    public static void setUp() {
+    public static void setUp() throws InterruptedException {
         // Crea una instancia del driver de firefox sobre el que se ejecutara la aplicacion.
         driver = new FirefoxDriver();
+        cookieSessionId = login(System.getenv("USERNAME_USER"), System.getenv("PASSWORD_USER"));
+        Thread.sleep(2500);
     }
 
     @Before
-    public void setUpTest() {        
+    public void setUpTest() throws InterruptedException {        
         insertData();
         // El browser  va a la url de despliegue. Se ejecuta al inicar cada uno de los metodos de prueba indicados con @Test
         driver.get(deploymentURL.toString());
+        if (driver.manage().getCookies().isEmpty()){
+            doLogin();
+        }
         
     }
 
@@ -131,7 +139,7 @@ public class BookFunctionalIT {
             book.setImage(URLIMAGE);
             Client cliente = ClientBuilder.newClient();
             Response response = cliente.target(URLBASE + PATHBOOK)
-                .request()
+                .request().cookie(cookieSessionId)
                 .post(Entity.entity(book, MediaType.APPLICATION_JSON));
             if (response.getStatus()== Ok)
                 data.add(book);
@@ -145,7 +153,7 @@ public class BookFunctionalIT {
             BookDTO book = factory.manufacturePojo(BookDTO.class);
             Client cliente = ClientBuilder.newClient();
             Response response = cliente.target(URLBASE + PATHBOOK + '/' + data.get(i).getId())
-                .request()
+                .request().cookie(cookieSessionId)
                 .delete();
             if (response.getStatus()== OkWithoutContent)
                 data.remove(book);
@@ -233,7 +241,7 @@ public class BookFunctionalIT {
         boolean success = false;
         Client cliente = ClientBuilder.newClient();
         Response response = cliente.target(URLBASE + PATHBOOK)
-                .request().get();
+                .request().cookie(cookieSessionId).get();
         String listBook = response.readEntity(String.class);
         List<BookDTO> listBookTest = new ObjectMapper().readValue(listBook, List.class);
         driver.findElement(By.id("-delete-btn")).click();// Elimina el primer elemento con encontrado id -delete-btn 
@@ -245,4 +253,34 @@ public class BookFunctionalIT {
         assertTrue(success);
     }
 
+    
+    public void doLogin() throws InterruptedException{
+        Thread.sleep(1500);
+        boolean success = false;
+        driver.findElement(By.name("username")).clear(); 
+        driver.findElement(By.name("username")).sendKeys(System.getenv("USERNAME_USER"));
+        driver.findElement(By.name("password")).clear(); 
+        driver.findElement(By.name("password")).sendKeys(System.getenv("PASSWORD_USER"));
+        driver.findElement(By.xpath("//input[@type='submit']")).click();
+        Thread.sleep(1000);
+
+    }
+    
+    
+     public static Cookie login(String username, String password) {
+        Client cliente = ClientBuilder.newClient();
+        UserDTO user = new UserDTO();
+        user.setUserName(username);
+        user.setPassword(password);
+        Response response = cliente.target(URLBASE).path("/users/login").request().
+                post(Entity.entity(user, MediaType.APPLICATION_JSON));       
+        UserDTO foundUser = (UserDTO) response.readEntity(UserDTO.class);
+        
+        if (foundUser != null && response.getStatus() == Ok) {
+            return response.getCookies().get("JSESSIONID");
+        } else {
+            return null;
+        }
+    }
+    
 }
