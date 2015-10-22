@@ -19,7 +19,7 @@ public class BookLogic implements IBookLogic {
 
     @Inject
     private BookPersistence persistence;
-    
+
     @Inject
     private AuthorPersistence authorPersistence;
 
@@ -49,7 +49,7 @@ public class BookLogic implements IBookLogic {
         persistence.delete(id);
     }
 
-    public AuthorDTO addAuthor(Long authorId, Long bookId) throws BusinessLogicException{
+    public AuthorDTO addAuthor(Long authorId, Long bookId) throws BusinessLogicException {
         BookEntity bookEntity = persistence.find(bookId);
         AuthorEntity authorEntity = authorPersistence.find(authorId);
         if (authorEntity.getBirthDate() != null && authorEntity.getBirthDate().after(bookEntity.getPublishDate())) {
@@ -66,9 +66,20 @@ public class BookLogic implements IBookLogic {
         bookEntity.getAuthors().remove(author);
     }
 
-    public List<AuthorDTO> replaceAuthors(List<AuthorDTO> authors, Long bookId) {
+    public List<AuthorDTO> replaceAuthors(List<AuthorDTO> authors, Long bookId) throws BusinessLogicException {
         BookEntity bookEntity = persistence.find(bookId);
-        bookEntity.setAuthors(AuthorConverter.listDTO2Entity(authors));
+        List<AuthorEntity> authorList = authorPersistence.findAll();
+        List<AuthorEntity> newAuthorList = AuthorConverter.listDTO2Entity(authors);
+        for (AuthorEntity author : newAuthorList) {
+            int i = authorList.indexOf(author);
+            if (authorList.get(i).getBirthDate() == null) {
+                continue;
+            }
+            if (authorList.get(i).getBirthDate().after(bookEntity.getPublishDate())) {
+                throw new BusinessLogicException("Publish date can't be prior to authors birthdate");
+            }
+        }
+        bookEntity.setAuthors(newAuthorList);
         return AuthorConverter.listEntity2DTO(bookEntity.getAuthors());
     }
 

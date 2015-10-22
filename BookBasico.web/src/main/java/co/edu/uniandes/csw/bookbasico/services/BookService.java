@@ -130,7 +130,12 @@ public class BookService {
     @PUT
     @Path("{bookId: \\d+}/authors")
     public List<AuthorDTO> replaceAuthors(@PathParam("bookId") Long bookId, List<AuthorDTO> authors) {
-        return bookLogic.replaceAuthors(authors, bookId);
+        try {
+            return bookLogic.replaceAuthors(authors, bookId);
+        } catch (BusinessLogicException ex) {
+            Logger.getLogger(BookService.class.getName()).log(Level.SEVERE, null, ex);
+            throw new WebApplicationException(ex, 409);
+        }
     }
 
     /**
