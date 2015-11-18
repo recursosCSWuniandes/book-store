@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package co.edu.uniandes.csw.bookbasico.serviceTest;
 
 import co.edu.uniandes.csw.auth.model.UserDTO;
@@ -10,21 +5,21 @@ import co.edu.uniandes.csw.bookbasico.dtos.BookDTO;
 import co.edu.uniandes.csw.bookbasico.providers.EJBExceptionMapper;
 import co.edu.uniandes.csw.bookbasico.services.BookService;
 import co.edu.uniandes.csw.bookbasico.shiro.ApiKeyProperties;
-import com.stormpath.sdk.account.Account;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
+import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Cookie;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 import org.codehaus.jackson.map.ObjectMapper;
+import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.filter.LoggingFilter;
 import org.jboss.arquillian.container.test.api.Deployment;
-import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
@@ -40,35 +35,25 @@ import org.junit.runners.MethodSorters;
 import uk.co.jemos.podam.api.PodamFactory;
 import uk.co.jemos.podam.api.PodamFactoryImpl;
 
-/**
- *
- * @author Jhonatan
- */
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @RunWith(Arquillian.class)
 public class BookTest {
 
-    public static String URLRESOURCES = "src/main/webapp";
-    public static String URLBASE = "http://localhost:8181/BookBasico.web/webresources";
-    public static String PATHBOOK = "/books";
-    public static int Ok = 200;
-    public static int Created = 201;
-    public static int OkWithoutContent = 204;
-    public static List<BookDTO> oraculo = new ArrayList<>();
-    public static List<Account> accountsTest = new ArrayList();
+    private static final String bookPath = "books";
+    private static final int Ok = Status.OK.getStatusCode();
+    private static final int Created = Status.CREATED.getStatusCode();
+    private static final int OkWithoutContent = Status.NO_CONTENT.getStatusCode();
+    private static List<BookDTO> oraculo = new ArrayList<>();
     private static Cookie cookieSessionId;
 
     @Deployment(testable = false)
     public static Archive<?> createDeployment() {
-
         MavenDependencyResolver resolver = DependencyResolvers.use(MavenDependencyResolver.class).loadMetadataFromPom("pom.xml");
         return ShrinkWrap
                 // Nombre del Proyecto "Bookbasico.web" seguido de ".war". Debe ser el mismo nombre del proyecto web que contiene los javascript y los  servicios Rest
                 .create(WebArchive.class, "BookBasico.web.war")
                 // Se agrega la dependencia a la logica con el nombre groupid:artefactid:version (GAV)
                 .addAsLibraries(resolver.artifact("co.edu.uniandes.csw.bookbasico:BookBasico.logic:1.0")
-                        .resolveAsFiles())
-                .addAsLibraries(resolver.artifact("co.edu.uniandes.csw:AuthService:0.0.4")
                         .resolveAsFiles())
                 // Se agregan los compilados de los paquetes de servicios
                 .addPackage(BookService.class.getPackage())
@@ -83,6 +68,13 @@ public class BookTest {
                 .addAsWebInfResource(new File("src/main/webapp/WEB-INF/shiro.ini"))
                 // El archivo web.xml es necesario para el despliegue de los servlets
                 .setWebXML(new File("src/main/webapp/WEB-INF/web.xml"));
+    }
+
+    private static WebTarget createWebTarget() {
+        String baseUrl = "http://localhost:8181/BookBasico.web/webresources";
+        ClientConfig config = new ClientConfig();
+        config.register(LoggingFilter.class);
+        return ClientBuilder.newClient(config).target(baseUrl);
     }
 
     @BeforeClass
@@ -100,18 +92,15 @@ public class BookTest {
     }
 
     public static Cookie login(String username, String password) {
-        Client cliente = ClientBuilder.newClient();
+        WebTarget target = createWebTarget();
         UserDTO user = new UserDTO();
         user.setUserName(username);
         user.setPassword(password);
         user.setRememberMe(true);
-        Response response = cliente.target(URLBASE)
-                .path("users")
-                .path("login")
-                .request()
-                .post(Entity.entity(user, MediaType.APPLICATION_JSON));       
+        Response response = target.path("users").path("login").request()
+                .post(Entity.entity(user, MediaType.APPLICATION_JSON));
         UserDTO foundUser = (UserDTO) response.readEntity(UserDTO.class);
-        
+
         if (foundUser != null && response.getStatus() == Ok) {
             return response.getCookies().get("JSESSIONID");
         } else {
@@ -120,10 +109,10 @@ public class BookTest {
     }
 
     @Test
-    public void t1CreateBookService() throws IOException {        
+    public void t1CreateBookService() throws IOException {
         BookDTO book = oraculo.get(0);
-        Client cliente = ClientBuilder.newClient();
-        Response response = cliente.target(URLBASE + PATHBOOK)
+        WebTarget target = createWebTarget();
+        Response response = target.path(bookPath)
                 .request().cookie(cookieSessionId)
                 .post(Entity.entity(book, MediaType.APPLICATION_JSON));
         BookDTO bookTest = (BookDTO) response.readEntity(BookDTO.class);
@@ -135,16 +124,17 @@ public class BookTest {
 
     @Test
     public void t2GetBookById() {
-        Client cliente = ClientBuilder.newClient();
-        BookDTO bookTest = cliente.target(URLBASE + PATHBOOK).path("/" + oraculo.get(0).getId())
+        WebTarget target = createWebTarget();
+        BookDTO bookTest = target.path(bookPath)
+                .path(oraculo.get(0).getId().toString())
                 .request().cookie(cookieSessionId).get(BookDTO.class);
         Assert.assertEquals(bookTest.getName(), oraculo.get(0).getName());
     }
 
     @Test
     public void t3GetCountryService() throws IOException {
-        Client cliente = ClientBuilder.newClient();
-        Response response = cliente.target(URLBASE + PATHBOOK)
+        WebTarget target = createWebTarget();
+        Response response = target.path(bookPath)
                 .request().cookie(cookieSessionId).get();
         String listBook = response.readEntity(String.class);
         List<BookDTO> listBookTest = new ObjectMapper().readValue(listBook, List.class);
@@ -159,8 +149,8 @@ public class BookTest {
         BookDTO bookChanged = factory.manufacturePojo(BookDTO.class);
         book.setName(bookChanged.getName());
         book.setIsbn(bookChanged.getIsbn());
-        Client cliente = ClientBuilder.newClient();
-        Response response = cliente.target(URLBASE + PATHBOOK).path("/" + book.getId())
+        WebTarget target = createWebTarget();
+        Response response = target.path(bookPath).path(book.getId().toString())
                 .request().cookie(cookieSessionId).put(Entity.entity(book, MediaType.APPLICATION_JSON));
         BookDTO bookTest = (BookDTO) response.readEntity(BookDTO.class);
         Assert.assertEquals(Ok, response.getStatus());
@@ -171,9 +161,9 @@ public class BookTest {
 
     @Test
     public void t5DeleteCountryService() {
-        Client cliente = ClientBuilder.newClient();
+        WebTarget target = createWebTarget();
         BookDTO book = oraculo.get(0);
-        Response response = cliente.target(URLBASE + PATHBOOK).path("/" + book.getId())
+        Response response = target.path(bookPath).path(book.getId().toString())
                 .request().cookie(cookieSessionId).delete();
         Assert.assertEquals(OkWithoutContent, response.getStatus());
     }
