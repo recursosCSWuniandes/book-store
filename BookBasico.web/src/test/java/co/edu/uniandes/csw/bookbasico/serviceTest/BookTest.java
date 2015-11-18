@@ -68,10 +68,13 @@ public class BookTest {
                 // Se agrega la dependencia a la logica con el nombre groupid:artefactid:version (GAV)
                 .addAsLibraries(resolver.artifact("co.edu.uniandes.csw.bookbasico:BookBasico.logic:1.0")
                         .resolveAsFiles())
+                .addAsLibraries(resolver.artifact("co.edu.uniandes.csw:AuthService:0.0.4")
+                        .resolveAsFiles())
                 // Se agregan los compilados de los paquetes de servicios
                 .addPackage(BookService.class.getPackage())
                 .addPackage(EJBExceptionMapper.class.getPackage())
                 .addPackage(ApiKeyProperties.class.getPackage())
+                .addPackage(UserDTO.class.getPackage())
                 // El archivo que contiene la configuracion a la base de datos. 
                 .addAsResource("META-INF/persistence.xml", "META-INF/persistence.xml")
                 // El archivo beans.xml es necesario para injeccion de dependencias. 
@@ -103,6 +106,7 @@ public class BookTest {
         UserDTO user = new UserDTO();
         user.setUserName(username);
         user.setPassword(password);
+        user.setRememberMe(true);
         Response response = cliente.target(URLBASE)
                 .path("users")
                 .path("login")
