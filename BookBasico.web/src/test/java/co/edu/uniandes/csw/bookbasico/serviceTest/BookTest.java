@@ -53,7 +53,7 @@ public class BookTest {
                 // Nombre del Proyecto "Bookbasico.web" seguido de ".war". Debe ser el mismo nombre del proyecto web que contiene los javascript y los  servicios Rest
                 .create(WebArchive.class, "BookBasico.web.war")
                 // Se agrega la dependencia a la logica con el nombre groupid:artefactid:version (GAV)
-                .addAsLibraries(resolver.artifact("co.edu.uniandes.csw.bookbasico:BookBasico.logic:1.0")
+                .addAsLibraries(resolver.artifact("co.edu.uniandes.csw.bookbasico:BookBasico.logic:1.0-SNAPSHOT")
                         .resolveAsFiles())
                 // Se agregan los compilados de los paquetes de servicios
                 .addPackage(BookService.class.getPackage())
