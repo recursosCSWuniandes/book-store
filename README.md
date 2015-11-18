@@ -1,3 +1,6 @@
+# Status
+[![Build Status](https://travis-ci.org/recursosCSWuniandes/book-store.svg)](https://travis-ci.org/recursosCSWuniandes/book-store)
+
 #API Rest
 -  [Introducción](#introducción)
 -  [Estructuras JSON](#estructuras-JSON)
