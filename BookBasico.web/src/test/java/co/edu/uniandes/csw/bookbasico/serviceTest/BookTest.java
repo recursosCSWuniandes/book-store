@@ -22,6 +22,7 @@ import javax.ws.rs.core.Cookie;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import org.codehaus.jackson.map.ObjectMapper;
+import org.glassfish.jersey.filter.LoggingFilter;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.junit.Arquillian;
@@ -102,8 +103,12 @@ public class BookTest {
         UserDTO user = new UserDTO();
         user.setUserName(username);
         user.setPassword(password);
-        Response response = cliente.target(URLBASE).path("/users/login").request().
-                post(Entity.entity(user, MediaType.APPLICATION_JSON));       
+        Response response = cliente.target(URLBASE)
+                .path("users")
+                .path("login")
+                .register(LoggingFilter.class)
+                .request()
+                .post(Entity.entity(user, MediaType.APPLICATION_JSON));       
         UserDTO foundUser = (UserDTO) response.readEntity(UserDTO.class);
         
         if (foundUser != null && response.getStatus() == Ok) {
