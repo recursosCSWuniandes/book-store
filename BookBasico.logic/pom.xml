@@ -15,7 +15,7 @@
     <parent>
         <groupId>co.edu.uniandes.csw.bookbasico</groupId>
         <artifactId>BookBasico</artifactId>
-        <version>1.0</version>
+        <version>1.0-SNAPSHOT</version>
     </parent>
     <dependencies>
         <!-- embedded glassfish 3.1.2 --> 
