@@ -58,11 +58,11 @@ public class BookTest {
     public static List<Account> accountsTest = new ArrayList();
     private static Cookie cookieSessionId;
 
-    @Deployment
+    @Deployment(testable = false)
     public static Archive<?> createDeployment() {
 
         MavenDependencyResolver resolver = DependencyResolvers.use(MavenDependencyResolver.class).loadMetadataFromPom("pom.xml");
-        WebArchive war = ShrinkWrap
+        return ShrinkWrap
                 // Nombre del Proyecto "Bookbasico.web" seguido de ".war". Debe ser el mismo nombre del proyecto web que contiene los javascript y los  servicios Rest
                 .create(WebArchive.class, "BookBasico.web.war")
                 // Se agrega la dependencia a la logica con el nombre groupid:artefactid:version (GAV)
@@ -83,8 +83,6 @@ public class BookTest {
                 .addAsWebInfResource(new File("src/main/webapp/WEB-INF/shiro.ini"))
                 // El archivo web.xml es necesario para el despliegue de los servlets
                 .setWebXML(new File("src/main/webapp/WEB-INF/web.xml"));
-
-        return war;
     }
 
     @BeforeClass
@@ -110,7 +108,6 @@ public class BookTest {
         Response response = cliente.target(URLBASE)
                 .path("users")
                 .path("login")
-                .register(LoggingFilter.class)
                 .request()
                 .post(Entity.entity(user, MediaType.APPLICATION_JSON));       
         UserDTO foundUser = (UserDTO) response.readEntity(UserDTO.class);
@@ -123,7 +120,6 @@ public class BookTest {
     }
 
     @Test
-    @RunAsClient
     public void t1CreateBookService() throws IOException {        
         BookDTO book = oraculo.get(0);
         Client cliente = ClientBuilder.newClient();
@@ -138,7 +134,6 @@ public class BookTest {
     }
 
     @Test
-    @RunAsClient
     public void t2GetBookById() {
         Client cliente = ClientBuilder.newClient();
         BookDTO bookTest = cliente.target(URLBASE + PATHBOOK).path("/" + oraculo.get(0).getId())
@@ -147,7 +142,6 @@ public class BookTest {
     }
 
     @Test
-    @RunAsClient
     public void t3GetCountryService() throws IOException {
         Client cliente = ClientBuilder.newClient();
         Response response = cliente.target(URLBASE + PATHBOOK)
@@ -159,7 +153,6 @@ public class BookTest {
     }
 
     @Test
-    @RunAsClient
     public void t4UpdateBookService() throws IOException {
         BookDTO book = oraculo.get(0);
         PodamFactory factory = new PodamFactoryImpl();
@@ -177,7 +170,6 @@ public class BookTest {
     }
 
     @Test
-    @RunAsClient
     public void t5DeleteCountryService() {
         Client cliente = ClientBuilder.newClient();
         BookDTO book = oraculo.get(0);
