@@ -3,7 +3,7 @@
     <groupId>co.edu.uniandes.csw.bookbasico</groupId>
     <artifactId>BookBasico.logic</artifactId>
     <name>BookBasico.logic</name>
-    <version>1.0</version>
+    <version>1.0-SNAPSHOT</version>
     <properties> 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <sonar.sourceEncoding>UTF-8</sonar.sourceEncoding>
@@ -12,39 +12,34 @@
         <sonar.jacoco.outReportPath>target/jacoco</sonar.jacoco.outReportPath>
         <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
     </properties>
+    <parent>
+        <groupId>co.edu.uniandes.csw.bookbasico</groupId>
+        <artifactId>BookBasico</artifactId>
+        <version>1.0</version>
+    </parent>
     <dependencies>
         <!-- embedded glassfish 3.1.2 --> 
         <dependency>
             <groupId>org.glassfish.main.extras</groupId>
             <artifactId>glassfish-embedded-all</artifactId>
-            <version>3.1.2.2</version> 
-            <scope>test</scope> 
         </dependency>
         
         <!-- JUnit -->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.10</version>
-            <type>jar</type>
-            <scope>test</scope>
-            <optional>true</optional>
         </dependency>
 
         <!-- Arquillian -->
         <dependency>
             <groupId>org.jboss.arquillian.junit</groupId>
             <artifactId>arquillian-junit-container</artifactId>
-            <version>1.0.0.Final</version>
-            <scope>test</scope>
         </dependency>
 
         <!-- arquillian support for embedded glassfish -->
         <dependency>
             <groupId>org.jboss.arquillian.container</groupId>
             <artifactId>arquillian-glassfish-embedded-3.1</artifactId>
-            <version>1.0.0.CR4</version>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.eclipse.persistence</groupId>
@@ -60,7 +55,6 @@
         <dependency>
             <groupId>uk.co.jemos.podam</groupId>
             <artifactId>podam</artifactId>
-            <version>6.0.1.RELEASE</version>
         </dependency>
     </dependencies>
     <build>
