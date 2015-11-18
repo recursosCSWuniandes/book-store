@@ -1,11 +1,11 @@
 (function (ng) {
-    var mod = ng.module('bookModule');
+    var mod = ng.module('authorModule');
 
-    mod.controller('bookCtrl', ['$scope', 'bookService', 'editorialService', 'authorService', '$modal', function ($scope, svc, editorialSvc, authorSvc, $modal) {
+    mod.controller('authorCtrl', ['$scope', 'authorService', function ($scope, svc) {
             $scope.currentRecord = {};
             $scope.records = [];
             $scope.alerts = [];
-
+            
             $scope.today = function () {
                 $scope.value = new Date();
             };
@@ -37,10 +37,6 @@
 
             this.showError = function (msg) {
                 showMessage(msg, 'danger');
-            };
-
-            this.showSuccess = function (msg) {
-                showMessage(msg, 'success');
             };
 
             function responseError(response) {
@@ -78,11 +74,6 @@
                     $scope.records = response.data;
                     $scope.currentRecord = {};
                     self.editMode = false;
-                    ng.forEach(response.data, function (value, key) {
-                        svc.getAuthors(value.id).then(function (response) {
-                            value.authors = response.data;
-                        });
-                    });
                     return response;
                 }, responseError);
             };
@@ -97,73 +88,13 @@
                 }, responseError);
             };
 
-            editorialSvc.fetchRecords().then(function (response) {
-                $scope.editorials = response.data;
-            });
-
-            this.selectAuthors = function (book) {
-                var modal = $modal.open({
-                    animation: true,
-                    templateUrl: 'src/modules/book/authorModal.tpl.html',
-                    controller: ['$scope', '$modalInstance', 'items', 'currentItems', function ($scope, $modalInstance, items, currentItems) {
-                            $scope.records = items.data;
-                            $scope.allChecked = false;
-
-                            function loadSelected(list, selected) {
-                                ng.forEach(selected, function (selectedValue) {
-                                    ng.forEach(list, function (listValue) {
-                                        if (listValue.id === selectedValue.id) {
-                                            listValue.selected = true;
-                                        }
-                                    });
-                                });
-                            }
-
-                            loadSelected($scope.records, currentItems);
-
-                            $scope.checkAll = function (flag) {
-                                this.records.forEach(function (item) {
-                                    item.selected = flag;
-                                });
-                            };
-
-                            function getSelectedItems() {
-                                return $scope.records.filter(function (item) {
-                                    return !!item.selected;
-                                });
-                            }
-
-                            $scope.ok = function () {
-                                $modalInstance.close(getSelectedItems());
-                            };
-
-                            $scope.cancel = function () {
-                                $modalInstance.dismiss('cancel');
-                            };
-                        }],
-                    resolve: {
-                        items: function () {
-                            return authorSvc.fetchRecords();
-                        },
-                        currentItems: function () {
-                            return svc.getAuthors(book.id);
-                        }
-                    }
-                });
-                modal.result.then(function (data) {
-                    svc.replaceAuthors(book.id, data).then(function () {
-                        self.showSuccess('Autores actualizados');
-                    }, responseError);
-                });
-            };
-
             this.fetchRecords();
         }]);
 
-    mod.controller('authorsCtrl', ['$scope', 'authorService', '$modal', 'bookService', function ($scope, svc, $modal, bookSvc) {
+    mod.controller('booksCtrl', ['$scope', 'bookService', '$modal', 'authorService', function ($scope, svc, $modal, authorSvc) {
             $scope.currentRecord = {};
             $scope.records = [];
-            $scope.refName = 'authors';
+            $scope.refName = 'books';
             $scope.alerts = [];
 
             //Alertas
@@ -195,24 +126,83 @@
 
             //Escucha de evento cuando se selecciona un registro maestro
             function onCreateOrEdit(event, args) {
-                var childName = 'authors';
+                var childName = 'books';
                 if (args[childName] === undefined) {
                     args[childName] = [];
                 }
                 $scope.records = [];
                 $scope.refId = args.id;
-                bookSvc.getAuthors(args.id).then(function (response) {
-                    $scope.records = response.data;
-                }, responseError);
+                if (args.id) {
+                    authorSvc.getBooks(args.id).then(function (response) {
+                        $scope.records = response.data;
+                    }, responseError);
+                }
             }
 
             $scope.$on('post-create', onCreateOrEdit);
             $scope.$on('post-edit', onCreateOrEdit);
 
-            this.removeAuthor = function (index) {
-                bookSvc.removeAuthor($scope.refId, $scope.records[index].id).then(function () {
+            this.removeBook = function (index) {
+                authorSvc.removeBook($scope.refId, $scope.records[index].id).then(function () {
                     $scope.records.splice(index, 1);
                 }, responseError);
+            };
+
+            this.showList = function () {
+                var modal = $modal.open({
+                    animation: true,
+                    templateUrl: 'src/modules/author/bookModal.tpl.html',
+                    controller: ['$scope', '$modalInstance', 'items', 'currentItems', function ($scope, $modalInstance, items, currentItems) {
+                            $scope.records = items.data;
+                            $scope.allChecked = false;
+
+                            function loadSelected(list, selected) {
+                                ng.forEach(selected, function (selectedValue) {
+                                    ng.forEach(list, function (listValue) {
+                                        if (listValue.id === selectedValue.id) {
+                                            listValue.selected = true;
+                                        }
+                                    });
+                                });
+                            }
+
+                            $scope.checkAll = function (flag) {
+                                this.records.forEach(function (item) {
+                                    item.selected = flag;
+                                });
+                            };
+
+                            loadSelected($scope.records, currentItems);
+
+                            function getSelectedItems() {
+                                return $scope.records.filter(function (item) {
+                                    return !!item.selected;
+                                });
+                            }
+
+                            $scope.ok = function () {
+                                $modalInstance.close(getSelectedItems());
+                            };
+
+                            $scope.cancel = function () {
+                                $modalInstance.dismiss('cancel');
+                            };
+                        }],
+                    resolve: {
+                        items: function () {
+                            return svc.fetchRecords();
+                        },
+                        currentItems: function () {
+                            return $scope.records;
+                        }
+                    }
+                });
+                modal.result.then(function (data) {
+                    authorSvc.replaceBooks($scope.refId, data).then(function (response) {
+                        $scope.records.splice(0, $scope.records.length);
+                        $scope.records.push.apply($scope.records, response.data);
+                    }, responseError);
+                });
             };
         }]);
 })(window.angular);

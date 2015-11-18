@@ -1,6 +1,8 @@
 package co.edu.uniandes.csw.bookbasico.services;
 
+import co.edu.uniandes.csw.bookbasico.api.IAuthorLogic;
 import co.edu.uniandes.csw.bookbasico.api.IEditorialLogic;
+import co.edu.uniandes.csw.bookbasico.dtos.AuthorDTO;
 import co.edu.uniandes.csw.bookbasico.dtos.BookDTO;
 import co.edu.uniandes.csw.bookbasico.dtos.EditorialDTO;
 import co.edu.uniandes.csw.bookbasico.providers.StatusCreated;
@@ -23,6 +25,9 @@ public class EditorialService {
 
     @Inject
     private IEditorialLogic editorialLogic;
+
+    @Inject
+    private IAuthorLogic authorLogic;
 
     /**
      * Crea un registro de Editorial
@@ -149,5 +154,19 @@ public class EditorialService {
     @Path("{editorialId: \\d+}/books/{bookId: \\d+}")
     public BookDTO getBook(@PathParam("editorialId") Long editorialId, @PathParam("bookId") Long bookId) {
         return editorialLogic.getBook(editorialId, bookId);
+    }
+
+    /**
+     * Obtiene la colección de instancias de Autores que tienen al menos una
+     * instancia de Book asociada a una Editorial
+     *
+     * @param editorialId Identificador de la editorial
+     * @return Colección de instancias de AuthorDTO que tienen al menos un Book
+     * asociado a la Editorial
+     */
+    @GET
+    @Path("{editorialId: \\d+}/authors")
+    public List<AuthorDTO> getAuthors(@PathParam("editorialId") Long editorialId) {
+        return authorLogic.findByEditorial(editorialId);
     }
 }
