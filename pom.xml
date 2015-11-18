@@ -26,6 +26,7 @@
         <sonar.jacoco.itReportPath>${project.basedir}/target/jacoco-it.exec</sonar.jacoco.itReportPath>
         <sonar.jacoco.outReportPath>target/jacoco</sonar.jacoco.outReportPath>
         <sonar.jacoco.outItReportPath>target/jacoco-it</sonar.jacoco.outItReportPath>
+        <sonar.host.url>http://157.253.238.75:9000/</sonar.host.url>
     </properties>
     <dependencyManagement>
         <dependencies>
