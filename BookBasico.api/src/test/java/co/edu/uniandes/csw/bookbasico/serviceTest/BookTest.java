@@ -24,8 +24,7 @@ import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
-import org.jboss.shrinkwrap.resolver.api.DependencyResolvers;
-import org.jboss.shrinkwrap.resolver.api.maven.MavenDependencyResolver;
+import org.jboss.shrinkwrap.resolver.api.maven.Maven;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
@@ -48,13 +47,13 @@ public class BookTest {
 
     @Deployment(testable = false)
     public static Archive<?> createDeployment() {
-        MavenDependencyResolver resolver = DependencyResolvers.use(MavenDependencyResolver.class).loadMetadataFromPom("pom.xml");
         return ShrinkWrap
                 // Nombre del Proyecto "Bookbasico.web" seguido de ".war". Debe ser el mismo nombre del proyecto web que contiene los javascript y los  servicios Rest
                 .create(WebArchive.class, "BookBasico.web.war")
                 // Se agrega la dependencia a la logica con el nombre groupid:artefactid:version (GAV)
-                .addAsLibraries(resolver.artifact("co.edu.uniandes.csw.bookbasico:BookBasico.logic:1.0-SNAPSHOT")
-                        .resolveAsFiles())
+                .addAsLibraries(Maven.resolver()
+                        .resolve("co.edu.uniandes.csw.bookbasico:BookBasico.logic:1.0-SNAPSHOT")
+                        .withTransitivity().asFile())
                 // Se agregan los compilados de los paquetes de servicios
                 .addPackage(BookService.class.getPackage())
                 .addPackage(EJBExceptionMapper.class.getPackage())
