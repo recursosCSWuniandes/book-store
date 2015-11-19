@@ -54,6 +54,9 @@ public class BookTest {
                 .addAsLibraries(Maven.resolver()
                         .resolve("co.edu.uniandes.csw.bookbasico:BookBasico.logic:1.0-SNAPSHOT")
                         .withTransitivity().asFile())
+                .addAsLibraries(Maven.resolver()
+                        .resolve("co.edu.uniandes.csw:AuthService:0.0.4-SNAPSHOT")
+                        .withTransitivity().asFile())
                 // Se agregan los compilados de los paquetes de servicios
                 .addPackage(BookService.class.getPackage())
                 .addPackage(EJBExceptionMapper.class.getPackage())
