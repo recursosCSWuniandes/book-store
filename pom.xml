@@ -8,7 +8,7 @@
     <name>BookBasico</name>
     <modules>
         <module>BookBasico.logic</module>
-        <module>BookBasico.web</module>
+        <module>BookBasico.api</module>
     </modules>
     <repositories>
         <repository>
@@ -30,14 +30,6 @@
     </properties>
     <dependencyManagement>
         <dependencies>
-            <!-- build -->
-            <dependency>
-                <groupId>javax</groupId>
-                <artifactId>javaee-api</artifactId>
-                <version>7.0</version>
-            </dependency>
-
-            <!-- test -->
             <dependency>
                 <groupId>junit</groupId>
                 <artifactId>junit</artifactId>
