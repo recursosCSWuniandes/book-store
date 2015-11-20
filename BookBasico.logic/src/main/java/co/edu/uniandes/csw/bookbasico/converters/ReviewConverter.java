@@ -8,6 +8,9 @@ import java.util.List;
 
 public abstract class ReviewConverter {
 
+    private ReviewConverter() {
+    }
+
     /**
      * Convierte una instancia de ReviewEntity a ReviewDTO
      * Convierte todos los atributos propios de ReviewEntity

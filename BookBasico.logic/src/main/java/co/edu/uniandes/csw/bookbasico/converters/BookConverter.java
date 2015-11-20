@@ -7,6 +7,9 @@ import java.util.List;
 
 public abstract class BookConverter {
 
+    private BookConverter() {
+    }
+
     /**
      * Realiza la conversión de BookEntity a BookDTO Se invoca cuando otra
      * entidad tiene una referencia a BookEntity Entrega únicamente los
@@ -121,9 +124,10 @@ public abstract class BookConverter {
     }
 
     /**
-     * Convierte una colección de instancias de BookEntity a BookDTO
-     * Para cada instancia de BookEntity en la lista, invoca basicEntity2DTO y 
-     * añade el nuevo DTO a una nueva lista
+     * Convierte una colección de instancias de BookEntity a BookDTO Para cada
+     * instancia de BookEntity en la lista, invoca basicEntity2DTO y añade el
+     * nuevo DTO a una nueva lista
+     *
      * @param entities Colección de entidades a convertir
      * @return Collección de instancias de BookDTO
      */
@@ -138,10 +142,11 @@ public abstract class BookConverter {
     }
 
     /**
-     * Convierte una colección de instancias de BookDTO a instancias de BookEntity
-     * Para cada instancia se invoca el método basicDTO2Entity
+     * Convierte una colección de instancias de BookDTO a instancias de
+     * BookEntity Para cada instancia se invoca el método basicDTO2Entity
+     *
      * @param dtos
-     * @return 
+     * @return
      */
     public static List<BookEntity> listDTO2Entity(List<BookDTO> dtos) {
         List<BookEntity> entities = new ArrayList<BookEntity>();

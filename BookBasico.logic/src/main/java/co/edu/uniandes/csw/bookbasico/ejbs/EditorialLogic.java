@@ -22,29 +22,35 @@ public class EditorialLogic implements IEditorialLogic {
     @Inject
     private BookPersistence bookPersistence;
 
+    @Override
     public List<EditorialDTO> getEditorials() {
         return EditorialConverter.listEntity2DTO(persistence.findAll());
     }
 
+    @Override
     public EditorialDTO getEditorial(Long id) {
         return EditorialConverter.basicEntity2DTO(persistence.find(id));
     }
 
+    @Override
     public EditorialDTO createEditorial(EditorialDTO dto) {
         EditorialEntity entity = EditorialConverter.basicDTO2Entity(dto);
         persistence.create(entity);
         return EditorialConverter.basicEntity2DTO(entity);
     }
 
+    @Override
     public EditorialDTO updateEditorial(EditorialDTO dto) {
         EditorialEntity entity = persistence.update(EditorialConverter.basicDTO2Entity(dto));
         return EditorialConverter.basicEntity2DTO(entity);
     }
 
+    @Override
     public void deleteEditorial(Long id) {
         persistence.delete(id);
     }
 
+    @Override
     public BookDTO addBook(Long bookId, Long editorialId) {
         EditorialEntity editorialEntity = persistence.find(editorialId);
         BookEntity bookEntity = bookPersistence.find(bookId);
@@ -52,6 +58,7 @@ public class EditorialLogic implements IEditorialLogic {
         return BookConverter.basicEntity2DTO(bookEntity);
     }
 
+    @Override
     public void removeBook(Long bookId, Long editorialId) {
         EditorialEntity editorialEntity = persistence.find(editorialId);
         BookEntity book = bookPersistence.find(bookId);
@@ -59,6 +66,7 @@ public class EditorialLogic implements IEditorialLogic {
         editorialEntity.getBooks().remove(book);
     }
 
+    @Override
     public List<BookDTO> replaceBooks(List<BookDTO> books, Long editorialId) {
         EditorialEntity editorial = persistence.find(editorialId);
         List<BookEntity> bookList = bookPersistence.findAll();
@@ -75,10 +83,12 @@ public class EditorialLogic implements IEditorialLogic {
         return books;
     }
 
+    @Override
     public List<BookDTO> getBooks(Long editorialId) {
         return BookConverter.listEntity2DTO(persistence.find(editorialId).getBooks());
     }
 
+    @Override
     public BookDTO getBook(Long editorialId, Long bookId) {
         List<BookEntity> books = persistence.find(editorialId).getBooks();
         BookEntity book = new BookEntity();

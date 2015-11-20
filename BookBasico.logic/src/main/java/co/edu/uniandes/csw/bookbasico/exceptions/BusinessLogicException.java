@@ -3,9 +3,10 @@ package co.edu.uniandes.csw.bookbasico.exceptions;
 import javax.ejb.ApplicationException;
 
 @ApplicationException(rollback = true)
-public class BusinessLogicException extends Exception{
+public class BusinessLogicException extends Exception {
 
     public BusinessLogicException() {
+        super();
     }
 
     public BusinessLogicException(String message) {
@@ -19,5 +20,5 @@ public class BusinessLogicException extends Exception{
     public BusinessLogicException(String message, Throwable cause) {
         super(message, cause);
     }
-    
+
 }

@@ -8,29 +8,28 @@
         'ngRoute',
         'ngStorage'
     ]);
-    
+
     mainApp.factory('authInterceptor', ['$localStorage', function (storage) {
-        return {
-            // automatically attach Authorization header
-            request: function(config) {
-                var token = storage.token;
-                if(token) {
-                   config.headers.Authorization = 'Bearer ' + token;
+            return {
+                // automatically attach Authorization header
+                request: function (config) {
+                    var token = storage.token;
+                    if (token) {
+                        config.headers.Authorization = 'Bearer ' + token;
+                    }
+                    return config;
+                },
+                // If a token was sent back, save it
+                response: function (res) {
+                    if (res.headers('Authorization')) {
+                        storage.token = res.headers('Authorization');
+                    }
+                    return res;
                 }
-                return config;
-            },
+            };
+        }]);
 
-            // If a token was sent back, save it
-            response: function(res) {
-                if(res.headers('Authorization')) {                    
-                    storage.token = res.headers('Authorization');
-                }
-                return res;
-            }
-        }
-    }]);
-
-    mainApp.config(['$routeProvider','$httpProvider', function ($routeProvider,$httpProvider) {
+    mainApp.config(['$routeProvider', '$httpProvider', function ($routeProvider, $httpProvider) {
             $httpProvider.interceptors.push('authInterceptor');
             $routeProvider
                     .when('/book', {

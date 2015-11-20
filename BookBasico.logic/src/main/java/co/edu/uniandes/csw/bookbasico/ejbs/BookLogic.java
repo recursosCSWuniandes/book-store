@@ -23,20 +23,24 @@ public class BookLogic implements IBookLogic {
     @Inject
     private AuthorPersistence authorPersistence;
 
+    @Override
     public List<BookDTO> getBooks() {
         return BookConverter.listEntity2DTO(persistence.findAll());
     }
 
+    @Override
     public BookDTO getBook(Long id) {
         return BookConverter.fullEntity2DTO(persistence.find(id));
     }
 
+    @Override
     public BookDTO createBook(BookDTO dto) {
         BookEntity entity = BookConverter.fullDTO2Entity(dto);
         persistence.create(entity);
         return BookConverter.fullEntity2DTO(entity);
     }
 
+    @Override
     public BookDTO updateBook(BookDTO dto) {
         BookEntity newEntity = BookConverter.fullDTO2Entity(dto);
         BookEntity oldEntity = persistence.find(dto.getId());
@@ -45,10 +49,12 @@ public class BookLogic implements IBookLogic {
         return BookConverter.fullEntity2DTO(entity);
     }
 
+    @Override
     public void deleteBook(Long id) {
         persistence.delete(id);
     }
 
+    @Override
     public AuthorDTO addAuthor(Long authorId, Long bookId) throws BusinessLogicException {
         BookEntity bookEntity = persistence.find(bookId);
         AuthorEntity authorEntity = authorPersistence.find(authorId);
@@ -59,6 +65,7 @@ public class BookLogic implements IBookLogic {
         return AuthorConverter.basicEntity2DTO(authorEntity);
     }
 
+    @Override
     public void removeAuthor(Long authorId, Long bookId) {
         BookEntity bookEntity = persistence.find(bookId);
         AuthorEntity author = new AuthorEntity();
@@ -66,6 +73,7 @@ public class BookLogic implements IBookLogic {
         bookEntity.getAuthors().remove(author);
     }
 
+    @Override
     public List<AuthorDTO> replaceAuthors(List<AuthorDTO> authors, Long bookId) throws BusinessLogicException {
         BookEntity bookEntity = persistence.find(bookId);
         List<AuthorEntity> authorList = authorPersistence.findAll();
@@ -83,10 +91,12 @@ public class BookLogic implements IBookLogic {
         return AuthorConverter.listEntity2DTO(bookEntity.getAuthors());
     }
 
+    @Override
     public List<AuthorDTO> getAuthors(Long bookId) {
         return AuthorConverter.listEntity2DTO(persistence.find(bookId).getAuthors());
     }
 
+    @Override
     public AuthorDTO getAuthor(Long bookId, Long authorId) {
         List<AuthorEntity> authors = persistence.find(bookId).getAuthors();
         AuthorEntity author = new AuthorEntity();

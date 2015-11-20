@@ -112,7 +112,7 @@ public class BookDTO {
         return publishDate;
     }
 
-    public void setPublishDate(Date publish_date) {
-        this.publishDate = publish_date;
+    public void setPublishDate(Date publishDate) {
+        this.publishDate = publishDate;
     }
 }

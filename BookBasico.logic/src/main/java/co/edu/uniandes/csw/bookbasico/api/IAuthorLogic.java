@@ -17,15 +17,15 @@ public interface IAuthorLogic {
 
     public void deleteAuthor(Long id);
     
-    public BookDTO addBook(Long BookId, Long AuthorId) throws BusinessLogicException;
+    public BookDTO addBook(Long bookId, Long authorId) throws BusinessLogicException;
     
-    public void removeBook(Long BookId, Long AuthorId);
+    public void removeBook(Long bookId, Long authorId);
     
-    public List<BookDTO> replaceBooks(List<BookDTO> Books, Long AuthorId) throws BusinessLogicException;
+    public List<BookDTO> replaceBooks(List<BookDTO> books, Long authorId) throws BusinessLogicException;
     
-    public List<BookDTO> getBooks(Long AuthorId);
+    public List<BookDTO> getBooks(Long authorId);
     
-    public BookDTO getBook(Long AuthorId, Long BookId);
+    public BookDTO getBook(Long authorId, Long bookId);
     
     public List<AuthorDTO> findByEditorial(Long editorialId);
 }
