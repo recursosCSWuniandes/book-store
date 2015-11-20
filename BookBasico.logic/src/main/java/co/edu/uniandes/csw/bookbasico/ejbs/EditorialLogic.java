@@ -1,10 +1,6 @@
 package co.edu.uniandes.csw.bookbasico.ejbs;
 
 import co.edu.uniandes.csw.bookbasico.api.IEditorialLogic;
-import co.edu.uniandes.csw.bookbasico.converters.BookConverter;
-import co.edu.uniandes.csw.bookbasico.converters.EditorialConverter;
-import co.edu.uniandes.csw.bookbasico.dtos.BookDTO;
-import co.edu.uniandes.csw.bookbasico.dtos.EditorialDTO;
 import co.edu.uniandes.csw.bookbasico.entities.BookEntity;
 import co.edu.uniandes.csw.bookbasico.entities.EditorialEntity;
 import co.edu.uniandes.csw.bookbasico.persistence.BookPersistence;
@@ -23,26 +19,25 @@ public class EditorialLogic implements IEditorialLogic {
     private BookPersistence bookPersistence;
 
     @Override
-    public List<EditorialDTO> getEditorials() {
-        return EditorialConverter.listEntity2DTO(persistence.findAll());
+    public List<EditorialEntity> getEditorials() {
+        return persistence.findAll();
     }
 
     @Override
-    public EditorialDTO getEditorial(Long id) {
-        return EditorialConverter.basicEntity2DTO(persistence.find(id));
+    public EditorialEntity getEditorial(Long id) {
+        return persistence.find(id);
     }
 
     @Override
-    public EditorialDTO createEditorial(EditorialDTO dto) {
-        EditorialEntity entity = EditorialConverter.basicDTO2Entity(dto);
+    public EditorialEntity createEditorial(EditorialEntity entity) {
         persistence.create(entity);
-        return EditorialConverter.basicEntity2DTO(entity);
+        return entity;
     }
 
     @Override
-    public EditorialDTO updateEditorial(EditorialDTO dto) {
-        EditorialEntity entity = persistence.update(EditorialConverter.basicDTO2Entity(dto));
-        return EditorialConverter.basicEntity2DTO(entity);
+    public EditorialEntity updateEditorial(EditorialEntity entity) {
+        entity = persistence.update(entity);
+        return entity;
     }
 
     @Override
@@ -51,11 +46,11 @@ public class EditorialLogic implements IEditorialLogic {
     }
 
     @Override
-    public BookDTO addBook(Long bookId, Long editorialId) {
+    public BookEntity addBook(Long bookId, Long editorialId) {
         EditorialEntity editorialEntity = persistence.find(editorialId);
         BookEntity bookEntity = bookPersistence.find(bookId);
         editorialEntity.getBooks().add(bookEntity);
-        return BookConverter.basicEntity2DTO(bookEntity);
+        return bookEntity;
     }
 
     @Override
@@ -67,12 +62,11 @@ public class EditorialLogic implements IEditorialLogic {
     }
 
     @Override
-    public List<BookDTO> replaceBooks(List<BookDTO> books, Long editorialId) {
+    public List<BookEntity> replaceBooks(List<BookEntity> books, Long editorialId) {
         EditorialEntity editorial = persistence.find(editorialId);
         List<BookEntity> bookList = bookPersistence.findAll();
-        List<BookEntity> newBookList = BookConverter.listDTO2Entity(books);
         for (BookEntity book : bookList) {
-            if (newBookList.contains(book)) {
+            if (books.contains(book)) {
                 book.setEditorial(editorial);
             } else {
                 if (book.getEditorial() != null && book.getEditorial().equals(editorial)) {
@@ -84,18 +78,18 @@ public class EditorialLogic implements IEditorialLogic {
     }
 
     @Override
-    public List<BookDTO> getBooks(Long editorialId) {
-        return BookConverter.listEntity2DTO(persistence.find(editorialId).getBooks());
+    public List<BookEntity> getBooks(Long editorialId) {
+        return persistence.find(editorialId).getBooks();
     }
 
     @Override
-    public BookDTO getBook(Long editorialId, Long bookId) {
+    public BookEntity getBook(Long editorialId, Long bookId) {
         List<BookEntity> books = persistence.find(editorialId).getBooks();
         BookEntity book = new BookEntity();
         book.setId(bookId);
         int index = books.indexOf(book);
         if (index >= 0) {
-            return BookConverter.basicEntity2DTO(books.get(index));
+            return books.get(index);
         }
         return null;
     }

@@ -3,6 +3,9 @@ package co.edu.uniandes.csw.bookbasico.services;
 import co.edu.uniandes.csw.bookbasico.api.IAuthorLogic;
 import co.edu.uniandes.csw.bookbasico.dtos.AuthorDTO;
 import co.edu.uniandes.csw.bookbasico.dtos.BookDTO;
+import co.edu.uniandes.csw.bookbasico.converters.AuthorConverter;
+import co.edu.uniandes.csw.bookbasico.converters.BookConverter;
+import co.edu.uniandes.csw.bookbasico.entities.AuthorEntity;
 import co.edu.uniandes.csw.bookbasico.exceptions.BusinessLogicException;
 import co.edu.uniandes.csw.bookbasico.providers.StatusCreated;
 import java.util.List;
@@ -30,13 +33,13 @@ public class AuthorService {
 
     /**
      * Crea un registro de Author y retorna la instancia de este registro.
-     * @param dto Instancia de AuthorDTO con los datos a guardar
+     * @param entity Instancia de AuthorEntity con los datos a guardar
      * @return Instancia de AuthorDTO con los nuevos datos y el ID.
      */
     @POST
     @StatusCreated
-    public AuthorDTO createAuthor(AuthorDTO dto) {
-        return authorLogic.createAuthor(dto);
+    public AuthorDTO createAuthor(AuthorEntity entity) {
+        return AuthorConverter.basicEntity2DTO(entity);
     }
 
     /**
@@ -45,7 +48,7 @@ public class AuthorService {
      */
     @GET
     public List<AuthorDTO> getAuthors() {
-        return authorLogic.getAuthors();
+        return AuthorConverter.listEntity2DTO(authorLogic.getAuthors());
     }
 
     /**
@@ -56,20 +59,20 @@ public class AuthorService {
     @GET
     @Path("{authorId: \\d+}")
     public AuthorDTO getAuthor(@PathParam("authorId") Long id) {
-        return authorLogic.getAuthor(id);
+        return AuthorConverter.basicEntity2DTO(authorLogic.getAuthor(id));
     }
 
     /**
      * Actualiza los datos de un registro de Author
      * @param id Identificador del registro de Author a actualizar
-     * @param dto Instancia de AuthorDTO con los datos nuevos.
+     * @param entity Instancia de AuthorEntity con los datos nuevos.
      * @return Instancia de AuthorDTO con los datos nuevos.
      */
     @PUT
     @Path("{authorId: \\d+}")
-    public AuthorDTO updateAuthor(@PathParam("authorId") Long id, AuthorDTO dto) {
-        dto.setId(id);
-        return authorLogic.updateAuthor(dto);
+    public AuthorDTO updateAuthor(@PathParam("authorId") Long id, AuthorEntity entity) {
+        entity.setId(id);
+        return AuthorConverter.basicEntity2DTO(authorLogic.updateAuthor(entity));
     }
 
     /**
@@ -92,7 +95,7 @@ public class AuthorService {
     @Path("{authorId: \\d+}/books/{bookId: \\d+}")
     public BookDTO addBook(@PathParam("authorId") Long authorId, @PathParam("bookId") Long bookId) {
         try {
-            return authorLogic.addBook(bookId, authorId);
+            return BookConverter.basicEntity2DTO( authorLogic.addBook(bookId, authorId) );
         } catch (BusinessLogicException ex) {
             Logger.getLogger(AuthorService.class.getName()).log(Level.SEVERE, null, ex);
             throw new WebApplicationException(ex, 409);
@@ -120,7 +123,7 @@ public class AuthorService {
     @Path("{authorId: \\d+}/books")
     public List<BookDTO> replaceBooks(@PathParam("authorId") Long authorId, List<BookDTO> books) {
         try {
-            return authorLogic.replaceBooks(books, authorId);
+            return BookConverter.listEntity2DTO( authorLogic.replaceBooks(BookConverter.listDTO2Entity(books), authorId) );
         } catch (BusinessLogicException ex) {
             Logger.getLogger(AuthorService.class.getName()).log(Level.SEVERE, null, ex);
             throw new WebApplicationException(ex, 409);
@@ -135,7 +138,7 @@ public class AuthorService {
     @GET
     @Path("{authorId: \\d+}/books")
     public List<BookDTO> getBooks(@PathParam("authorId") Long authorId) {
-        return authorLogic.getBooks(authorId);
+        return BookConverter.listEntity2DTO(authorLogic.getBooks(authorId));
     }
 
     /**
@@ -146,6 +149,6 @@ public class AuthorService {
     @GET
     @Path("{authorId: \\d+}/books/{bookId: \\d+}")
     public BookDTO getBook(@PathParam("authorId") Long authorId, @PathParam("bookId") Long bookId) {
-        return authorLogic.getBook(authorId, bookId);
+        return BookConverter.basicEntity2DTO(authorLogic.getBook(authorId, bookId));
     }
 }

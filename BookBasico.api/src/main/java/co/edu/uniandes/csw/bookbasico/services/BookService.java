@@ -1,6 +1,8 @@
 package co.edu.uniandes.csw.bookbasico.services;
 
 import co.edu.uniandes.csw.bookbasico.api.IBookLogic;
+import co.edu.uniandes.csw.bookbasico.converters.AuthorConverter;
+import co.edu.uniandes.csw.bookbasico.converters.BookConverter;
 import co.edu.uniandes.csw.bookbasico.dtos.AuthorDTO;
 import co.edu.uniandes.csw.bookbasico.dtos.BookDTO;
 import co.edu.uniandes.csw.bookbasico.exceptions.BusinessLogicException;
@@ -37,7 +39,7 @@ public class BookService {
     @POST
     @StatusCreated
     public BookDTO createBook(BookDTO dto) {
-        return bookLogic.createBook(dto);
+        return BookConverter.basicEntity2DTO(bookLogic.createBook(BookConverter.basicDTO2Entity(dto)));
     }
 
     /**
@@ -48,7 +50,7 @@ public class BookService {
      */
     @GET
     public List<BookDTO> getBooks() {
-        return bookLogic.getBooks();
+        return BookConverter.listEntity2DTO( bookLogic.getBooks() );
     }
 
     /**
@@ -61,7 +63,7 @@ public class BookService {
     @GET
     @Path("{id: \\d+}")
     public BookDTO getBook(@PathParam("id") Long id) {
-        return bookLogic.getBook(id);
+        return BookConverter.basicEntity2DTO(bookLogic.getBook(id));
     }
 
     /**
@@ -75,7 +77,7 @@ public class BookService {
     @Path("{id: \\d+}")
     public BookDTO updateBook(@PathParam("id") Long id, BookDTO dto) {
         dto.setId(id);
-        return bookLogic.updateBook(dto);
+        return BookConverter.basicEntity2DTO( bookLogic.updateBook(BookConverter.basicDTO2Entity(dto) ));
     }
 
     /**
@@ -100,7 +102,7 @@ public class BookService {
     @Path("{bookId: \\d+}/authors/{authorId: \\d+}")
     public AuthorDTO addAuthor(@PathParam("bookId") Long bookId, @PathParam("authorId") Long authorId) {
         try {
-            return bookLogic.addAuthor(authorId, bookId);
+            return AuthorConverter.basicEntity2DTO(bookLogic.addAuthor(authorId, bookId));
         } catch (BusinessLogicException ex) {
             Logger.getLogger(BookService.class.getName()).log(Level.SEVERE, null, ex);
             throw new WebApplicationException(ex, 409);
@@ -131,7 +133,7 @@ public class BookService {
     @Path("{bookId: \\d+}/authors")
     public List<AuthorDTO> replaceAuthors(@PathParam("bookId") Long bookId, List<AuthorDTO> authors) {
         try {
-            return bookLogic.replaceAuthors(authors, bookId);
+            return AuthorConverter.listEntity2DTO(bookLogic.replaceAuthors(AuthorConverter.listDTO2Entity(authors), bookId));
         } catch (BusinessLogicException ex) {
             Logger.getLogger(BookService.class.getName()).log(Level.SEVERE, null, ex);
             throw new WebApplicationException(ex, 409);
@@ -149,7 +151,7 @@ public class BookService {
     @GET
     @Path("{bookId: \\d+}/authors")
     public List<AuthorDTO> getAuthors(@PathParam("bookId") Long bookId) {
-        return bookLogic.getAuthors(bookId);
+        return AuthorConverter.listEntity2DTO(bookLogic.getAuthors(bookId));
     }
 
     /**

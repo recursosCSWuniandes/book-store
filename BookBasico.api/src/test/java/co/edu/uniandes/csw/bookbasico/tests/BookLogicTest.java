@@ -117,7 +117,7 @@ public class BookLogicTest {
     public void createBookTest() {
         PodamFactory factory = new PodamFactoryImpl();
         BookDTO dto = factory.manufacturePojo(BookDTO.class);
-        BookDTO result = bookLogic.createBook(dto);
+        BookDTO result = BookConverter.basicEntity2DTO(bookLogic.createBook(BookConverter.basicDTO2Entity(dto)));
         Assert.assertNotNull(result);
         BookEntity entity = em.find(BookEntity.class, result.getId());
 
@@ -132,7 +132,7 @@ public class BookLogicTest {
      */
     @Test
     public void getBooksTest() {
-        List<BookDTO> list = bookLogic.getBooks();
+        List<BookDTO> list = BookConverter.listEntity2DTO(bookLogic.getBooks());
         Assert.assertEquals(data.size(), list.size());
         for (BookDTO dto : list) {
             boolean found = false;
@@ -151,7 +151,7 @@ public class BookLogicTest {
     @Test
     public void getBookTest() {
         BookEntity entity = data.get(0);
-        BookDTO dto = bookLogic.getBook(entity.getId());
+        BookDTO dto = BookConverter.basicEntity2DTO(bookLogic.getBook(entity.getId()));
         Assert.assertNotNull(dto);
         Assert.assertEquals(entity.getName(), dto.getName());
         Assert.assertEquals(entity.getIsbn(), dto.getIsbn());
@@ -180,7 +180,7 @@ public class BookLogicTest {
         BookDTO dto = factory.manufacturePojo(BookDTO.class);
         dto.setId(entity.getId());
         
-        bookLogic.updateBook(dto);
+        bookLogic.updateBook(BookConverter.basicDTO2Entity(dto));
 
         BookEntity resp = em.find(BookEntity.class, entity.getId());
 

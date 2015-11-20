@@ -2,6 +2,9 @@ package co.edu.uniandes.csw.bookbasico.services;
 
 import co.edu.uniandes.csw.bookbasico.api.IAuthorLogic;
 import co.edu.uniandes.csw.bookbasico.api.IEditorialLogic;
+import co.edu.uniandes.csw.bookbasico.converters.AuthorConverter;
+import co.edu.uniandes.csw.bookbasico.converters.BookConverter;
+import co.edu.uniandes.csw.bookbasico.converters.EditorialConverter;
 import co.edu.uniandes.csw.bookbasico.dtos.AuthorDTO;
 import co.edu.uniandes.csw.bookbasico.dtos.BookDTO;
 import co.edu.uniandes.csw.bookbasico.dtos.EditorialDTO;
@@ -38,7 +41,7 @@ public class EditorialService {
     @POST
     @StatusCreated
     public EditorialDTO createEditorial(EditorialDTO dto) {
-        return editorialLogic.createEditorial(dto);
+        return EditorialConverter.basicEntity2DTO(editorialLogic.createEditorial(EditorialConverter.basicDTO2Entity(dto)));
     }
 
     /**
@@ -48,7 +51,7 @@ public class EditorialService {
      */
     @GET
     public List<EditorialDTO> getEditorials() {
-        return editorialLogic.getEditorials();
+        return EditorialConverter.listEntity2DTO(editorialLogic.getEditorials());
     }
 
     /**
@@ -60,7 +63,7 @@ public class EditorialService {
     @GET
     @Path("{id: \\d+}")
     public EditorialDTO getEditorial(@PathParam("id") Long id) {
-        return editorialLogic.getEditorial(id);
+        return EditorialConverter.basicEntity2DTO(editorialLogic.getEditorial(id));
     }
 
     /**
@@ -74,7 +77,7 @@ public class EditorialService {
     @Path("{id: \\d+}")
     public EditorialDTO updateEditorial(@PathParam("id") Long id, EditorialDTO dto) {
         dto.setId(id);
-        return editorialLogic.updateEditorial(dto);
+        return EditorialConverter.basicEntity2DTO(editorialLogic.updateEditorial(EditorialConverter.basicDTO2Entity(dto)));
     }
 
     /**
@@ -99,7 +102,7 @@ public class EditorialService {
     @POST
     @Path("{editorialId: \\d+}/books/{bookId: \\d+}")
     public BookDTO addBook(@PathParam("editorialId") Long editorialId, @PathParam("bookId") Long bookId) {
-        return editorialLogic.addBook(bookId, editorialId);
+        return BookConverter.basicEntity2DTO(editorialLogic.addBook(bookId, editorialId));
     }
 
     /**
@@ -127,7 +130,7 @@ public class EditorialService {
     @PUT
     @Path("{editorialId: \\d+}/books")
     public List<BookDTO> replaceBooks(@PathParam("editorialId") Long editorialId, List<BookDTO> books) {
-        return editorialLogic.replaceBooks(books, editorialId);
+        return BookConverter.listEntity2DTO(editorialLogic.replaceBooks(BookConverter.listDTO2Entity(books), editorialId));
     }
 
     /**
@@ -140,7 +143,7 @@ public class EditorialService {
     @GET
     @Path("{editorialId: \\d+}/books")
     public List<BookDTO> getBooks(@PathParam("editorialId") Long editorialId) {
-        return editorialLogic.getBooks(editorialId);
+        return BookConverter.listEntity2DTO( editorialLogic.getBooks(editorialId) );
     }
 
     /**
@@ -153,7 +156,7 @@ public class EditorialService {
     @GET
     @Path("{editorialId: \\d+}/books/{bookId: \\d+}")
     public BookDTO getBook(@PathParam("editorialId") Long editorialId, @PathParam("bookId") Long bookId) {
-        return editorialLogic.getBook(editorialId, bookId);
+        return BookConverter.basicEntity2DTO(editorialLogic.getBook(editorialId, bookId));
     }
 
     /**
@@ -167,6 +170,6 @@ public class EditorialService {
     @GET
     @Path("{editorialId: \\d+}/authors")
     public List<AuthorDTO> getAuthors(@PathParam("editorialId") Long editorialId) {
-        return authorLogic.findByEditorial(editorialId);
+        return AuthorConverter.listEntity2DTO(authorLogic.findByEditorial(editorialId));
     }
 }
