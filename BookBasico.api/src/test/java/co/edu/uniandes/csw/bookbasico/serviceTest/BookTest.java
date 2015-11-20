@@ -9,6 +9,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
@@ -44,6 +45,7 @@ public class BookTest {
     private static final int OkWithoutContent = Status.NO_CONTENT.getStatusCode();
     private static List<BookDTO> oraculo = new ArrayList<>();
     private static Cookie cookieSessionId;
+    private static String token;
 
     @Deployment(testable = false)
     public static Archive<?> createDeployment() {
@@ -102,7 +104,7 @@ public class BookTest {
         Response response = target.path("users").path("login").request()
                 .post(Entity.entity(user, MediaType.APPLICATION_JSON));
         UserDTO foundUser = (UserDTO) response.readEntity(UserDTO.class);
-
+        token=response.getHeaderString("Authorization");
         if (foundUser != null && response.getStatus() == Ok) {
             return response.getCookies().get("JSESSIONID");
         } else {
@@ -115,7 +117,7 @@ public class BookTest {
         BookDTO book = oraculo.get(0);
         WebTarget target = createWebTarget();
         Response response = target.path(bookPath)
-                .request().cookie(cookieSessionId)
+                .request().header("Authorization", token).cookie(cookieSessionId)
                 .post(Entity.entity(book, MediaType.APPLICATION_JSON));
         BookDTO bookTest = (BookDTO) response.readEntity(BookDTO.class);
         Assert.assertEquals(book.getName(), bookTest.getName());
