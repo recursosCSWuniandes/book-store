@@ -9,28 +9,7 @@
         'ngStorage'
     ]);
 
-    mainApp.factory('authInterceptor', ['$localStorage', function (storage) {
-            return {
-                // automatically attach Authorization header
-                request: function (config) {
-                    var token = storage.token;
-                    if (token) {
-                        config.headers.Authorization = 'Bearer ' + token;
-                    }
-                    return config;
-                },
-                // If a token was sent back, save it
-                response: function (res) {
-                    if (res.headers('Authorization')) {
-                        storage.token = res.headers('Authorization');
-                    }
-                    return res;
-                }
-            };
-        }]);
-
-    mainApp.config(['$routeProvider', '$httpProvider', function ($routeProvider, $httpProvider) {
-            $httpProvider.interceptors.push('authInterceptor');
+    mainApp.config(['$routeProvider', function ($routeProvider) {
             $routeProvider
                     .when('/book', {
                         templateUrl: 'src/modules/book/book.tpl.html',
@@ -61,5 +40,9 @@
                 logoutURL: 'logout',
                 nameCookie: 'userCookie'
             });
+            auth.setRoles({'user': [{id: 'registeredUsers', label: 'user', icon: 'list-alt', url: '#/author'}, {id: 'indexBook', label: 'book', icon: 'list-alt', url: '#/book'}],
+                'provider': [{id: 'registeredProviders', label: 'provider', icon: 'inbox', url: '#/editorial'}]});
+
+            auth.setJwtConfig({'saveIn': 'sessionStorage'})// En teoria se pude cambiar el nombre, pero en el servicio tiene por default 'Autorization'        
         }]);
 })(window.angular);
