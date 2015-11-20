@@ -2,8 +2,7 @@ package co.edu.uniandes.csw.bookbasico.tests;
 
 import co.edu.uniandes.csw.bookbasico.ejbs.BookLogic;
 import co.edu.uniandes.csw.bookbasico.api.IBookLogic;
-import co.edu.uniandes.csw.bookbasico.converters.BookConverter;
-import co.edu.uniandes.csw.bookbasico.dtos.BookDTO;
+
 import co.edu.uniandes.csw.bookbasico.entities.BookEntity;
 import co.edu.uniandes.csw.bookbasico.persistence.BookPersistence;
 import static co.edu.uniandes.csw.bookbasico.tests._TestUtil.*;
@@ -22,8 +21,6 @@ import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import uk.co.jemos.podam.api.PodamFactory;
-import uk.co.jemos.podam.api.PodamFactoryImpl;
 
 /**
  * @generated
@@ -39,8 +36,6 @@ public class BookLogicTest {
     public static WebArchive createDeployment() {
         return ShrinkWrap.create(WebArchive.class, DEPLOY + ".war")
                 .addPackage(BookEntity.class.getPackage())
-                .addPackage(BookDTO.class.getPackage())
-                .addPackage(BookConverter.class.getPackage())
                 .addPackage(BookLogic.class.getPackage())
                 .addPackage(IBookLogic.class.getPackage())
                 .addPackage(BookPersistence.class.getPackage())
@@ -102,9 +97,12 @@ public class BookLogicTest {
      * @generated
      */
     private void insertData() {
-        for (int i = 0; i < 3; i++) {            
-            PodamFactory factory = new PodamFactoryImpl();
-            BookEntity entity = BookConverter.basicDTO2Entity(factory.manufacturePojo(BookDTO.class));
+        for (int i = 0; i < 3; i++) {
+            BookEntity entity = new BookEntity();
+            entity.setName("entityName" + i);
+            entity.setIsbn("entityIsbn" + i);
+            entity.setImage("entityImage" + i);
+            entity.setDescription("entityDesc" + i);
             em.persist(entity);
             data.add(entity);
         }
@@ -115,16 +113,17 @@ public class BookLogicTest {
      */
     @Test
     public void createBookTest() {
-        PodamFactory factory = new PodamFactoryImpl();
-        BookDTO dto = factory.manufacturePojo(BookDTO.class);
-        BookDTO result = BookConverter.basicEntity2DTO(bookLogic.createBook(BookConverter.basicDTO2Entity(dto)));
+        BookEntity entity = new BookEntity();
+        entity.setName("varname1");
+        entity.setIsbn("varisbn2");
+        entity.setImage("varimagen3");
+        entity.setDescription("vardesc4");
+        BookEntity result = bookLogic.createBook(entity);
         Assert.assertNotNull(result);
-        BookEntity entity = em.find(BookEntity.class, result.getId());
-
-        Assert.assertEquals(dto.getName(), entity.getName());
-        Assert.assertEquals(dto.getIsbn(), entity.getIsbn());
-        Assert.assertEquals(dto.getImage(), entity.getImage());
-        Assert.assertEquals(dto.getDescription(), entity.getDescription());
+        Assert.assertEquals(result.getName(), entity.getName());
+        Assert.assertEquals(result.getIsbn(), entity.getIsbn());
+        Assert.assertEquals(result.getImage(), entity.getImage());
+        Assert.assertEquals(result.getDescription(), entity.getDescription());
     }
 
     /**
@@ -132,12 +131,12 @@ public class BookLogicTest {
      */
     @Test
     public void getBooksTest() {
-        List<BookDTO> list = BookConverter.listEntity2DTO(bookLogic.getBooks());
+        List<BookEntity> list = bookLogic.getBooks();
         Assert.assertEquals(data.size(), list.size());
-        for (BookDTO dto : list) {
+        for (BookEntity entity : list) {
             boolean found = false;
-            for (BookEntity entity : data) {
-                if (dto.getId().equals(entity.getId())) {
+            for (BookEntity storedEntity : data) {
+                if (entity.getId().equals(storedEntity.getId())) {
                     found = true;
                 }
             }
@@ -151,12 +150,12 @@ public class BookLogicTest {
     @Test
     public void getBookTest() {
         BookEntity entity = data.get(0);
-        BookDTO dto = BookConverter.basicEntity2DTO(bookLogic.getBook(entity.getId()));
-        Assert.assertNotNull(dto);
-        Assert.assertEquals(entity.getName(), dto.getName());
-        Assert.assertEquals(entity.getIsbn(), dto.getIsbn());
-        Assert.assertEquals(entity.getImage(), dto.getImage());
-        Assert.assertEquals(entity.getDescription(), dto.getDescription());
+        BookEntity resultEntity = bookLogic.getBook(entity.getId());
+        Assert.assertNotNull(resultEntity);
+        Assert.assertEquals(entity.getName(), resultEntity.getName());
+        Assert.assertEquals(entity.getIsbn(), resultEntity.getIsbn());
+        Assert.assertEquals(entity.getImage(), resultEntity.getImage());
+        Assert.assertEquals(entity.getDescription(), resultEntity.getDescription());
     }
 
     /**
@@ -176,17 +175,20 @@ public class BookLogicTest {
     @Test
     public void updateBookTest() {
         BookEntity entity = data.get(0);
-        PodamFactory factory = new PodamFactoryImpl();
-        BookDTO dto = factory.manufacturePojo(BookDTO.class);
-        dto.setId(entity.getId());
+        BookEntity pojoEntity = new BookEntity();
+        pojoEntity.setName("newpojoname");
+        pojoEntity.setIsbn("newpojoisbn");
+        pojoEntity.setImage("newpojoimage");
+        pojoEntity.setDescription("newpojodesc");
+        pojoEntity.setId(entity.getId());
         
-        bookLogic.updateBook(BookConverter.basicDTO2Entity(dto));
+        bookLogic.updateBook(pojoEntity);
 
         BookEntity resp = em.find(BookEntity.class, entity.getId());
 
-        Assert.assertEquals(dto.getName(), resp.getName());
-        Assert.assertEquals(dto.getIsbn(), resp.getIsbn());
-        Assert.assertEquals(dto.getImage(), resp.getImage());
-        Assert.assertEquals(dto.getDescription(), resp.getDescription());
+        Assert.assertEquals(pojoEntity.getName(), resp.getName());
+        Assert.assertEquals(pojoEntity.getIsbn(), resp.getIsbn());
+        Assert.assertEquals(pojoEntity.getImage(), resp.getImage());
+        Assert.assertEquals(pojoEntity.getDescription(), resp.getDescription());
     }
 }
