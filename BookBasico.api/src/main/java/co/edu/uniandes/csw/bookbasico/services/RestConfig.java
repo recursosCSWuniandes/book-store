@@ -8,8 +8,8 @@ public class RestConfig extends ResourceConfig {
 
     public RestConfig() {
         packages("co.edu.uniandes.csw.bookbasico.services");
-        packages("co.edu.uniandes.csw.bookbasico.providers");
         packages("co.edu.uniandes.csw.auth.service");
+        packages("co.edu.uniandes.csw.auth.provider");
         packages("co.edu.uniandes.csw.auth.filter");
     }
 }

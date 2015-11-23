@@ -6,7 +6,7 @@ import co.edu.uniandes.csw.bookbasico.converters.BookConverter;
 import co.edu.uniandes.csw.bookbasico.dtos.AuthorDTO;
 import co.edu.uniandes.csw.bookbasico.dtos.BookDTO;
 import co.edu.uniandes.csw.bookbasico.exceptions.BusinessLogicException;
-import co.edu.uniandes.csw.bookbasico.providers.StatusCreated;
+import co.edu.uniandes.csw.auth.provider.StatusCreated;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;

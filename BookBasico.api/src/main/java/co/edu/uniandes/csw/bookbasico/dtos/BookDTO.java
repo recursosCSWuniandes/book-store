@@ -1,5 +1,6 @@
 package co.edu.uniandes.csw.bookbasico.dtos;
 
+import co.edu.uniandes.csw.auth.model.DateAdapter;
 import java.util.Date;
 import java.util.List;
 import javax.xml.bind.annotation.XmlRootElement;
