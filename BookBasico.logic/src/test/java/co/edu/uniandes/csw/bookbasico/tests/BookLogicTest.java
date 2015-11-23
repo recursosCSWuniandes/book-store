@@ -2,9 +2,14 @@ package co.edu.uniandes.csw.bookbasico.tests;
 
 import co.edu.uniandes.csw.bookbasico.ejbs.BookLogic;
 import co.edu.uniandes.csw.bookbasico.api.IBookLogic;
+import co.edu.uniandes.csw.bookbasico.ejbs.AuthorLogic;
+import co.edu.uniandes.csw.bookbasico.api.IAuthorLogic;
 
 import co.edu.uniandes.csw.bookbasico.entities.BookEntity;
+import co.edu.uniandes.csw.bookbasico.entities.AuthorEntity;
+import co.edu.uniandes.csw.bookbasico.exceptions.BusinessLogicException;
 import co.edu.uniandes.csw.bookbasico.persistence.BookPersistence;
+import co.edu.uniandes.csw.bookbasico.persistence.AuthorPersistence;
 import static co.edu.uniandes.csw.bookbasico.tests._TestUtil.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -48,6 +53,12 @@ public class BookLogicTest {
      */
     @Inject
     private IBookLogic bookLogic;
+    
+    /**
+     * @generated
+     */
+    @Inject
+    private IAuthorLogic authorLogic;
 
     /**
      * @generated
@@ -190,5 +201,134 @@ public class BookLogicTest {
         Assert.assertEquals(pojoEntity.getIsbn(), resp.getIsbn());
         Assert.assertEquals(pojoEntity.getImage(), resp.getImage());
         Assert.assertEquals(pojoEntity.getDescription(), resp.getDescription());
+    }
+    
+    /**
+     * @generated
+     */
+    @Test
+    public void addAuthorTest() {
+        BookEntity entity = data.get(0);
+        AuthorEntity authorEntity = new AuthorEntity();
+        authorEntity.setName("newauthor");
+        authorEntity = authorLogic.createAuthor(authorEntity);
+        
+        try{
+            AuthorEntity response = bookLogic.addAuthor(authorEntity.getId(), entity.getId());
+            Assert.assertNotNull(em);
+            Assert.assertEquals(response.getName(), authorEntity.getName());
+            Assert.assertEquals(response.getId(), authorEntity.getId());
+        }
+        catch (BusinessLogicException bslexception)
+        {
+            Assert.fail("No debe haber excepción");
+        }
+    }
+    
+    /**
+     * @generated
+     */
+    @Test
+    public void getAuthorTest() {
+        BookEntity entity = data.get(0);
+        AuthorEntity authorEntity = new AuthorEntity();
+        authorEntity.setName("newauthor");
+        authorEntity = authorLogic.createAuthor(authorEntity);
+        
+        try{
+            bookLogic.addAuthor(authorEntity.getId(), entity.getId());
+            AuthorEntity getAuthorResponse = bookLogic.getAuthor(entity.getId(), authorEntity.getId());
+            Assert.assertEquals(authorEntity.getName(), getAuthorResponse.getName());
+            Assert.assertEquals(authorEntity.getId(), getAuthorResponse.getId());
+            
+            bookLogic.updateBook(entity);
+
+            AuthorEntity listResponse = entity.getAuthors().get(entity.getAuthors().size() - 1);
+            Assert.assertEquals(listResponse.getName(), authorEntity.getName());
+            Assert.assertEquals(listResponse.getId(), authorEntity.getId());
+        }
+        catch (BusinessLogicException bslexception)
+        {
+            Assert.fail("No debe haber excepción");
+        }
+    }
+    
+    /**
+     * @generated
+     */
+    @Test
+    public void removeAuthorTest() {
+        BookEntity entity = data.get(0);
+        AuthorEntity authorEntity = new AuthorEntity();
+        authorEntity.setName("newauthor");
+        authorEntity = authorLogic.createAuthor(authorEntity);
+        
+        try{
+            bookLogic.addAuthor(authorEntity.getId(), entity.getId());
+            bookLogic.updateBook(entity);
+            AuthorEntity getAuthorResponse = bookLogic.getAuthor(entity.getId(), authorEntity.getId());
+            Assert.assertNotNull(getAuthorResponse);
+            bookLogic.removeAuthor(authorEntity.getId(), entity.getId());
+            bookLogic.updateBook(entity);
+            getAuthorResponse = bookLogic.getAuthor(entity.getId(), authorEntity.getId());
+            Assert.assertNull(getAuthorResponse);
+        }
+        catch (BusinessLogicException bslexception)
+        {
+            Assert.fail("No debe haber excepción");
+        }
+    }
+    
+    /**
+     * @generated
+     */
+    @Test
+    public void replaceAuthorsTest() {
+        BookEntity entity = data.get(0);
+        AuthorEntity authorEntity = new AuthorEntity();
+        authorEntity.setName("newauthor");
+        
+        AuthorEntity authorEntity2 = new AuthorEntity();
+        authorEntity2.setName("newauthor2");
+        
+        AuthorEntity authorEntity3 = new AuthorEntity();
+        authorEntity3.setName("newauthor3");
+        
+        authorEntity = authorLogic.createAuthor(authorEntity);
+        authorEntity2 = authorLogic.createAuthor(authorEntity2);
+        authorEntity3 = authorLogic.createAuthor(authorEntity3);
+        
+        try{
+            bookLogic.addAuthor(authorEntity.getId(), entity.getId());
+        }
+        catch (BusinessLogicException bslexception)
+        {
+            Assert.fail("No debe haber excepción");
+        }
+        
+        AuthorEntity getAuthorResponse = bookLogic.getAuthor(entity.getId(), authorEntity.getId());
+        AuthorEntity getAuthorResponse2 = bookLogic.getAuthor(entity.getId(), authorEntity2.getId());
+        AuthorEntity getAuthorResponse3 = bookLogic.getAuthor(entity.getId(), authorEntity3.getId());
+        Assert.assertNotNull(getAuthorResponse);
+        Assert.assertNull(getAuthorResponse2);
+        Assert.assertNull(getAuthorResponse3);
+        
+        try{
+            List<AuthorEntity> authorList = new ArrayList<AuthorEntity>() {};
+            authorList.add(authorEntity2);
+            authorList.add(authorEntity3);
+            bookLogic.replaceAuthors( authorList, entity.getId());
+        }
+        catch (BusinessLogicException bslexception)
+        {
+            Assert.fail("No debe haber excepción");
+        }
+        
+        getAuthorResponse = bookLogic.getAuthor(entity.getId(), authorEntity.getId());
+        getAuthorResponse2 = bookLogic.getAuthor(entity.getId(), authorEntity2.getId());
+        getAuthorResponse3 = bookLogic.getAuthor(entity.getId(), authorEntity3.getId());
+        Assert.assertNull(getAuthorResponse);
+        Assert.assertNotNull(getAuthorResponse2);
+        Assert.assertNotNull(getAuthorResponse3);
     }
 }
