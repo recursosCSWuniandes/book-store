@@ -8,7 +8,7 @@ import co.edu.uniandes.csw.bookbasico.converters.EditorialConverter;
 import co.edu.uniandes.csw.bookbasico.dtos.AuthorDTO;
 import co.edu.uniandes.csw.bookbasico.dtos.BookDTO;
 import co.edu.uniandes.csw.bookbasico.dtos.EditorialDTO;
-import co.edu.uniandes.csw.bookbasico.providers.StatusCreated;
+import co.edu.uniandes.csw.auth.provider.StatusCreated;
 import java.util.List;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes;

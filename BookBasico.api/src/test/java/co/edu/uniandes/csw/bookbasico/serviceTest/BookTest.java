@@ -2,14 +2,12 @@ package co.edu.uniandes.csw.bookbasico.serviceTest;
 
 import co.edu.uniandes.csw.auth.model.UserDTO;
 import co.edu.uniandes.csw.bookbasico.dtos.BookDTO;
-import co.edu.uniandes.csw.bookbasico.providers.EJBExceptionMapper;
 import co.edu.uniandes.csw.bookbasico.services.BookService;
 import co.edu.uniandes.csw.bookbasico.shiro.ApiKeyProperties;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
@@ -61,9 +59,7 @@ public class BookTest {
                         .withTransitivity().asFile())
                 // Se agregan los compilados de los paquetes de servicios
                 .addPackage(BookService.class.getPackage())
-                .addPackage(EJBExceptionMapper.class.getPackage())
                 .addPackage(ApiKeyProperties.class.getPackage())
-                .addPackage(UserDTO.class.getPackage())
                 // El archivo que contiene la configuracion a la base de datos. 
                 .addAsResource("META-INF/persistence.xml", "META-INF/persistence.xml")
                 // El archivo beans.xml es necesario para injeccion de dependencias. 
