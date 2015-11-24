@@ -24,6 +24,8 @@ import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import uk.co.jemos.podam.api.PodamFactory;
+import uk.co.jemos.podam.api.PodamFactoryImpl;
 
 /**
  * @generated
@@ -113,18 +115,15 @@ public class AuthorLogicTest {
      */
     private void insertData() {
         for (int i = 0; i < 3; i++) {
-            AuthorEntity entity = new AuthorEntity();
-            entity.setName("entityName" + i);
-            entity.setBirthDate(new Date(1970, 1, 1));
+            PodamFactory factory = new PodamFactoryImpl();
+            AuthorEntity entity = factory.manufacturePojo(AuthorEntity.class);
+            entity.setId(i+1L);
             em.persist(entity);
             data.add(entity);
             
-            BookEntity bookEntity = new BookEntity();
-            bookEntity.setName("entityName" + i);
-            bookEntity.setIsbn("entityIsbn" + i);
-            bookEntity.setImage("entityImage" + i);
-            bookEntity.setDescription("entityDesc" + i);
-            bookEntity.setPublishDate(new Date(2015, 11, 1));
+            
+            BookEntity bookEntity = factory.manufacturePojo(BookEntity.class);
+            bookEntity.setId(i+1L);
             em.persist(bookEntity);
             dataBooks.add(bookEntity);
         }
@@ -135,9 +134,8 @@ public class AuthorLogicTest {
      */
     @Test
     public void createAuthorsTest() {
-        AuthorEntity entity = new AuthorEntity();
-        entity.setName("varname1");
-        entity.setBirthDate(new Date(1970, 1, 1));
+        PodamFactory factory = new PodamFactoryImpl();
+        AuthorEntity entity = factory.manufacturePojo(AuthorEntity.class);
         
         AuthorEntity result = authorLogic.createAuthor(entity);
         Assert.assertNotNull(result);
@@ -173,7 +171,6 @@ public class AuthorLogicTest {
         AuthorEntity resultEntity = authorLogic.getAuthor(entity.getId());
         Assert.assertNotNull(resultEntity);
         Assert.assertEquals(entity.getName(), resultEntity.getName());
-        Assert.assertEquals(entity.getBirthDate(), resultEntity.getBirthDate());
         Assert.assertEquals(entity.getBooks(), resultEntity.getBooks());
     }
 
@@ -194,9 +191,8 @@ public class AuthorLogicTest {
     @Test
     public void updateAuthorTest() {
         AuthorEntity entity = data.get(0);
-        AuthorEntity pojoEntity = new AuthorEntity();
-        pojoEntity.setName("newpojoname");
-        pojoEntity.setBirthDate(new Date(1990, 12, 12));
+        PodamFactory factory = new PodamFactoryImpl();
+        AuthorEntity pojoEntity = factory.manufacturePojo(AuthorEntity.class);
         pojoEntity.setId(entity.getId());
         
         authorLogic.updateAuthor(pojoEntity);
@@ -204,7 +200,6 @@ public class AuthorLogicTest {
         AuthorEntity resp = em.find(AuthorEntity.class, entity.getId());
 
         Assert.assertEquals(pojoEntity.getName(), resp.getName());
-        Assert.assertEquals(pojoEntity.getBirthDate(), resp.getBirthDate());
     }
     
     /**
@@ -213,8 +208,8 @@ public class AuthorLogicTest {
     @Test
     public void addBookTest() {
         BookEntity entity = dataBooks.get(0);
-        AuthorEntity authorEntity = new AuthorEntity();
-        authorEntity.setName("newauthor");
+        PodamFactory factory = new PodamFactoryImpl();
+        AuthorEntity authorEntity = factory.manufacturePojo(AuthorEntity.class);
         authorEntity = authorLogic.createAuthor(authorEntity);
         
         try{
