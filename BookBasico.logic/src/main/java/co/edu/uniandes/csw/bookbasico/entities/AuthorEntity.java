@@ -10,6 +10,7 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import uk.co.jemos.podam.common.PodamExclude;
 
 @Entity
 @NamedQueries({
@@ -29,6 +30,7 @@ public class AuthorEntity extends BaseEntity implements Serializable {
      * que define la relación. Si no se hace esto, JPA crea una nueva relación
      * con BookEntity.
      */
+    @PodamExclude
     @ManyToMany(mappedBy = "authors")
     private List<BookEntity> books;
     

@@ -16,8 +16,11 @@ import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import uk.co.jemos.podam.api.PodamFactory;
+import uk.co.jemos.podam.api.PodamFactoryImpl;
 
 /**
  * @generated
@@ -93,11 +96,8 @@ public class BookPersistenceTest {
      */
     private void insertData() {
         for (int i = 0; i < 3; i++) {
-            BookEntity entity = new BookEntity();
-            entity.setName("entityName" + i);
-            entity.setIsbn("entityIsbn" + i);
-            entity.setImage("entityImage" + i);
-            entity.setDescription("entityDesc" + i);
+            PodamFactory factory = new PodamFactoryImpl();
+            BookEntity entity = factory.manufacturePojo(BookEntity.class);
             em.persist(entity);
             data.add(entity);
         }
@@ -108,11 +108,8 @@ public class BookPersistenceTest {
      */
     @Test
     public void createBookTest() {
-        BookEntity newEntity = new BookEntity();
-        newEntity.setName("newEntityName");
-        newEntity.setIsbn("newEntityIsbn");
-        newEntity.setImage("newEntityImage");
-        newEntity.setDescription("newEntityDesc");
+        PodamFactory factory = new PodamFactoryImpl();
+        BookEntity newEntity = factory.manufacturePojo(BookEntity.class);
         BookEntity result = bookPersistence.create(newEntity);
 
         Assert.assertNotNull(result);
@@ -174,11 +171,8 @@ public class BookPersistenceTest {
     @Test
     public void updateBookTest() {
         BookEntity entity = data.get(0);
-        BookEntity newEntity = new BookEntity();
-        newEntity.setName("updatedEntityName");
-        newEntity.setIsbn("updatedEntityIsbn");
-        newEntity.setImage("updatedEntityImage");
-        newEntity.setDescription("updatedEntityDesc");
+        PodamFactory factory = new PodamFactoryImpl();
+        BookEntity newEntity = factory.manufacturePojo(BookEntity.class);
         newEntity.setId(entity.getId());
 
         bookPersistence.update(newEntity);
