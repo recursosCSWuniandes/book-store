@@ -60,9 +60,9 @@ public class BookTest {
                 // Se agregan los compilados de los paquetes de servicios
                 .addPackage(BookService.class.getPackage())
                 .addPackage(ApiKeyProperties.class.getPackage())
-                // El archivo que contiene la configuracion a la base de datos. 
+                // El archivo que contiene la configuracion a la base de datos.
                 .addAsResource("META-INF/persistence.xml", "META-INF/persistence.xml")
-                // El archivo beans.xml es necesario para injeccion de dependencias. 
+                // El archivo beans.xml es necesario para injeccion de dependencias.
                 .addAsWebInfResource(new File("src/main/webapp/WEB-INF/beans.xml"))
                 // El archivo shiro.ini es necesario para injeccion de dependencias
                 .addAsWebInfResource(new File("src/main/webapp/WEB-INF/shiro.ini"))
@@ -99,10 +99,9 @@ public class BookTest {
         user.setRememberMe(true);
         Response response = target.path("users").path("login").request()
                 .post(Entity.entity(user, MediaType.APPLICATION_JSON));
-        UserDTO foundUser = (UserDTO) response.readEntity(UserDTO.class);
-        token=response.getHeaderString("Authorization");
-        if (foundUser != null && response.getStatus() == Ok) {
-            return response.getCookies().get("JSESSIONID");
+
+        if (response.getStatus() == Ok) {
+            return response.getCookies().get("jwt-token");
         } else {
             return null;
         }

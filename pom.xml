@@ -15,12 +15,9 @@
             <id>csw-snapshots</id>
             <name>csw snapshots</name>
             <url>http://157.253.238.75:8081/content/repositories/snapshots/</url>
-            <snapshots>
-                <updatePolicy>always</updatePolicy>
-            </snapshots>
         </repository>
     </repositories>
-    <properties> 
+    <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <sonar.sourceEncoding>UTF-8</sonar.sourceEncoding>
         <sonar.junit.reportsPath>target/surefire-reports</sonar.junit.reportsPath>
@@ -49,8 +46,8 @@
             <dependency>
                 <groupId>org.glassfish.main.extras</groupId>
                 <artifactId>glassfish-embedded-all</artifactId>
-                <version>3.1.2.2</version> 
-                <scope>test</scope> 
+                <version>3.1.2.2</version>
+                <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>org.jboss.arquillian.container</groupId>
@@ -75,7 +72,7 @@
                     <version>2.19</version>
                     <configuration>
                         <encoding>${project.build.sourceEncoding}</encoding>
-                        <argLine>${jacoco.agent.argLine} -XX:MaxPermSize=1024m</argLine> 
+                        <argLine>${jacoco.agent.argLine} -XX:MaxPermSize=1024m</argLine>
                         <reportsDirectory>${project.build.directory}/target/failsafe-reports</reportsDirectory>
                         <excludes>
                             <exclude>**/*Test.java</exclude>
@@ -99,7 +96,7 @@
                     <configuration>
                         <!-- Sets the VM argument line used when unit tests are run. -->
                         <argLine>${surefireArgLine}</argLine>
-                        <!-- Skips unit tests if the value of skip.unit.tests property is true -->                  
+                        <!-- Skips unit tests if the value of skip.unit.tests property is true -->
                         <!-- Excludes integration tests when unit tests are run. -->
                         <excludes>
                             <exclude>**/*IT.java</exclude>
@@ -110,7 +107,7 @@
                             <id>run-unit-tests</id>
                             <goals>
                                 <goal>test</goal>
-                            </goals>    
+                            </goals>
                         </execution>
                     </executions>
                 </plugin>
