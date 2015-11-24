@@ -257,6 +257,8 @@ public class AuthorLogicTest {
      */
     @Test
     public void replaceBooksTest() {
+        
+        
         BookEntity entity = dataBooks.get(0);
         BookEntity entity2 = dataBooks.get(1);
         BookEntity entity3 = dataBooks.get(2);
@@ -267,15 +269,11 @@ public class AuthorLogicTest {
             authorLogic.addBook(entity.getId(), authorEntity.getId());
             authorLogic.updateAuthor(authorEntity);
             Assert.assertEquals(1, authorLogic.getBooks(authorEntity.getId()).size());
-            authorLogic.replaceBooks(new ArrayList<BookEntity>(), authorEntity.getId());
-            authorLogic.addBook(authorEntity.getId(), entity.getId());
-            authorLogic.updateAuthor(authorEntity);
-            
-            Assert.assertEquals(1, authorLogic.getBooks(authorEntity.getId()).size());
             List<BookEntity> bookList = new ArrayList<BookEntity>();
             bookList.add(entity2);
             bookList.add(entity3);
             authorLogic.replaceBooks(bookList, authorEntity.getId());
+            authorLogic.updateAuthor(authorEntity);
             BookEntity getBookResponse = authorLogic.getBook(authorEntity.getId(), entity.getId());
             BookEntity getBookResponse2 = authorLogic.getBook(authorEntity.getId(), entity2.getId());
             BookEntity getBookResponse3 = authorLogic.getBook(authorEntity.getId(), entity3.getId());

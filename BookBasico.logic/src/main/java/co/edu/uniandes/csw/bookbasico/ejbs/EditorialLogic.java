@@ -49,7 +49,7 @@ public class EditorialLogic implements IEditorialLogic {
     public BookEntity addBook(Long bookId, Long editorialId) {
         EditorialEntity editorialEntity = persistence.find(editorialId);
         BookEntity bookEntity = bookPersistence.find(bookId);
-        editorialEntity.getBooks().add(bookEntity);
+        bookEntity.setEditorial(editorialEntity);
         return bookEntity;
     }
 
