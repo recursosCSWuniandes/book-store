@@ -38,8 +38,9 @@ public class AuthorService {
      */
     @POST
     @StatusCreated
-    public AuthorDTO createAuthor(AuthorEntity entity) {
-        return AuthorConverter.basicEntity2DTO(entity);
+    public AuthorDTO createAuthor(AuthorDTO dto) {
+        AuthorEntity authorEntity = authorLogic.createAuthor(AuthorConverter.basicDTO2Entity(dto));
+        return AuthorConverter.basicEntity2DTO(authorEntity);
     }
 
     /**
@@ -70,9 +71,10 @@ public class AuthorService {
      */
     @PUT
     @Path("{authorId: \\d+}")
-    public AuthorDTO updateAuthor(@PathParam("authorId") Long id, AuthorEntity entity) {
-        entity.setId(id);
-        return AuthorConverter.basicEntity2DTO(authorLogic.updateAuthor(entity));
+    public AuthorDTO updateAuthor(@PathParam("authorId") Long id, AuthorDTO dto) {
+        dto.setId(id);
+        AuthorEntity authorEntity = authorLogic.updateAuthor(AuthorConverter.basicDTO2Entity(dto));
+        return AuthorConverter.basicEntity2DTO(authorEntity);
     }
 
     /**
