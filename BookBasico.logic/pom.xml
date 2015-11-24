@@ -48,6 +48,11 @@
             <groupId>uk.co.jemos.podam</groupId>
             <artifactId>podam</artifactId>
         </dependency>
+        <dependency>
+            <groupId>co.edu.uniandes.csw</groupId>
+            <artifactId>CrudUtils</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
     </dependencies>
     <build>
         <plugins>

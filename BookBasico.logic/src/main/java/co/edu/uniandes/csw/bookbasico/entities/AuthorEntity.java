@@ -1,11 +1,10 @@
 package co.edu.uniandes.csw.bookbasico.entities;
 
+import co.edu.uniandes.csw.crud.spi.entity.BaseEntity;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -18,19 +17,7 @@ import javax.persistence.TemporalType;
             name = "AuthorEntity.findByEditorial",
             query = "SELECT DISTINCT a FROM AuthorEntity a join a.books b where b.editorial.id = :editorial_id")
 })
-public class AuthorEntity implements Serializable {
-
-    /**
-     * La anotación @Id indica a JPA que este campo es la llave primaria de la
-     * entidad. La anotación @GeneratedValue indica a JPA que el valor del campo
-     * debe ser generado automáticamente. La secuencia del valor del id
-     * dependerá de "Author".
-     */
-    @Id
-    @GeneratedValue(generator = "Author")
-    private Long id;
-
-    private String name;
+public class AuthorEntity extends BaseEntity implements Serializable {
 
     @Temporal(TemporalType.DATE)
     private Date birthDate;
@@ -44,22 +31,7 @@ public class AuthorEntity implements Serializable {
      */
     @ManyToMany(mappedBy = "authors")
     private List<BookEntity> books;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
+    
 
     public List<BookEntity> getBooks() {
         return books;
