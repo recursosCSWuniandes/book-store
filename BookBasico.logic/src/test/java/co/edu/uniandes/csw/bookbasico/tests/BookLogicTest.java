@@ -26,6 +26,8 @@ import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import uk.co.jemos.podam.api.PodamFactory;
+import uk.co.jemos.podam.api.PodamFactoryImpl;
 
 /**
  * @generated
@@ -109,11 +111,8 @@ public class BookLogicTest {
      */
     private void insertData() {
         for (int i = 0; i < 3; i++) {
-            BookEntity entity = new BookEntity();
-            entity.setName("entityName" + i);
-            entity.setIsbn("entityIsbn" + i);
-            entity.setImage("entityImage" + i);
-            entity.setDescription("entityDesc" + i);
+            PodamFactory factory = new PodamFactoryImpl();
+            BookEntity entity = factory.manufacturePojo(BookEntity.class);
             em.persist(entity);
             data.add(entity);
         }
@@ -124,11 +123,8 @@ public class BookLogicTest {
      */
     @Test
     public void createBookTest() {
-        BookEntity entity = new BookEntity();
-        entity.setName("varname1");
-        entity.setIsbn("varisbn2");
-        entity.setImage("varimagen3");
-        entity.setDescription("vardesc4");
+        PodamFactory factory = new PodamFactoryImpl();
+        BookEntity entity = factory.manufacturePojo(BookEntity.class);
         BookEntity result = bookLogic.createBook(entity);
         Assert.assertNotNull(result);
         Assert.assertEquals(result.getName(), entity.getName());
@@ -186,11 +182,8 @@ public class BookLogicTest {
     @Test
     public void updateBookTest() {
         BookEntity entity = data.get(0);
-        BookEntity pojoEntity = new BookEntity();
-        pojoEntity.setName("newpojoname");
-        pojoEntity.setIsbn("newpojoisbn");
-        pojoEntity.setImage("newpojoimage");
-        pojoEntity.setDescription("newpojodesc");
+        PodamFactory factory = new PodamFactoryImpl();
+        BookEntity pojoEntity = factory.manufacturePojo(BookEntity.class);
         pojoEntity.setId(entity.getId());
         
         bookLogic.updateBook(pojoEntity);
@@ -208,9 +201,9 @@ public class BookLogicTest {
      */
     @Test
     public void addAuthorTest() {
-        BookEntity entity = data.get(0);
-        AuthorEntity authorEntity = new AuthorEntity();
-        authorEntity.setName("newauthor");
+        BookEntity entity = data.get(0);        
+        PodamFactory factory = new PodamFactoryImpl();
+        AuthorEntity authorEntity = factory.manufacturePojo(AuthorEntity.class);
         authorEntity = authorLogic.createAuthor(authorEntity);
         
         try{
@@ -231,8 +224,8 @@ public class BookLogicTest {
     @Test
     public void getAuthorTest() {
         BookEntity entity = data.get(0);
-        AuthorEntity authorEntity = new AuthorEntity();
-        authorEntity.setName("newauthor");
+        PodamFactory factory = new PodamFactoryImpl();
+        AuthorEntity authorEntity = factory.manufacturePojo(AuthorEntity.class);
         authorEntity = authorLogic.createAuthor(authorEntity);
         
         try{
@@ -259,8 +252,8 @@ public class BookLogicTest {
     @Test
     public void removeAuthorTest() {
         BookEntity entity = data.get(0);
-        AuthorEntity authorEntity = new AuthorEntity();
-        authorEntity.setName("newauthor");
+        PodamFactory factory = new PodamFactoryImpl();
+        AuthorEntity authorEntity = factory.manufacturePojo(AuthorEntity.class);
         authorEntity = authorLogic.createAuthor(authorEntity);
         
         try{
@@ -285,14 +278,12 @@ public class BookLogicTest {
     @Test
     public void replaceAuthorsTest() {
         BookEntity entity = data.get(0);
-        AuthorEntity authorEntity = new AuthorEntity();
-        authorEntity.setName("newauthor");
+        PodamFactory factory = new PodamFactoryImpl();
+        AuthorEntity authorEntity = factory.manufacturePojo(AuthorEntity.class);
         
-        AuthorEntity authorEntity2 = new AuthorEntity();
-        authorEntity2.setName("newauthor2");
+        AuthorEntity authorEntity2 = factory.manufacturePojo(AuthorEntity.class);
         
-        AuthorEntity authorEntity3 = new AuthorEntity();
-        authorEntity3.setName("newauthor3");
+        AuthorEntity authorEntity3 = factory.manufacturePojo(AuthorEntity.class);
         
         authorEntity = authorLogic.createAuthor(authorEntity);
         authorEntity2 = authorLogic.createAuthor(authorEntity2);

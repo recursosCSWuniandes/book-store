@@ -86,7 +86,8 @@ public class BookTest {
     public static void insertData() {
         for (int i = 0; i < 5; i++) {
             PodamFactory factory = new PodamFactoryImpl();
-            BookDTO book = factory.manufacturePojo(BookDTO.class);
+            BookDTO book = factory.manufacturePojo(BookDTO.class);            
+            book.setId(i+1L);
             oraculo.add(book);
         }
     }

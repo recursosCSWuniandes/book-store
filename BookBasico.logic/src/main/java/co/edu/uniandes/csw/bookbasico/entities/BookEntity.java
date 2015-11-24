@@ -11,6 +11,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import uk.co.jemos.podam.common.PodamExclude;
 
 /**
  * @generated
@@ -36,6 +37,7 @@ public class BookEntity extends BaseEntity implements Serializable {
      * El parámetro orphanRemoval indica que se debe eliminar toda instancia
      * de ReviewEntity que no pertenezca a esta relación.
      */
+    @PodamExclude
     @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ReviewEntity> reviews;
 
@@ -49,6 +51,7 @@ public class BookEntity extends BaseEntity implements Serializable {
      * el parámetro mappedBy pero se debe definir en el otro extremo, es decir 
      * en la clase AuthorEntity.
      */
+    @PodamExclude
     @ManyToMany
     private List<AuthorEntity> authors;
     
@@ -56,6 +59,7 @@ public class BookEntity extends BaseEntity implements Serializable {
      * Relación muchos a uno con EditorialEntity. Este tipo de relación crea en
      * la tabla BookEntity una llave foránea hacia EditorialEntity.
      */
+    @PodamExclude
     @ManyToOne
     private EditorialEntity editorial;
 
