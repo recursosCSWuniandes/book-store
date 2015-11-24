@@ -1,11 +1,10 @@
 package co.edu.uniandes.csw.bookbasico.entities;
 
+import co.edu.uniandes.csw.crud.spi.entity.BaseEntity;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.CascadeType;
-import javax.persistence.Id;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Entity;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
@@ -17,18 +16,7 @@ import javax.persistence.TemporalType;
  * @generated
  */
 @Entity
-public class BookEntity implements Serializable {
-
-    /**
-     * La anotación @Id indica a JPA que este campo es la llave primaria de la entidad
-     * La anotación @GeneratedValue indica a JPA que el valor del campo debe ser generado 
-     * automáticamente. La secuencia del valor del id dependerá de "Book".
-     */
-    @Id
-    @GeneratedValue(generator = "Book")
-    private Long id;
-
-    private String name;
+public class BookEntity extends BaseEntity implements Serializable {
 
     private String isbn;
 
@@ -70,34 +58,6 @@ public class BookEntity implements Serializable {
      */
     @ManyToOne
     private EditorialEntity editorial;
-
-    /**
-     * @generated
-     */
-    public Long getId() {
-        return id;
-    }
-
-    /**
-     * @generated
-     */
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    /**
-     * @generated
-     */
-    public String getName() {
-        return name;
-    }
-
-    /**
-     * @generated
-     */
-    public void setName(String name) {
-        this.name = name;
-    }
 
     /**
      * @generated
