@@ -53,8 +53,7 @@ public class AuthorLogic implements IAuthorLogic {
     @Override
     public BookEntity addBook(Long bookId, Long authorId) throws BusinessLogicException {
         bookLogic.addAuthor(authorId, bookId);
-        BookEntity book = bookPersistence.find(bookId);
-        return book;
+        return bookPersistence.find(bookId);
     }
 
     @Override

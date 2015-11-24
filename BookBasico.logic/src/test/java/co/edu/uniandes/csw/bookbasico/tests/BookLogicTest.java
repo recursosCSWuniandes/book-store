@@ -331,4 +331,43 @@ public class BookLogicTest {
         Assert.assertNotNull(getAuthorResponse2);
         Assert.assertNotNull(getAuthorResponse3);
     }
+    
+    /**
+     * @generated
+     */
+    @Test
+    public void getAuthorsTest() {
+        BookEntity entity = data.get(0);
+        List<AuthorEntity> listado = new ArrayList<AuthorEntity>();
+        entity.setAuthors(listado);
+        bookLogic.updateBook(entity);
+        
+        Assert.assertEquals(entity.getAuthors().size(), 0);
+        
+        AuthorEntity authorEntity = new AuthorEntity();
+        authorEntity.setName("newauthor");
+        
+        AuthorEntity authorEntity2 = new AuthorEntity();
+        authorEntity2.setName("newauthor2");
+        
+        AuthorEntity authorEntity3 = new AuthorEntity();
+        authorEntity3.setName("newauthor3");
+        
+        authorEntity = authorLogic.createAuthor(authorEntity);
+        authorEntity2 = authorLogic.createAuthor(authorEntity2);
+        authorEntity3 = authorLogic.createAuthor(authorEntity3);
+        
+        try{
+            bookLogic.addAuthor(authorEntity.getId(), entity.getId());
+            bookLogic.addAuthor(authorEntity2.getId(), entity.getId());
+            bookLogic.addAuthor(authorEntity3.getId(), entity.getId());
+        }
+        catch (BusinessLogicException bslexception)
+        {
+            Assert.fail("No debe haber excepción");
+        }
+        
+        entity = bookLogic.updateBook(entity);
+        Assert.assertEquals(entity.getAuthors().size(), 3);
+    }
 }
