@@ -25,6 +25,7 @@ import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.jboss.shrinkwrap.resolver.api.maven.Maven;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
@@ -37,13 +38,12 @@ import uk.co.jemos.podam.api.PodamFactoryImpl;
 @RunWith(Arquillian.class)
 public class BookTest {
 
-    private static final String bookPath = "books";
-    private static final int Ok = Status.OK.getStatusCode();
-    private static final int Created = Status.CREATED.getStatusCode();
-    private static final int OkWithoutContent = Status.NO_CONTENT.getStatusCode();
+    private final String bookPath = "books";
+    private final int Ok = Status.OK.getStatusCode();
+    private final int Created = Status.CREATED.getStatusCode();
+    private final int OkWithoutContent = Status.NO_CONTENT.getStatusCode();
     private static List<BookDTO> oraculo = new ArrayList<>();
-    private static Cookie cookieSessionId;
-    private static String token;
+    private WebTarget target;
 
     @Deployment(testable = false)
     public static Archive<?> createDeployment() {
@@ -70,7 +70,7 @@ public class BookTest {
                 .setWebXML(new File("src/main/webapp/WEB-INF/web.xml"));
     }
 
-    private static WebTarget createWebTarget() {
+    private WebTarget createWebTarget() {
         String baseUrl = "http://localhost:8181/BookBasico.web/api";
         ClientConfig config = new ClientConfig();
         config.register(LoggingFilter.class);
@@ -79,41 +79,43 @@ public class BookTest {
 
     @BeforeClass
     public static void setUp() {
-        insertData();
-        cookieSessionId = login(System.getenv("USERNAME_USER"), System.getenv("PASSWORD_USER"));
+        insertData();        
     }
 
     public static void insertData() {
         for (int i = 0; i < 5; i++) {
             PodamFactory factory = new PodamFactoryImpl();
-            BookDTO book = factory.manufacturePojo(BookDTO.class);            
-            book.setId(i+1L);
+            BookDTO book = factory.manufacturePojo(BookDTO.class);
+            book.setId(i + 1L);
             oraculo.add(book);
         }
     }
 
-    public static Cookie login(String username, String password) {
-        WebTarget target = createWebTarget();
+    public Cookie login(String username, String password) {
         UserDTO user = new UserDTO();
         user.setUserName(username);
         user.setPassword(password);
         user.setRememberMe(true);
         Response response = target.path("users").path("login").request()
                 .post(Entity.entity(user, MediaType.APPLICATION_JSON));
-
         if (response.getStatus() == Ok) {
             return response.getCookies().get("jwt-token");
         } else {
             return null;
         }
     }
-
+    
+    @Before
+    public void setUpTest(){
+        target = createWebTarget();
+    }
+    
     @Test
     public void t1CreateBookService() throws IOException {
         BookDTO book = oraculo.get(0);
-        WebTarget target = createWebTarget();
+        Cookie cookieSessionId = login(System.getenv("USERNAME_USER"), System.getenv("PASSWORD_USER"));
         Response response = target.path(bookPath)
-                .request().header("Authorization", token).cookie(cookieSessionId)
+                .request().cookie(cookieSessionId)
                 .post(Entity.entity(book, MediaType.APPLICATION_JSON));
         BookDTO bookTest = (BookDTO) response.readEntity(BookDTO.class);
         Assert.assertEquals(book.getName(), bookTest.getName());
@@ -124,7 +126,7 @@ public class BookTest {
 
     @Test
     public void t2GetBookById() {
-        WebTarget target = createWebTarget();
+        Cookie cookieSessionId = login(System.getenv("USERNAME_USER"), System.getenv("PASSWORD_USER"));
         BookDTO bookTest = target.path(bookPath)
                 .path(oraculo.get(0).getId().toString())
                 .request().cookie(cookieSessionId).get(BookDTO.class);
@@ -133,7 +135,7 @@ public class BookTest {
 
     @Test
     public void t3GetBookService() throws IOException {
-        WebTarget target = createWebTarget();
+        Cookie cookieSessionId = login(System.getenv("USERNAME_USER"), System.getenv("PASSWORD_USER"));
         Response response = target.path(bookPath)
                 .request().cookie(cookieSessionId).get();
         String listBook = response.readEntity(String.class);
@@ -144,12 +146,12 @@ public class BookTest {
 
     @Test
     public void t4UpdateBookService() throws IOException {
+        Cookie cookieSessionId = login(System.getenv("USERNAME_USER"), System.getenv("PASSWORD_USER"));
         BookDTO book = oraculo.get(0);
         PodamFactory factory = new PodamFactoryImpl();
         BookDTO bookChanged = factory.manufacturePojo(BookDTO.class);
         book.setName(bookChanged.getName());
         book.setIsbn(bookChanged.getIsbn());
-        WebTarget target = createWebTarget();
         Response response = target.path(bookPath).path(book.getId().toString())
                 .request().cookie(cookieSessionId).put(Entity.entity(book, MediaType.APPLICATION_JSON));
         BookDTO bookTest = (BookDTO) response.readEntity(BookDTO.class);
@@ -161,7 +163,7 @@ public class BookTest {
 
     @Test
     public void t5DeleteBookService() {
-        WebTarget target = createWebTarget();
+        Cookie cookieSessionId = login(System.getenv("USERNAME_USER"), System.getenv("PASSWORD_USER"));
         BookDTO book = oraculo.get(0);
         Response response = target.path(bookPath).path(book.getId().toString())
                 .request().cookie(cookieSessionId).delete();
