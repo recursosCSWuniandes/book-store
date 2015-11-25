@@ -5,11 +5,12 @@ import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
+import uk.co.jemos.podam.common.PodamExclude;
 
 @Entity
 public class EditorialEntity extends BaseEntity implements Serializable {
 
-
+    @PodamExclude
     @OneToMany(mappedBy = "editorial")
     private List<BookEntity> books;
 

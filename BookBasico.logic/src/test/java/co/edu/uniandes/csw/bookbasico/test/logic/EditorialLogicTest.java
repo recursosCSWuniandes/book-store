@@ -4,6 +4,7 @@ import co.edu.uniandes.csw.bookbasico.ejbs.EditorialLogic;
 import co.edu.uniandes.csw.bookbasico.ejbs.BookLogic;
 import co.edu.uniandes.csw.bookbasico.api.IEditorialLogic;
 import co.edu.uniandes.csw.bookbasico.api.IBookLogic;
+import co.edu.uniandes.csw.bookbasico.entities.AuthorEntity;
 import co.edu.uniandes.csw.bookbasico.entities.EditorialEntity;
 import co.edu.uniandes.csw.bookbasico.entities.BookEntity;
 import co.edu.uniandes.csw.bookbasico.exceptions.BusinessLogicException;
@@ -25,6 +26,8 @@ import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import uk.co.jemos.podam.api.PodamFactory;
+import uk.co.jemos.podam.api.PodamFactoryImpl;
 
 /**
  * @generated
@@ -114,17 +117,14 @@ public class EditorialLogicTest {
      */
     private void insertData() {
         for (int i = 0; i < 3; i++) {
-            EditorialEntity entity = new EditorialEntity();
-            entity.setName("entityName" + i);
+            PodamFactory factory = new PodamFactoryImpl();
+            EditorialEntity entity = factory.manufacturePojo(EditorialEntity.class);
+            entity.setId(i+1L);
             em.persist(entity);
             data.add(entity);
             
-            BookEntity bookEntity = new BookEntity();
-            bookEntity.setName("entityName" + i);
-            bookEntity.setIsbn("entityIsbn" + i);
-            bookEntity.setImage("entityImage" + i);
-            bookEntity.setDescription("entityDesc" + i);
-            bookEntity.setPublishDate(new Date(2015, 11, 1));
+            BookEntity bookEntity = factory.manufacturePojo(BookEntity.class);
+            bookEntity.setId(i+1L);
             em.persist(bookEntity);
             dataBooks.add(bookEntity);
         }
@@ -135,8 +135,8 @@ public class EditorialLogicTest {
      */
     @Test
     public void createEditorialTest() {
-        EditorialEntity entity = new EditorialEntity();
-        entity.setName("varname1");
+        PodamFactory factory = new PodamFactoryImpl();
+        EditorialEntity entity = factory.manufacturePojo(EditorialEntity.class);
         
         EditorialEntity result = editorialLogic.createEditorial(entity);
         Assert.assertNotNull(result);
@@ -191,8 +191,8 @@ public class EditorialLogicTest {
     @Test
     public void updateEditorialTest() {
         EditorialEntity entity = data.get(0);
-        EditorialEntity pojoEntity = new EditorialEntity();
-        pojoEntity.setName("newpojoname");
+        PodamFactory factory = new PodamFactoryImpl();
+        EditorialEntity pojoEntity = factory.manufacturePojo(EditorialEntity.class);
         pojoEntity.setId(entity.getId());
         
         editorialLogic.updateEditorial(pojoEntity);
