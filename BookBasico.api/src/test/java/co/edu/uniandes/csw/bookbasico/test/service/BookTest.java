@@ -1,4 +1,4 @@
-package co.edu.uniandes.csw.bookbasico.serviceTest;
+package co.edu.uniandes.csw.bookbasico.test.service;
 
 import co.edu.uniandes.csw.auth.model.UserDTO;
 import co.edu.uniandes.csw.bookbasico.dtos.BookDTO;

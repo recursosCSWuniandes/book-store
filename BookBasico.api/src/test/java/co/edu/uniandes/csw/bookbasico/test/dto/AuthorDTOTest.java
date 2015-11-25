@@ -1,4 +1,4 @@
-package co.edu.uniandes.csw.bookbasico.dtoTest;
+package co.edu.uniandes.csw.bookbasico.test.dto;
 
 import co.edu.uniandes.csw.bookbasico.dtos.AuthorDTO;
 

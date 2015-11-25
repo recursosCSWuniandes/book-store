@@ -1,8 +1,7 @@
-package co.edu.uniandes.csw.bookbasico.persistenceTests;
+package co.edu.uniandes.csw.bookbasico.test.persistence;
 
 import co.edu.uniandes.csw.bookbasico.entities.BookEntity;
 import co.edu.uniandes.csw.bookbasico.persistence.BookPersistence;
-import static co.edu.uniandes.csw.bookbasico.logicTests._TestUtil.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,7 +15,6 @@ import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import uk.co.jemos.podam.api.PodamFactory;

@@ -1,4 +1,4 @@
-package co.edu.uniandes.csw.bookbasico.logicTests;
+package co.edu.uniandes.csw.bookbasico.test.logic;
 
 import java.util.Date;
 import java.util.Random;

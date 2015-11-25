@@ -1,16 +1,13 @@
-package co.edu.uniandes.csw.bookbasico.logicTests;
+package co.edu.uniandes.csw.bookbasico.test.logic;
 
 import co.edu.uniandes.csw.bookbasico.ejbs.BookLogic;
 import co.edu.uniandes.csw.bookbasico.api.IBookLogic;
-import co.edu.uniandes.csw.bookbasico.ejbs.AuthorLogic;
 import co.edu.uniandes.csw.bookbasico.api.IAuthorLogic;
 
 import co.edu.uniandes.csw.bookbasico.entities.BookEntity;
 import co.edu.uniandes.csw.bookbasico.entities.AuthorEntity;
 import co.edu.uniandes.csw.bookbasico.exceptions.BusinessLogicException;
 import co.edu.uniandes.csw.bookbasico.persistence.BookPersistence;
-import co.edu.uniandes.csw.bookbasico.persistence.AuthorPersistence;
-import static co.edu.uniandes.csw.bookbasico.logicTests._TestUtil.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -55,7 +52,7 @@ public class BookLogicTest {
      */
     @Inject
     private IBookLogic bookLogic;
-    
+
     /**
      * @generated
      */
@@ -185,7 +182,7 @@ public class BookLogicTest {
         PodamFactory factory = new PodamFactoryImpl();
         BookEntity pojoEntity = factory.manufacturePojo(BookEntity.class);
         pojoEntity.setId(entity.getId());
-        
+
         bookLogic.updateBook(pojoEntity);
 
         BookEntity resp = em.find(BookEntity.class, entity.getId());
@@ -195,17 +192,17 @@ public class BookLogicTest {
         Assert.assertEquals(pojoEntity.getImage(), resp.getImage());
         Assert.assertEquals(pojoEntity.getDescription(), resp.getDescription());
     }
-    
+
     /**
      * @generated
      */
     @Test
     public void addAuthorTest() {
-        BookEntity entity = data.get(0);        
+        BookEntity entity = data.get(0);
         PodamFactory factory = new PodamFactoryImpl();
         AuthorEntity authorEntity = factory.manufacturePojo(AuthorEntity.class);
         authorEntity = authorLogic.createAuthor(authorEntity);
-        
+
         try{
             AuthorEntity response = bookLogic.addAuthor(authorEntity.getId(), entity.getId());
             Assert.assertNotNull(em);
@@ -217,7 +214,7 @@ public class BookLogicTest {
             Assert.fail("No debe haber excepción");
         }
     }
-    
+
     /**
      * @generated
      */
@@ -227,13 +224,13 @@ public class BookLogicTest {
         PodamFactory factory = new PodamFactoryImpl();
         AuthorEntity authorEntity = factory.manufacturePojo(AuthorEntity.class);
         authorEntity = authorLogic.createAuthor(authorEntity);
-        
+
         try{
             bookLogic.addAuthor(authorEntity.getId(), entity.getId());
             AuthorEntity getAuthorResponse = bookLogic.getAuthor(entity.getId(), authorEntity.getId());
             Assert.assertEquals(authorEntity.getName(), getAuthorResponse.getName());
             Assert.assertEquals(authorEntity.getId(), getAuthorResponse.getId());
-            
+
             bookLogic.updateBook(entity);
 
             AuthorEntity listResponse = entity.getAuthors().get(entity.getAuthors().size() - 1);
@@ -245,7 +242,7 @@ public class BookLogicTest {
             Assert.fail("No debe haber excepción");
         }
     }
-    
+
     /**
      * @generated
      */
@@ -255,7 +252,7 @@ public class BookLogicTest {
         PodamFactory factory = new PodamFactoryImpl();
         AuthorEntity authorEntity = factory.manufacturePojo(AuthorEntity.class);
         authorEntity = authorLogic.createAuthor(authorEntity);
-        
+
         try{
             bookLogic.addAuthor(authorEntity.getId(), entity.getId());
             bookLogic.updateBook(entity);
@@ -271,7 +268,7 @@ public class BookLogicTest {
             Assert.fail("No debe haber excepción");
         }
     }
-    
+
     /**
      * @generated
      */
@@ -280,15 +277,15 @@ public class BookLogicTest {
         BookEntity entity = data.get(0);
         PodamFactory factory = new PodamFactoryImpl();
         AuthorEntity authorEntity = factory.manufacturePojo(AuthorEntity.class);
-        
+
         AuthorEntity authorEntity2 = factory.manufacturePojo(AuthorEntity.class);
-        
+
         AuthorEntity authorEntity3 = factory.manufacturePojo(AuthorEntity.class);
-        
+
         authorEntity = authorLogic.createAuthor(authorEntity);
         authorEntity2 = authorLogic.createAuthor(authorEntity2);
         authorEntity3 = authorLogic.createAuthor(authorEntity3);
-        
+
         try{
             bookLogic.addAuthor(authorEntity.getId(), entity.getId());
         }
@@ -296,14 +293,14 @@ public class BookLogicTest {
         {
             Assert.fail("No debe haber excepción");
         }
-        
+
         AuthorEntity getAuthorResponse = bookLogic.getAuthor(entity.getId(), authorEntity.getId());
         AuthorEntity getAuthorResponse2 = bookLogic.getAuthor(entity.getId(), authorEntity2.getId());
         AuthorEntity getAuthorResponse3 = bookLogic.getAuthor(entity.getId(), authorEntity3.getId());
         Assert.assertNotNull(getAuthorResponse);
         Assert.assertNull(getAuthorResponse2);
         Assert.assertNull(getAuthorResponse3);
-        
+
         try{
             List<AuthorEntity> authorList = new ArrayList<AuthorEntity>() {};
             authorList.add(authorEntity2);
@@ -314,7 +311,7 @@ public class BookLogicTest {
         {
             Assert.fail("No debe haber excepción");
         }
-        
+
         getAuthorResponse = bookLogic.getAuthor(entity.getId(), authorEntity.getId());
         getAuthorResponse2 = bookLogic.getAuthor(entity.getId(), authorEntity2.getId());
         getAuthorResponse3 = bookLogic.getAuthor(entity.getId(), authorEntity3.getId());
@@ -322,7 +319,7 @@ public class BookLogicTest {
         Assert.assertNotNull(getAuthorResponse2);
         Assert.assertNotNull(getAuthorResponse3);
     }
-    
+
     /**
      * @generated
      */
@@ -332,22 +329,22 @@ public class BookLogicTest {
         List<AuthorEntity> listado = new ArrayList<AuthorEntity>();
         entity.setAuthors(listado);
         bookLogic.updateBook(entity);
-        
+
         Assert.assertEquals(entity.getAuthors().size(), 0);
-        
+
         AuthorEntity authorEntity = new AuthorEntity();
         authorEntity.setName("newauthor");
-        
+
         AuthorEntity authorEntity2 = new AuthorEntity();
         authorEntity2.setName("newauthor2");
-        
+
         AuthorEntity authorEntity3 = new AuthorEntity();
         authorEntity3.setName("newauthor3");
-        
+
         authorEntity = authorLogic.createAuthor(authorEntity);
         authorEntity2 = authorLogic.createAuthor(authorEntity2);
         authorEntity3 = authorLogic.createAuthor(authorEntity3);
-        
+
         try{
             bookLogic.addAuthor(authorEntity.getId(), entity.getId());
             bookLogic.addAuthor(authorEntity2.getId(), entity.getId());
@@ -357,7 +354,7 @@ public class BookLogicTest {
         {
             Assert.fail("No debe haber excepción");
         }
-        
+
         entity = bookLogic.updateBook(entity);
         Assert.assertEquals(entity.getAuthors().size(), 3);
     }
