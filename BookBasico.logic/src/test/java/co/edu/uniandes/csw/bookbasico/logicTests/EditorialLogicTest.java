@@ -1,4 +1,4 @@
-package co.edu.uniandes.csw.bookbasico.tests;
+package co.edu.uniandes.csw.bookbasico.logicTests;
 
 import co.edu.uniandes.csw.bookbasico.ejbs.EditorialLogic;
 import co.edu.uniandes.csw.bookbasico.ejbs.BookLogic;

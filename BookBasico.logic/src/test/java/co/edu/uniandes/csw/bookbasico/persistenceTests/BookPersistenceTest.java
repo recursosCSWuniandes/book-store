@@ -1,8 +1,8 @@
-package co.edu.uniandes.csw.bookbasico.tests;
+package co.edu.uniandes.csw.bookbasico.persistenceTests;
 
 import co.edu.uniandes.csw.bookbasico.entities.BookEntity;
 import co.edu.uniandes.csw.bookbasico.persistence.BookPersistence;
-import static co.edu.uniandes.csw.bookbasico.tests._TestUtil.*;
+import static co.edu.uniandes.csw.bookbasico.logicTests._TestUtil.*;
 import java.util.ArrayList;
 import java.util.List;
 

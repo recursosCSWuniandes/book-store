@@ -1,4 +1,4 @@
-package co.edu.uniandes.csw.bookbasico.tests;
+package co.edu.uniandes.csw.bookbasico.logicTests;
 
 import co.edu.uniandes.csw.bookbasico.ejbs.BookLogic;
 import co.edu.uniandes.csw.bookbasico.api.IBookLogic;
@@ -10,7 +10,7 @@ import co.edu.uniandes.csw.bookbasico.entities.AuthorEntity;
 import co.edu.uniandes.csw.bookbasico.exceptions.BusinessLogicException;
 import co.edu.uniandes.csw.bookbasico.persistence.BookPersistence;
 import co.edu.uniandes.csw.bookbasico.persistence.AuthorPersistence;
-import static co.edu.uniandes.csw.bookbasico.tests._TestUtil.*;
+import static co.edu.uniandes.csw.bookbasico.logicTests._TestUtil.*;
 import java.util.ArrayList;
 import java.util.List;
 
