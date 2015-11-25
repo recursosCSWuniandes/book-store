@@ -132,7 +132,7 @@ public class BookTest {
     }
 
     @Test
-    public void t3GetCountryService() throws IOException {
+    public void t3GetBookService() throws IOException {
         WebTarget target = createWebTarget();
         Response response = target.path(bookPath)
                 .request().cookie(cookieSessionId).get();
@@ -160,7 +160,7 @@ public class BookTest {
     }
 
     @Test
-    public void t5DeleteCountryService() {
+    public void t5DeleteBookService() {
         WebTarget target = createWebTarget();
         BookDTO book = oraculo.get(0);
         Response response = target.path(bookPath).path(book.getId().toString())
