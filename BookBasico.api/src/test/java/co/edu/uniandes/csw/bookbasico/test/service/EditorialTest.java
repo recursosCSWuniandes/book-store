@@ -1,6 +1,7 @@
 package co.edu.uniandes.csw.bookbasico.test.service;
 
 import co.edu.uniandes.csw.auth.model.UserDTO;
+import co.edu.uniandes.csw.auth.security.JWT;
 import co.edu.uniandes.csw.bookbasico.dtos.EditorialDTO;
 import co.edu.uniandes.csw.bookbasico.services.EditorialService;
 import java.io.File;
@@ -93,14 +94,13 @@ public class EditorialTest {
 
     public Cookie login(String username, String password) {
         UserDTO user = new UserDTO();
-        System.out.println(username + ":" + password);
         user.setUserName(username);
         user.setPassword(password);
         user.setRememberMe(true);
         Response response = target.path("users").path("login").request()
                 .post(Entity.entity(user, MediaType.APPLICATION_JSON));
         if (response.getStatus() == Ok) {
-            return response.getCookies().get("jwt-token");
+            return response.getCookies().get(JWT.cookieName);
         } else {
             return null;
         }
