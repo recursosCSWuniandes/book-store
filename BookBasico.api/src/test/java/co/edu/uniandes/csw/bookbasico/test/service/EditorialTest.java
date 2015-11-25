@@ -43,6 +43,8 @@ public class EditorialTest {
     private final int Created = Status.CREATED.getStatusCode();
     private final int OkWithoutContent = Status.NO_CONTENT.getStatusCode();
     private static List<EditorialDTO> oraculo = new ArrayList<>();
+    private final String username = System.getenv("USERNAME_USER");
+    private final String password = System.getenv("PASSWORD_USER");
     private WebTarget target;
 
     @Deployment(testable = false)
@@ -85,7 +87,7 @@ public class EditorialTest {
     public static void insertData() {
         for (int i = 0; i < 5; i++) {
             PodamFactory factory = new PodamFactoryImpl();
-            EditorialDTO editorial = factory.manufacturePojo(EditorialDTO.class);            
+            EditorialDTO editorial = factory.manufacturePojo(EditorialDTO.class);
             editorial.setId(i + 1L);
             oraculo.add(editorial);
         }
@@ -93,6 +95,7 @@ public class EditorialTest {
 
     public Cookie login(String username, String password) {
         UserDTO user = new UserDTO();
+        System.out.println(username + ":" + password);
         user.setUserName(username);
         user.setPassword(password);
         user.setRememberMe(true);
@@ -104,17 +107,16 @@ public class EditorialTest {
             return null;
         }
     }
-    
+
     @Before
-    public void setUpTest(){
+    public void setUpTest() {
         target = createWebTarget();
     }
 
     @Test
     public void t1CreateEditorialService() throws IOException {
         EditorialDTO editorial = oraculo.get(0);
-        Cookie cookieSessionId = login(System.getenv("USERNAME_USER"), System.getenv("PASSWORD_USER"));
-        WebTarget target = createWebTarget();
+        Cookie cookieSessionId = login(username, password);
         Response response = target.path(editorialPath)
                 .request().cookie(cookieSessionId)
                 .post(Entity.entity(editorial, MediaType.APPLICATION_JSON));
@@ -126,7 +128,7 @@ public class EditorialTest {
 
     @Test
     public void t2GetEditorialById() {
-        Cookie cookieSessionId = login(System.getenv("USERNAME_USER"), System.getenv("PASSWORD_USER"));
+        Cookie cookieSessionId = login(username, password);
         EditorialDTO editorialTest = target.path(editorialPath)
                 .path(oraculo.get(0).getId().toString())
                 .request().cookie(cookieSessionId).get(EditorialDTO.class);
@@ -135,7 +137,7 @@ public class EditorialTest {
 
     @Test
     public void t3GetEditorialService() throws IOException {
-        Cookie cookieSessionId = login(System.getenv("USERNAME_USER"), System.getenv("PASSWORD_USER"));
+        Cookie cookieSessionId = login(username, password);
         Response response = target.path(editorialPath)
                 .request().cookie(cookieSessionId).get();
         String listEditorial = response.readEntity(String.class);
@@ -146,7 +148,7 @@ public class EditorialTest {
 
     @Test
     public void t4UpdateEditorialService() throws IOException {
-        Cookie cookieSessionId = login(System.getenv("USERNAME_USER"), System.getenv("PASSWORD_USER"));
+        Cookie cookieSessionId = login(username, password);
         EditorialDTO editorial = oraculo.get(0);
         PodamFactory factory = new PodamFactoryImpl();
         EditorialDTO editorialChanged = factory.manufacturePojo(EditorialDTO.class);
@@ -161,7 +163,7 @@ public class EditorialTest {
 
     @Test
     public void t5DeleteEditorialService() {
-        Cookie cookieSessionId = login(System.getenv("USERNAME_USER"), System.getenv("PASSWORD_USER"));
+        Cookie cookieSessionId = login(username, password);
         EditorialDTO editorial = oraculo.get(0);
         Response response = target.path(editorialPath).path(editorial.getId().toString())
                 .request().cookie(cookieSessionId).delete();

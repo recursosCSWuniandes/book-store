@@ -50,7 +50,7 @@ public class BookService {
      */
     @GET
     public List<BookDTO> getBooks() {
-        return BookConverter.listEntity2DTO( bookLogic.getBooks() );
+        return BookConverter.listEntity2DTO(bookLogic.getBooks());
     }
 
     /**
@@ -77,7 +77,7 @@ public class BookService {
     @Path("{id: \\d+}")
     public BookDTO updateBook(@PathParam("id") Long id, BookDTO dto) {
         dto.setId(id);
-        return BookConverter.basicEntity2DTO( bookLogic.updateBook(BookConverter.basicDTO2Entity(dto) ));
+        return BookConverter.basicEntity2DTO(bookLogic.updateBook(BookConverter.basicDTO2Entity(dto)));
     }
 
     /**
@@ -162,7 +162,7 @@ public class BookService {
      */
     @GET
     @Path("{bookId: \\d+}/authors/{authorId: \\d+}")
-    public void getAuthor(@PathParam("bookId") Long bookId, @PathParam("authorId") Long authorId) {
-        bookLogic.getAuthor(bookId, authorId);
+    public AuthorDTO getAuthor(@PathParam("bookId") Long bookId, @PathParam("authorId") Long authorId) {
+        return AuthorConverter.basicEntity2DTO(bookLogic.getAuthor(bookId, authorId));
     }
 }
