@@ -2,11 +2,13 @@ package co.edu.uniandes.csw.bookbasico.test.service;
 
 import co.edu.uniandes.csw.auth.model.UserDTO;
 import co.edu.uniandes.csw.bookbasico.dtos.BookDTO;
+import co.edu.uniandes.csw.bookbasico.dtos.AuthorDTO;
 import co.edu.uniandes.csw.bookbasico.services.BookService;
 import co.edu.uniandes.csw.bookbasico.shiro.ApiKeyProperties;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
@@ -39,10 +41,12 @@ import uk.co.jemos.podam.api.PodamFactoryImpl;
 public class BookTest {
 
     private final String bookPath = "books";
+    private final String authorPath = "authors";
     private final int Ok = Status.OK.getStatusCode();
     private final int Created = Status.CREATED.getStatusCode();
     private final int OkWithoutContent = Status.NO_CONTENT.getStatusCode();
     private static List<BookDTO> oraculo = new ArrayList<>();
+    private static List<AuthorDTO> oraculoAuthors = new ArrayList<>();
     private WebTarget target;
 
     @Deployment(testable = false)
@@ -76,7 +80,7 @@ public class BookTest {
         config.register(LoggingFilter.class);
         return ClientBuilder.newClient(config).target(baseUrl);
     }
-
+    
     @BeforeClass
     public static void setUp() {
         insertData();        
@@ -88,6 +92,11 @@ public class BookTest {
             BookDTO book = factory.manufacturePojo(BookDTO.class);
             book.setId(i + 1L);
             oraculo.add(book);
+            
+            AuthorDTO author = factory.manufacturePojo(AuthorDTO.class);
+            author.setId(i + 1L);
+            author.setBirthDate(null);
+            oraculoAuthors.add(author);
         }
     }
 
@@ -160,7 +169,7 @@ public class BookTest {
         Assert.assertEquals(book.getIsbn(), bookTest.getIsbn());
 
     }
-
+    
     @Test
     public void t5DeleteBookService() {
         Cookie cookieSessionId = login(System.getenv("USERNAME_USER"), System.getenv("PASSWORD_USER"));
@@ -169,5 +178,4 @@ public class BookTest {
                 .request().cookie(cookieSessionId).delete();
         Assert.assertEquals(OkWithoutContent, response.getStatus());
     }
-
 }

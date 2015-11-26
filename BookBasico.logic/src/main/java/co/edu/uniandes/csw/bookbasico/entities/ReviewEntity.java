@@ -4,6 +4,7 @@ import co.edu.uniandes.csw.crud.spi.entity.BaseEntity;
 import java.io.Serializable;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
+import uk.co.jemos.podam.common.PodamExclude;
 
 @Entity
 public class ReviewEntity extends BaseEntity implements Serializable {
@@ -19,6 +20,7 @@ public class ReviewEntity extends BaseEntity implements Serializable {
      * La anotación crea una llave foránea en la base de datos que
      * apunta a la tabla de BookEntity
      */
+    @PodamExclude
     @ManyToOne
     private BookEntity book;
 

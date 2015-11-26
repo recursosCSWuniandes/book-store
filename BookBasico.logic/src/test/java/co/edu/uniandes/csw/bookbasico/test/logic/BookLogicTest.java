@@ -6,6 +6,7 @@ import co.edu.uniandes.csw.bookbasico.api.IAuthorLogic;
 
 import co.edu.uniandes.csw.bookbasico.entities.BookEntity;
 import co.edu.uniandes.csw.bookbasico.entities.AuthorEntity;
+import co.edu.uniandes.csw.bookbasico.entities.ReviewEntity;
 import co.edu.uniandes.csw.bookbasico.exceptions.BusinessLogicException;
 import co.edu.uniandes.csw.bookbasico.persistence.BookPersistence;
 import java.util.ArrayList;
@@ -110,6 +111,17 @@ public class BookLogicTest {
         for (int i = 0; i < 3; i++) {
             PodamFactory factory = new PodamFactoryImpl();
             BookEntity entity = factory.manufacturePojo(BookEntity.class);
+            
+            List<ReviewEntity> reviews = new ArrayList<ReviewEntity>();
+            
+            for (int j = 0; j < 3; j++)
+            {
+                ReviewEntity reviewEntity = factory.manufacturePojo(ReviewEntity.class);
+                reviews.add(reviewEntity);
+            }
+            
+            entity.setReviews(reviews);
+            
             em.persist(entity);
             data.add(entity);
         }
