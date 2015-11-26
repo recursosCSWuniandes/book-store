@@ -1,9 +1,9 @@
 package co.edu.uniandes.csw.bookbasico.test.service;
 
 import co.edu.uniandes.csw.auth.model.UserDTO;
+import co.edu.uniandes.csw.auth.security.JWT;
 import co.edu.uniandes.csw.bookbasico.dtos.EditorialDTO;
 import co.edu.uniandes.csw.bookbasico.services.EditorialService;
-import co.edu.uniandes.csw.bookbasico.shiro.ApiKeyProperties;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -43,6 +43,8 @@ public class EditorialTest {
     private final int Created = Status.CREATED.getStatusCode();
     private final int OkWithoutContent = Status.NO_CONTENT.getStatusCode();
     private static List<EditorialDTO> oraculo = new ArrayList<>();
+    private final String username = System.getenv("USERNAME_USER");
+    private final String password = System.getenv("PASSWORD_USER");
     private WebTarget target;
 
     @Deployment(testable = false)
@@ -59,7 +61,6 @@ public class EditorialTest {
                         .withTransitivity().asFile())
                 // Se agregan los compilados de los paquetes de servicios
                 .addPackage(EditorialService.class.getPackage())
-                .addPackage(ApiKeyProperties.class.getPackage())
                 // El archivo que contiene la configuracion a la base de datos.
                 .addAsResource("META-INF/persistence.xml", "META-INF/persistence.xml")
                 // El archivo beans.xml es necesario para injeccion de dependencias.
@@ -85,7 +86,7 @@ public class EditorialTest {
     public static void insertData() {
         for (int i = 0; i < 5; i++) {
             PodamFactory factory = new PodamFactoryImpl();
-            EditorialDTO editorial = factory.manufacturePojo(EditorialDTO.class);            
+            EditorialDTO editorial = factory.manufacturePojo(EditorialDTO.class);
             editorial.setId(i + 1L);
             oraculo.add(editorial);
         }
@@ -99,22 +100,21 @@ public class EditorialTest {
         Response response = target.path("users").path("login").request()
                 .post(Entity.entity(user, MediaType.APPLICATION_JSON));
         if (response.getStatus() == Ok) {
-            return response.getCookies().get("jwt-token");
+            return response.getCookies().get(JWT.cookieName);
         } else {
             return null;
         }
     }
-    
+
     @Before
-    public void setUpTest(){
+    public void setUpTest() {
         target = createWebTarget();
     }
 
     @Test
     public void t1CreateEditorialService() throws IOException {
         EditorialDTO editorial = oraculo.get(0);
-        Cookie cookieSessionId = login(System.getenv("USERNAME_USER"), System.getenv("PASSWORD_USER"));
-        WebTarget target = createWebTarget();
+        Cookie cookieSessionId = login(username, password);
         Response response = target.path(editorialPath)
                 .request().cookie(cookieSessionId)
                 .post(Entity.entity(editorial, MediaType.APPLICATION_JSON));
@@ -126,7 +126,7 @@ public class EditorialTest {
 
     @Test
     public void t2GetEditorialById() {
-        Cookie cookieSessionId = login(System.getenv("USERNAME_USER"), System.getenv("PASSWORD_USER"));
+        Cookie cookieSessionId = login(username, password);
         EditorialDTO editorialTest = target.path(editorialPath)
                 .path(oraculo.get(0).getId().toString())
                 .request().cookie(cookieSessionId).get(EditorialDTO.class);
@@ -135,7 +135,7 @@ public class EditorialTest {
 
     @Test
     public void t3GetEditorialService() throws IOException {
-        Cookie cookieSessionId = login(System.getenv("USERNAME_USER"), System.getenv("PASSWORD_USER"));
+        Cookie cookieSessionId = login(username, password);
         Response response = target.path(editorialPath)
                 .request().cookie(cookieSessionId).get();
         String listEditorial = response.readEntity(String.class);
@@ -146,7 +146,7 @@ public class EditorialTest {
 
     @Test
     public void t4UpdateEditorialService() throws IOException {
-        Cookie cookieSessionId = login(System.getenv("USERNAME_USER"), System.getenv("PASSWORD_USER"));
+        Cookie cookieSessionId = login(username, password);
         EditorialDTO editorial = oraculo.get(0);
         PodamFactory factory = new PodamFactoryImpl();
         EditorialDTO editorialChanged = factory.manufacturePojo(EditorialDTO.class);
@@ -161,7 +161,7 @@ public class EditorialTest {
 
     @Test
     public void t5DeleteEditorialService() {
-        Cookie cookieSessionId = login(System.getenv("USERNAME_USER"), System.getenv("PASSWORD_USER"));
+        Cookie cookieSessionId = login(username, password);
         EditorialDTO editorial = oraculo.get(0);
         Response response = target.path(editorialPath).path(editorial.getId().toString())
                 .request().cookie(cookieSessionId).delete();
