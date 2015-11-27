@@ -6,6 +6,7 @@ import co.edu.uniandes.csw.bookbasico.dtos.EditorialDTO;
 import co.edu.uniandes.csw.bookbasico.services.EditorialService;
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import javax.ws.rs.client.ClientBuilder;
@@ -20,6 +21,7 @@ import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.filter.LoggingFilter;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
+import org.jboss.arquillian.test.api.ArquillianResource;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
@@ -42,16 +44,20 @@ public class EditorialTest {
     private final int Ok = Status.OK.getStatusCode();
     private final int Created = Status.CREATED.getStatusCode();
     private final int OkWithoutContent = Status.NO_CONTENT.getStatusCode();
-    private static List<EditorialDTO> oraculo = new ArrayList<>();
+    private final static List<EditorialDTO> oraculo = new ArrayList<>();
     private final String username = System.getenv("USERNAME_USER");
     private final String password = System.getenv("PASSWORD_USER");
     private WebTarget target;
+    private final String apiPath = "api";
+
+    @ArquillianResource
+    private URL deploymentURL;
 
     @Deployment(testable = false)
     public static Archive<?> createDeployment() {
         return ShrinkWrap
                 // Nombre del Proyecto "Bookbasico.web" seguido de ".war". Debe ser el mismo nombre del proyecto web que contiene los javascript y los  servicios Rest
-                .create(WebArchive.class, "BookBasico.web.war")
+                .create(WebArchive.class, "BookBasico.api.war")
                 // Se agrega la dependencia a la logica con el nombre groupid:artefactid:version (GAV)
                 .addAsLibraries(Maven.resolver()
                         .resolve("co.edu.uniandes.csw.bookbasico:BookBasico.logic:1.0-SNAPSHOT")
@@ -72,10 +78,9 @@ public class EditorialTest {
     }
 
     private WebTarget createWebTarget() {
-        String baseUrl = "http://localhost:8181/BookBasico.web/api";
         ClientConfig config = new ClientConfig();
         config.register(LoggingFilter.class);
-        return ClientBuilder.newClient(config).target(baseUrl);
+        return ClientBuilder.newClient(config).target(deploymentURL.toString()).path(apiPath);
     }
 
     @BeforeClass
