@@ -4,6 +4,7 @@ import co.edu.uniandes.csw.auth.model.UserDTO;
 import co.edu.uniandes.csw.auth.security.JWT;
 import co.edu.uniandes.csw.bookbasico.dtos.BookDTO;
 import co.edu.uniandes.csw.bookbasico.dtos.EditorialDTO;
+import co.edu.uniandes.csw.bookbasico.dtos.AuthorDTO;
 import co.edu.uniandes.csw.bookbasico.services.EditorialService;
 import java.io.File;
 import java.io.IOException;
@@ -41,6 +42,7 @@ public class EditorialTest {
 
     private final String editorialPath = "editorials";
     private final String bookPath = "books";
+    private final String authorPath = "authors";
     private final int Ok = Status.OK.getStatusCode();
     private final int Created = Status.CREATED.getStatusCode();
     private final int OkWithoutContent = Status.NO_CONTENT.getStatusCode();
@@ -251,6 +253,22 @@ public class EditorialTest {
         Response response = target.path(editorialPath).path(editorial.getId().toString())
                 .request().cookie(cookieSessionId).delete();
         Assert.assertEquals(OkWithoutContent, response.getStatus());
+    }
+    
+    @Test
+    public void t10GetAuthorsService() throws IOException {
+        Cookie cookieSessionId = login(System.getenv("USERNAME_USER"), System.getenv("PASSWORD_USER"));
+        EditorialDTO editorial = oraculo.get(0);
+        
+        Response response = target.path(editorialPath)
+                .path(editorial.getId().toString())
+                .path(authorPath)
+                .request().cookie(cookieSessionId).get();
+        
+        String listAuthors = response.readEntity(String.class);
+        List<AuthorDTO> listAuthorsTest = new ObjectMapper().readValue(listAuthors, List.class);
+        Assert.assertEquals(Ok, response.getStatus());
+        Assert.assertEquals(0, listAuthorsTest.size());
     }
 
 }

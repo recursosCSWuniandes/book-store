@@ -3,6 +3,7 @@ package co.edu.uniandes.csw.bookbasico.test.service;
 import co.edu.uniandes.csw.auth.model.UserDTO;
 import co.edu.uniandes.csw.bookbasico.dtos.BookDTO;
 import co.edu.uniandes.csw.bookbasico.dtos.AuthorDTO;
+import co.edu.uniandes.csw.bookbasico.dtos.ReviewDTO;
 import co.edu.uniandes.csw.bookbasico.services.BookService;
 import java.io.File;
 import java.io.IOException;
@@ -89,6 +90,17 @@ public class BookTest {
             PodamFactory factory = new PodamFactoryImpl();
             BookDTO book = factory.manufacturePojo(BookDTO.class);
             book.setId(i + 1L);
+            
+            List<ReviewDTO> listReviews = new ArrayList<>();
+            for (int j = 0; j < 5; j++)
+            {
+                ReviewDTO review = factory.manufacturePojo(ReviewDTO.class);
+                review.setId(i + 1L);
+                listReviews.add(review);
+            }
+            
+            book.setReviews(listReviews);
+            
             oraculo.add(book);
             
             AuthorDTO author = factory.manufacturePojo(AuthorDTO.class);
