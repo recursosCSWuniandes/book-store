@@ -162,33 +162,16 @@ public class AuthorTest {
         Assert.assertEquals(author.getName(), authorTest.getName());
 
     }
-
-    @Test
-    public void t5DeleteAuthorService() {
-        Cookie cookieSessionId = login(System.getenv("USERNAME_USER"), System.getenv("PASSWORD_USER"));
-        AuthorDTO author = oraculo.get(0);
-        Response response = target.path(authorPath).path(author.getId().toString())
-                .request().cookie(cookieSessionId).delete();
-        Assert.assertEquals(OkWithoutContent, response.getStatus());
-    }
     
     @Test
-    public void t6AddBookAuthorService() {
+    public void t5AddBookAuthorService() {
         Cookie cookieSessionId = login(System.getenv("USERNAME_USER"), System.getenv("PASSWORD_USER"));
         
-        AuthorDTO author = oraculo.get(1);
+        AuthorDTO author = oraculo.get(0);
         BookDTO book = oraculoBooks.get(0);
         
-        // Debemos crear el author, luego el book y luego agregarlos
-        Response response = target.path(authorPath)
-                .request().cookie(cookieSessionId)
-                .post(Entity.entity(author, MediaType.APPLICATION_JSON));
-        AuthorDTO authorTest = (AuthorDTO) response.readEntity(AuthorDTO.class);
-        Assert.assertEquals(author.getName(), authorTest.getName());
-        Assert.assertEquals(author.getId(), authorTest.getId());
-        Assert.assertEquals(Created, response.getStatus());
-        
-        response = target.path(bookPath)
+        // Debemos crear el book
+        Response response = target.path(bookPath)
                 .request().cookie(cookieSessionId)
                 .post(Entity.entity(book, MediaType.APPLICATION_JSON));
         BookDTO bookTest = (BookDTO) response.readEntity(BookDTO.class);
@@ -210,9 +193,9 @@ public class AuthorTest {
     }
     
     @Test
-    public void t7GetBooksService() throws IOException {
+    public void t6GetBooksService() throws IOException {
         Cookie cookieSessionId = login(System.getenv("USERNAME_USER"), System.getenv("PASSWORD_USER"));
-        AuthorDTO author = oraculo.get(1);
+        AuthorDTO author = oraculo.get(0);
         
         Response response = target.path(authorPath)
                 .path(author.getId().toString())
@@ -226,9 +209,9 @@ public class AuthorTest {
     }
     
     @Test
-    public void t8GetBookService() throws IOException {
+    public void t7GetBookService() throws IOException {
         Cookie cookieSessionId = login(System.getenv("USERNAME_USER"), System.getenv("PASSWORD_USER"));
-        AuthorDTO author = oraculo.get(1);
+        AuthorDTO author = oraculo.get(0);
         BookDTO book = oraculoBooks.get(0);
         
         BookDTO bookTest = target.path(authorPath)
@@ -243,14 +226,23 @@ public class AuthorTest {
     }
     
     @Test
-    public void t9RemoveBookAuthorService() {
+    public void t8RemoveBookAuthorService() {
         Cookie cookieSessionId = login(System.getenv("USERNAME_USER"), System.getenv("PASSWORD_USER"));
         
-        AuthorDTO author = oraculo.get(1);
+        AuthorDTO author = oraculo.get(0);
         BookDTO book = oraculoBooks.get(0);
         
         Response response = target.path(authorPath).path(author.getId().toString())
                 .path(bookPath).path(book.getId().toString())
+                .request().cookie(cookieSessionId).delete();
+        Assert.assertEquals(OkWithoutContent, response.getStatus());
+    }
+    
+    @Test
+    public void t9DeleteAuthorService() {
+        Cookie cookieSessionId = login(System.getenv("USERNAME_USER"), System.getenv("PASSWORD_USER"));
+        AuthorDTO author = oraculo.get(0);
+        Response response = target.path(authorPath).path(author.getId().toString())
                 .request().cookie(cookieSessionId).delete();
         Assert.assertEquals(OkWithoutContent, response.getStatus());
     }
