@@ -173,7 +173,7 @@ public class AuthorTest {
     
     @Test
     public void t5AddBookAuthorService() {
-        Cookie cookieSessionId = login(System.getenv("USERNAME_USER"), System.getenv("PASSWORD_USER"));
+        Cookie cookieSessionId = login(username, password);
         
         AuthorDTO author = oraculo.get(0);
         BookDTO book = oraculoBooks.get(0);
@@ -202,7 +202,7 @@ public class AuthorTest {
     
     @Test
     public void t6GetBooksService() throws IOException {
-        Cookie cookieSessionId = login(System.getenv("USERNAME_USER"), System.getenv("PASSWORD_USER"));
+        Cookie cookieSessionId = login(username, password);
         AuthorDTO author = oraculo.get(0);
         
         Response response = target.path(authorPath)
@@ -218,7 +218,7 @@ public class AuthorTest {
     
     @Test
     public void t7GetBookService() throws IOException {
-        Cookie cookieSessionId = login(System.getenv("USERNAME_USER"), System.getenv("PASSWORD_USER"));
+        Cookie cookieSessionId = login(username, password);
         AuthorDTO author = oraculo.get(0);
         BookDTO book = oraculoBooks.get(0);
         
@@ -235,8 +235,7 @@ public class AuthorTest {
     
     @Test
     public void t8RemoveBookAuthorService() {
-        Cookie cookieSessionId = login(System.getenv("USERNAME_USER"), System.getenv("PASSWORD_USER"));
-        
+        Cookie cookieSessionId = login(username, password);
         AuthorDTO author = oraculo.get(0);
         BookDTO book = oraculoBooks.get(0);
         
@@ -248,7 +247,7 @@ public class AuthorTest {
     
     @Test
     public void t9DeleteAuthorService() {
-        Cookie cookieSessionId = login(System.getenv("USERNAME_USER"), System.getenv("PASSWORD_USER"));
+        Cookie cookieSessionId = login(username, password);
         AuthorDTO author = oraculo.get(0);
         Response response = target.path(authorPath).path(author.getId().toString())
                 .request().cookie(cookieSessionId).delete();
