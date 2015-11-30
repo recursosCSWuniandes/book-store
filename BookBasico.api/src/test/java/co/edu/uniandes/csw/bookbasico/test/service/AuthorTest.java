@@ -1,11 +1,13 @@
 package co.edu.uniandes.csw.bookbasico.test.service;
 
 import co.edu.uniandes.csw.auth.model.UserDTO;
+import co.edu.uniandes.csw.auth.security.JWT;
 import co.edu.uniandes.csw.bookbasico.dtos.AuthorDTO;
 import co.edu.uniandes.csw.bookbasico.dtos.BookDTO;
 import co.edu.uniandes.csw.bookbasico.services.AuthorService;
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import javax.ws.rs.client.ClientBuilder;
@@ -20,6 +22,7 @@ import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.filter.LoggingFilter;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
+import org.jboss.arquillian.test.api.ArquillianResource;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
@@ -46,12 +49,18 @@ public class AuthorTest {
     private static List<AuthorDTO> oraculo = new ArrayList<>();
     private static List<BookDTO> oraculoBooks = new ArrayList<>();
     private WebTarget target;
+    private final String apiPath = "api";
+    private final String username = System.getenv("USERNAME_USER");
+    private final String password = System.getenv("PASSWORD_USER");
+
+    @ArquillianResource
+    private URL deploymentURL;
 
     @Deployment(testable = false)
     public static Archive<?> createDeployment() {
         return ShrinkWrap
                 // Nombre del Proyecto "Bookbasico.web" seguido de ".war". Debe ser el mismo nombre del proyecto web que contiene los javascript y los  servicios Rest
-                .create(WebArchive.class, "BookBasico.web.war")
+                .create(WebArchive.class, "BookBasico.api.war")
                 // Se agrega la dependencia a la logica con el nombre groupid:artefactid:version (GAV)
                 .addAsLibraries(Maven.resolver()
                         .resolve("co.edu.uniandes.csw.bookbasico:BookBasico.logic:1.0-SNAPSHOT")
@@ -72,10 +81,9 @@ public class AuthorTest {
     }
 
     private WebTarget createWebTarget() {
-        String baseUrl = "http://localhost:8181/BookBasico.web/api";
         ClientConfig config = new ClientConfig();
         config.register(LoggingFilter.class);
-        return ClientBuilder.newClient(config).target(baseUrl);
+        return ClientBuilder.newClient(config).target(deploymentURL.toString()).path(apiPath);
     }
 
     @BeforeClass
@@ -104,7 +112,7 @@ public class AuthorTest {
         Response response = target.path("users").path("login").request()
                 .post(Entity.entity(user, MediaType.APPLICATION_JSON));
         if (response.getStatus() == Ok) {
-            return response.getCookies().get("jwt-token");
+            return response.getCookies().get(JWT.cookieName);
         } else {
             return null;
         }
@@ -118,7 +126,7 @@ public class AuthorTest {
     @Test
     public void t1CreateAuthorService() throws IOException {
         AuthorDTO author = oraculo.get(0);
-        Cookie cookieSessionId = login(System.getenv("USERNAME_USER"), System.getenv("PASSWORD_USER"));
+        Cookie cookieSessionId = login(username, password);
         Response response = target.path(authorPath)
                 .request().cookie(cookieSessionId)
                 .post(Entity.entity(author, MediaType.APPLICATION_JSON));
@@ -130,7 +138,7 @@ public class AuthorTest {
 
     @Test
     public void t2GetAuthorById() {
-        Cookie cookieSessionId = login(System.getenv("USERNAME_USER"), System.getenv("PASSWORD_USER"));
+        Cookie cookieSessionId = login(username, password);
         AuthorDTO authorTest = target.path(authorPath)
                 .path(oraculo.get(0).getId().toString())
                 .request().cookie(cookieSessionId).get(AuthorDTO.class);
@@ -139,7 +147,7 @@ public class AuthorTest {
 
     @Test
     public void t3GetAuthorService() throws IOException {
-        Cookie cookieSessionId = login(System.getenv("USERNAME_USER"), System.getenv("PASSWORD_USER"));
+        Cookie cookieSessionId = login(username, password);
         Response response = target.path(authorPath)
                 .request().cookie(cookieSessionId).get();
         String listAuthor = response.readEntity(String.class);
@@ -150,7 +158,7 @@ public class AuthorTest {
 
     @Test
     public void t4UpdateAuthorService() throws IOException {
-        Cookie cookieSessionId = login(System.getenv("USERNAME_USER"), System.getenv("PASSWORD_USER"));
+        Cookie cookieSessionId = login(username, password);
         AuthorDTO author = oraculo.get(0);
         PodamFactory factory = new PodamFactoryImpl();
         AuthorDTO authorChanged = factory.manufacturePojo(AuthorDTO.class);
@@ -165,7 +173,7 @@ public class AuthorTest {
     
     @Test
     public void t5AddBookAuthorService() {
-        Cookie cookieSessionId = login(System.getenv("USERNAME_USER"), System.getenv("PASSWORD_USER"));
+        Cookie cookieSessionId = login(username, password);
         
         AuthorDTO author = oraculo.get(0);
         BookDTO book = oraculoBooks.get(0);
@@ -194,7 +202,7 @@ public class AuthorTest {
     
     @Test
     public void t6GetBooksService() throws IOException {
-        Cookie cookieSessionId = login(System.getenv("USERNAME_USER"), System.getenv("PASSWORD_USER"));
+        Cookie cookieSessionId = login(username, password);
         AuthorDTO author = oraculo.get(0);
         
         Response response = target.path(authorPath)
@@ -210,7 +218,7 @@ public class AuthorTest {
     
     @Test
     public void t7GetBookService() throws IOException {
-        Cookie cookieSessionId = login(System.getenv("USERNAME_USER"), System.getenv("PASSWORD_USER"));
+        Cookie cookieSessionId = login(username, password);
         AuthorDTO author = oraculo.get(0);
         BookDTO book = oraculoBooks.get(0);
         
@@ -227,8 +235,7 @@ public class AuthorTest {
     
     @Test
     public void t8RemoveBookAuthorService() {
-        Cookie cookieSessionId = login(System.getenv("USERNAME_USER"), System.getenv("PASSWORD_USER"));
-        
+        Cookie cookieSessionId = login(username, password);
         AuthorDTO author = oraculo.get(0);
         BookDTO book = oraculoBooks.get(0);
         
@@ -240,7 +247,7 @@ public class AuthorTest {
     
     @Test
     public void t9DeleteAuthorService() {
-        Cookie cookieSessionId = login(System.getenv("USERNAME_USER"), System.getenv("PASSWORD_USER"));
+        Cookie cookieSessionId = login(username, password);
         AuthorDTO author = oraculo.get(0);
         Response response = target.path(authorPath).path(author.getId().toString())
                 .request().cookie(cookieSessionId).delete();
