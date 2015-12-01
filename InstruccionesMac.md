@@ -12,12 +12,14 @@ El problema con el sistema MacOSx radica en que las variables deben definirse se
 ##Tipos de variables de entorno
 En Mac existen distintos lugares en donde se pueden guardar las variables de entorno, en base al lugar escogido se podran usar en uno u otro proceso del ambiente de desarrollo. A continuación se explican los posibles lugares en donde deben guardarse las variables para un sistema Mac OSx.
 
-~/.profile: Las variables definidas aquí se usaran en todos los procesos iniciados en Terminal.app.
-~/.bashrc:  Estas variables son invocadas desde todo shell que no requiera login.
-/etc/profile: Estas variables se cargan antes del archivo ~/.profile. Se deben definir aquí cuando las variables deben aplicarse a los programas lanzados por todos los usuarios del sistema desde el terminal.
-~/.MacOSX/environment.plist: Estas variables son cargadas por loginwindow al momento de hacer login en el sistema. Las variables aquí definidas aplican para todas las aplicaciones, incluyendo las que se ejecutan con GUI. Cuandos se asignan variables en este archivo, se debe reiniciar el sistema para que tengan efecto. Este archivo ya no se soporta a partir de MacOS X 10.8.
-Las variables de launchd: Estas variables son definidas para el usuario y aplican para Terminal, Shells y aplicaciones que usan GUI. Cuandos se asignan variables en de esta manera, se debe reiniciar el sistema para que tengan efecto.
-/etc/launchd.conf: Estas variables son leidas por launchd cuando el sistema inicia y se loggea el usuario. Afectan a cada proceso que se ejecuta en el sistema, puesto que launchd es el proceso padre de los demás.
+Ubicación  | Descripción
+---------- | -------------
+~/.profile:   | Las variables definidas aquí se usaran en todos los procesos iniciados en Terminal.app.
+~/.bashrc:    | Estas variables son invocadas desde todo shell que no requiera login.
+/etc/profile: | Estas variables se cargan antes del archivo ~/.profile. Se deben definir aquí cuando las variables deben aplicarse a los programas lanzados por todos los usuarios del sistema desde el terminal.
+~/.MacOSX/environment.plist: | Estas variables son cargadas por loginwindow al momento de hacer login en el sistema. Las variables aquí definidas aplican para todas las aplicaciones, incluyendo las que se ejecutan con GUI. Cuandos se asignan variables en este archivo, se debe reiniciar el sistema para que tengan efecto. Este archivo ya no se soporta a partir de MacOS X 10.8.
+Las variables de launchd: | Estas variables son definidas para el usuario y aplican para Terminal, Shells y aplicaciones que usan GUI. Cuandos se asignan variables en de esta manera, se debe reiniciar el sistema para que tengan efecto.
+/etc/launchd.conf: | Estas variables son leidas por launchd cuando el sistema inicia y se loggea el usuario. Afectan a cada proceso que se ejecuta en el sistema, puesto que launchd es el proceso padre de los demás.
 
 ##Poniendo las variables en MacOSx 10.7 o inferior
 Si usted esta usando MacOSX 10.7 o inferior, puede proceder a modificar el archivo ~/.MacOSX/environment.plist para incluir las variables de entorno que necesitará ejecutar desde su IDE.
