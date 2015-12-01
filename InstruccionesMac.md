@@ -1,8 +1,8 @@
 #Funcionamiento en Mac
--  [Introducción](#introduccion)
--  [Tipos de variables de entorno](#tipos-env)
--  [Poniendo las variables en MacOSx 10.7 o inferior](#poniendo-las-variables-10-7)
--  [Poniendo las variables en MacOSx 10.8 o superior](#poniendo-las-variables-10-8)
+-  [introducción](#introduccion)
+-  [Tipos de variables de entorno](#tipos-de-variables-de-entorno)
+-  [Poniendo las variables en MacOSx 10.7 o inferior](#poniendo-las-variables-en-macosx-107-o-inferior)
+-  [Poniendo las variables en MacOSx 10.8 o superior](#poniendo-las-variables-en-macosx-108-o-superior)
 
 ##Introducción
 Se considerá una buena practica el usar variables de entorno en las partes de todo software en donde se tengan que utilizar datos privados, como los de autenticación. Las variables de entorno permiten mantener los datos ocultos en repositorios publicos, de modo que solo las personas que los conozcan puedan usar sus credenciales (o cambiarlas por unas propias) para aprovechar el funcionamiento del sistema con sus propias cuentas.
@@ -25,7 +25,7 @@ Las variables de launchd: | Estas variables son definidas para el usuario y apli
 Si usted esta usando MacOSX 10.7 o inferior, puede proceder a modificar el archivo ~/.MacOSX/environment.plist para incluir las variables de entorno que necesitará ejecutar desde su IDE.
 
 ##Poniendo las variables en MacOSx 10.8 o superior
-Por otro lado, si desea poner las variables en un sistema MacOSx 10.8 o superior debe crear un nuevo archivo, puede llamarlo "environment.plist" y debe ubicarlo en ~/Library/LaunchAgents/. Posteriormente, agregue el siguiente contenido a este archivo:
+Por otro lado, si desea poner las variables en un sistema MacOSx 10.8 o superior deberan hacerse usando launchd. Para ello, proceda a crear un nuevo archivo, puede llamarlo "environment.plist" y debe ubicarlo en ~/Library/LaunchAgents/. Posteriormente, agregue el siguiente contenido a este archivo:
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
@@ -50,8 +50,8 @@ Por otro lado, si desea poner las variables en un sistema MacOSx 10.8 o superior
 </dict>
 </plist>
 ```
-Al finalizar unicamente debe reemplazar los valores y las variables por las que usted desee utilizar. Tenga en cuenta que deberá reiniciar el computador para que estas variables puedan ser cargadas por el sistema.
+Al finalizar únicamente debe reemplazar los valores y las variables por las que usted desee utilizar. Tenga en cuenta que deberá reiniciar el computador para que estas variables puedan ser cargadas por el sistema.
 
-[Volver arriba](#tabla-de-contenidos)
+[Volver arriba](#funcionamiento-en-mac)
 
 
