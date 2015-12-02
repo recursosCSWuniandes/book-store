@@ -42,7 +42,6 @@
             });
             auth.setRoles({'user': [{id: 'registeredUsers', label: 'user', icon: 'list-alt', url: '#/author'}, {id: 'indexBook', label: 'book', icon: 'list-alt', url: '#/book'}],
                 'provider': [{id: 'registeredProviders', label: 'provider', icon: 'inbox', url: '#/editorial'}]});
-
-            auth.setJwtConfig({'saveIn': 'sessionStorage'})// En teoria se pude cambiar el nombre, pero en el servicio tiene por default 'Autorization'        
+         
         }]);
 })(window.angular);
